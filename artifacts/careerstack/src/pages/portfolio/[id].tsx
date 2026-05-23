@@ -210,7 +210,7 @@ export default function PortfolioDetail() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center space-x-4">
         <Link href="/portfolio" className="inline-flex items-center justify-center rounded-xl p-2 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-6 h-6" />
         </Link>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{isNew ? "New Project" : "Edit Project"}</h1>
@@ -234,7 +234,7 @@ export default function PortfolioDetail() {
                       <FormItem>
                         <FormLabel>Project Title</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g. MyProjectory" {...field} className="glass" />
+                          <Input placeholder="e.g. myProjectory" {...field} className="glass" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -308,7 +308,7 @@ export default function PortfolioDetail() {
                           onClick={() => setShowTechDropdown(!showTechDropdown)}
                           className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                         >
-                          <ChevronDown className="w-4 h-4" />
+                          <ChevronDown className="w-6 h-6" />
                         </button>
                         
                         {/* Dropdown List */}
@@ -453,7 +453,7 @@ export default function PortfolioDetail() {
                                 }}
                                 className="absolute right-3 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                               >
-                                <Calendar className="w-4 h-4" />
+                                <Calendar className="w-6 h-6" />
                               </button>
                             </div>
                           </FormControl>
@@ -498,7 +498,7 @@ export default function PortfolioDetail() {
                                   }}
                                   className="absolute right-3 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                                 >
-                                  <Calendar className="w-4 h-4" />
+                                  <Calendar className="w-6 h-6" />
                                 </button>
                               </div>
                             </FormControl>
@@ -647,7 +647,7 @@ export default function PortfolioDetail() {
 
               <div className="flex gap-4 pt-4">
                 <Button type="submit" className="flex-1 rounded-xl" disabled={isPending}>
-                  {isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                  {isPending ? <Loader2 className="w-6 h-6 mr-2 animate-spin" /> : <Save className="w-6 h-6 mr-2" />}
                   {isNew ? "Create Project" : "Save Changes"}
                 </Button>
                 <Button type="button" variant="outline" className="flex-1 rounded-xl glass" onClick={() => setLocation("/portfolio")} disabled={isPending}>

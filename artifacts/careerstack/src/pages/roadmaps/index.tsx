@@ -275,7 +275,7 @@ export default function Roadmaps() {
         <CardContent className="py-8 px-6 md:px-10 flex flex-col md:flex-row gap-8 items-center">
           <div className="flex-1">
             <h2 className="text-xl font-bold mb-2 flex items-center">
-              <Sparkles className="w-5 h-5 text-primary mr-2" />
+              <Sparkles className="w-6 h-6 text-primary mr-2" />
               Generate a New Roadmap
             </h2>
             <p className="text-muted-foreground mb-6 max-w-md">
@@ -293,7 +293,7 @@ export default function Roadmaps() {
                 className="rounded-xl h-12 px-6"
                 disabled={!tech.trim() || generateMutation.isPending}
               >
-                {generateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Generate"}
+                {generateMutation.isPending ? <Loader2 className="w-6 h-6 animate-spin" /> : "Generate"}
               </Button>
             </form>
           </div>
@@ -308,7 +308,7 @@ export default function Roadmaps() {
         <DialogContent className="sm:max-w-[450px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Layers className="w-5 h-5 text-primary" />
+              <Layers className="w-6 h-6 text-primary" />
               Confirm Stack Selection
             </DialogTitle>
             <DialogDescription>
@@ -327,7 +327,7 @@ export default function Roadmaps() {
           <DialogFooter className="gap-2">
             <Button variant="outline" onClick={() => setShowConfirm(false)}>Cancel</Button>
             <Button onClick={handleConfirmGenerate} disabled={generateMutation.isPending}>
-              {generateMutation.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-2" />}
+              {generateMutation.isPending ? <Loader2 className="w-6 h-6 mr-2 animate-spin" /> : <CheckCircle className="w-6 h-6 mr-2" />}
               Confirm & Generate
             </Button>
           </DialogFooter>
@@ -338,7 +338,7 @@ export default function Roadmaps() {
       <div className="space-y-4" id="trending-roadmaps">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-400/20 to-yellow-400/20 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-orange-500" />
+            <TrendingUp className="w-6 h-6 text-orange-500" />
           </div>
           <div>
             <h2 className="text-xl font-bold flex items-center gap-2">
@@ -383,7 +383,7 @@ export default function Roadmaps() {
       <div className="space-y-4" id="new-roadmaps">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-400/20 to-cyan-400/20 flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-blue-500" />
+            <Sparkles className="w-6 h-6 text-blue-500" />
           </div>
           <div>
             <h2 className="text-xl font-bold flex items-center gap-2">
@@ -420,7 +420,7 @@ export default function Roadmaps() {
       <div className="space-y-4" id="my-roadmaps">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-            <Map className="w-5 h-5 text-primary" />
+            <Map className="w-6 h-6 text-primary" />
           </div>
           <div>
             <h2 className="text-xl font-bold">My Roadmaps</h2>
@@ -451,7 +451,7 @@ export default function Roadmaps() {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <button type="button" onClick={(e) => e.stopPropagation()} className="p-1.5 rounded-lg hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors">
-                                  <Info className="w-4 h-4" />
+                                  <Info className="w-6 h-6" />
                                 </button>
                               </TooltipTrigger>
                               <TooltipContent side="top" className="max-w-[250px] text-sm">
@@ -469,7 +469,7 @@ export default function Roadmaps() {
                               disabled={deletingId === roadmap.id}
                               className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
                             >
-                              {deletingId === roadmap.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                              {deletingId === roadmap.id ? <Loader2 className="w-6 h-6 animate-spin" /> : <Trash2 className="w-6 h-6" />}
                             </button>
                           </div>
                         </div>
@@ -494,7 +494,7 @@ export default function Roadmaps() {
                             Stack Detail
                           </Link>
                           <Link href={`/roadmaps/${roadmap.id}`} onClick={(e) => e.stopPropagation()} className="p-2 -mr-2 cursor-pointer inline-block">
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                           </Link>
                         </div>
                       </CardFooter>

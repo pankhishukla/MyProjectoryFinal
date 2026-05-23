@@ -110,7 +110,7 @@ export default function AdminDomains() {
         <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="w-4 h-4 mr-2" /> Add Domain
+              <Plus className="w-6 h-6 mr-2" /> Add Domain
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[550px] max-h-[85vh] overflow-y-auto">
@@ -170,10 +170,10 @@ export default function AdminDomains() {
               </div>
               <div className="flex space-x-2">
                 <Button variant="ghost" size="icon" onClick={() => handleEdit(domain)}>
-                  <Edit2 className="w-4 h-4 text-blue-500" />
+                  <Edit2 className="w-6 h-6 text-blue-500" />
                 </Button>
                 <Button variant="ghost" size="icon" onClick={() => handleDelete(domain.id)}>
-                  <Trash2 className="w-4 h-4 text-destructive" />
+                  <Trash2 className="w-6 h-6 text-destructive" />
                 </Button>
               </div>
             </CardHeader>

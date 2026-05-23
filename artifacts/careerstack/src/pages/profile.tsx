@@ -285,7 +285,7 @@ export default function Profile() {
 
           <div className="flex justify-end">
             <Button type="submit" className="rounded-xl px-8 h-12" disabled={updateProfile.isPending}>
-              {updateProfile.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+              {updateProfile.isPending ? <Loader2 className="w-6 h-6 mr-2 animate-spin" /> : <Save className="w-6 h-6 mr-2" />}
               Save Profile
             </Button>
           </div>

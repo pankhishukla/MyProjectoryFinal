@@ -341,14 +341,14 @@ export default function Portfolio() {
                         {project.githubLink && (
                           <Button asChild variant="outline" size="sm" className="gap-2">
                             <a href={project.githubLink} target="_blank" rel="noreferrer">
-                              <Github className="w-4 h-4" /> GitHub
+                              <Github className="w-6 h-6" /> GitHub
                             </a>
                           </Button>
                         )}
                         {project.liveLink && (
                           <Button asChild variant="secondary" size="sm" className="gap-2">
                             <a href={project.liveLink} target="_blank" rel="noreferrer">
-                              <ExternalLink className="w-4 h-4" /> Live
+                              <ExternalLink className="w-6 h-6" /> Live
                             </a>
                           </Button>
                         )}
@@ -366,7 +366,7 @@ export default function Portfolio() {
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-primary" />
+              <Sparkles className="w-6 h-6 text-primary" />
             </div>
             <div>
               <CardTitle>Publish Your Portfolio</CardTitle>
@@ -401,7 +401,7 @@ export default function Portfolio() {
           {shareLink && (
             <div className="rounded-2xl border border-border/60 bg-muted/30 p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
               <div className="flex items-center gap-2 text-sm">
-                <LinkIcon className="w-4 h-4 text-primary" />
+                <LinkIcon className="w-6 h-6 text-primary" />
                 <span className="break-all">{shareLink}</span>
               </div>
               <Button variant="outline" onClick={copyLink}>Copy Link</Button>

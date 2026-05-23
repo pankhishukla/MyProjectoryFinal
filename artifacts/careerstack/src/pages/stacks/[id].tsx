@@ -37,7 +37,7 @@ export default function StackDetail() {
       {/* Header */}
       <div className="flex items-center space-x-4 mb-2">
         <Link href="/roadmaps" className="inline-flex items-center justify-center rounded-xl p-2 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-6 h-6" />
         </Link>
         <div className="flex-1">
           <div className="flex items-center gap-3">
@@ -57,7 +57,7 @@ export default function StackDetail() {
         <CardContent className="py-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <ListChecks className="w-5 h-5 text-primary" />
+              <ListChecks className="w-6 h-6 text-primary" />
               <h3 className="text-lg font-semibold">Stack Progress</h3>
             </div>
             <div className="flex items-center gap-3">
@@ -88,7 +88,7 @@ export default function StackDetail() {
         <Card className="glass rounded-2xl border-border/50">
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
-              <Layers className="w-4 h-4 text-primary" />
+              <Layers className="w-6 h-6 text-primary" />
               Technologies & Skills
             </CardTitle>
           </CardHeader>
@@ -111,7 +111,7 @@ export default function StackDetail() {
         <Card className="glass rounded-2xl border-border/50">
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
-              <Map className="w-4 h-4 text-primary" />
+              <Map className="w-6 h-6 text-primary" />
               Associated Roadmap
             </CardTitle>
           </CardHeader>
@@ -125,7 +125,7 @@ export default function StackDetail() {
             )}
             <Link href={`/roadmaps/${stack.roadmapId}`}>
               <Button className="w-full" variant="default">
-                <Map className="w-4 h-4 mr-2" />
+                <Map className="w-6 h-6 mr-2" />
                 View Roadmap
                 <ExternalLink className="w-3 h-3 ml-2" />
               </Button>
@@ -161,7 +161,7 @@ export default function StackDetail() {
                     statusColor(ms.status)
                   )}>
                     {ms.status === "completed" ? (
-                      <CheckCircle2 className="w-4 h-4 text-white" />
+                      <CheckCircle2 className="w-6 h-6 text-white" />
                     ) : (
                       <span className="text-xs font-bold text-white">{i + 1}</span>
                     )}

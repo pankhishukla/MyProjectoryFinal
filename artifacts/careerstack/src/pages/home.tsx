@@ -11,10 +11,10 @@ export default function Home() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-secondary/20 blur-[120px] pointer-events-none" />
 
       <header className="py-6 px-8 max-w-7xl w-full mx-auto flex justify-between items-center z-10">
-        <div className="flex items-center space-x-2">
+        <Link href="/dashboard" className="flex items-center space-x-2 cursor-pointer hover:opacity-90 transition-opacity">
           <img src="/logo.png" alt="MyProjectory Logo" className="w-8 h-auto rounded-md" />
-          <span className="text-xl font-bold tracking-tight">MyProjectory</span>
-        </div>
+          <span className="text-xl font-bold tracking-tight text-[#021a69]" style={{ fontFamily: "'Arvo', serif" }}>myProjectory</span>
+        </Link>
         <div className="space-x-4">
           <Link href="/sign-in">
             <Button variant="ghost" className="rounded-xl">Sign In</Button>
@@ -51,7 +51,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/sign-up">
               <Button size="lg" className="rounded-2xl px-8 h-14 text-base w-full sm:w-auto">
-                Start Building Free <ArrowRight className="ml-2 w-5 h-5" />
+                Start Building Free <ArrowRight className="ml-2 w-6 h-6" />
               </Button>
             </Link>
             <Link href="/sign-in">

@@ -46,7 +46,7 @@ function DynamicWeightingInfo() {
     return (
       <Card className="glass rounded-2xl border-border/50">
         <CardContent className="py-8 flex justify-center">
-          <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
         </CardContent>
       </Card>
     );
@@ -62,7 +62,7 @@ function DynamicWeightingInfo() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-              <Scale className="w-4 h-4" />
+              <Scale className="w-6 h-6" />
             </div>
             <div>
               <CardTitle className="text-lg">Portfolio Weighting</CardTitle>
@@ -100,7 +100,7 @@ function DynamicWeightingInfo() {
             onClick={() => setShowExplanation(!showExplanation)}
             className="flex items-center gap-2 text-sm text-primary hover:underline font-medium"
           >
-            <Info className="w-4 h-4" />
+            <Info className="w-6 h-6" />
             How are these weights calculated?
           </button>
           
@@ -148,7 +148,7 @@ function StrengthBreakdownSection() {
     return (
       <Card className="glass rounded-2xl border-border/50">
         <CardContent className="py-8 flex justify-center">
-          <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
         </CardContent>
       </Card>
     );
@@ -163,7 +163,7 @@ function StrengthBreakdownSection() {
       <CardHeader>
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-            <BarChart3 className="w-4 h-4 text-emerald-600" />
+            <BarChart3 className="w-6 h-6 text-emerald-600" />
           </div>
           <div>
             <CardTitle className="text-lg">Strength Breakdown</CardTitle>
@@ -209,7 +209,7 @@ function StrengthBreakdownSection() {
         {/* Insight */}
         {data.insight && (
           <div className="flex items-start gap-2 p-3 rounded-xl bg-primary/5 border border-primary/10 text-sm mt-4">
-            <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+            <Info className="w-6 h-6 text-primary shrink-0 mt-0.5" />
             <span className="text-foreground leading-relaxed">{data.insight}</span>
           </div>
         )}
@@ -227,7 +227,7 @@ function MarketAlignmentSection() {
     return (
       <Card className="glass rounded-2xl border-border/50">
         <CardContent className="py-8 flex justify-center">
-          <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
         </CardContent>
       </Card>
     );
@@ -242,7 +242,7 @@ function MarketAlignmentSection() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
-              <Globe2 className="w-4 h-4 text-amber-600" />
+              <Globe2 className="w-6 h-6 text-amber-600" />
             </div>
             <div>
               <CardTitle className="text-lg">Market Alignment</CardTitle>
@@ -252,7 +252,7 @@ function MarketAlignmentSection() {
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 text-sm text-amber-700 dark:text-amber-400">
-            <AlertCircle className="w-5 h-5 shrink-0" />
+            <AlertCircle className="w-6 h-6 shrink-0" />
             <span>Market trend data is not yet populated. Once the trend engine processes job listings, your alignment score will appear here.</span>
           </div>
         </CardContent>
@@ -268,7 +268,7 @@ function MarketAlignmentSection() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-              <Globe2 className="w-4 h-4 text-purple-600" />
+              <Globe2 className="w-6 h-6 text-purple-600" />
             </div>
             <div>
               <CardTitle className="text-lg">Market Alignment</CardTitle>
@@ -297,7 +297,7 @@ function MarketAlignmentSection() {
           {data.userMatchedSkills.length > 0 && (
             <div>
               <h4 className="text-sm font-semibold text-emerald-600 mb-2 flex items-center gap-1.5">
-                <CheckCircle className="w-4 h-4" />
+                <CheckCircle className="w-6 h-6" />
                 Skills You Have ({data.userMatchedSkills.length})
               </h4>
               <div className="flex flex-wrap gap-1.5">
@@ -485,7 +485,7 @@ export default function Scores() {
         <Card className="glass rounded-2xl border-primary/20 bg-primary/5">
           <CardContent className="py-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <Target className="w-5 h-5 text-primary mr-2" />
+              <Target className="w-6 h-6 text-primary mr-2" />
               Action Plan to Improve
             </h3>
             <ul className="space-y-3">

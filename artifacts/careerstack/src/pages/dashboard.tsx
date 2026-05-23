@@ -35,7 +35,7 @@ export default function Dashboard() {
           <Card className="glass rounded-2xl border-border/50 hover-elevate">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Job Readiness</CardTitle>
-              <Target className="w-4 h-4 text-primary" />
+              <Target className="w-6 h-6 text-primary" />
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold">{summary.readinessScore}%</div>
@@ -46,7 +46,7 @@ export default function Dashboard() {
           <Card className="glass rounded-2xl border-border/50 hover-elevate">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Portfolio Projects</CardTitle>
-              <Briefcase className="w-4 h-4 text-secondary" />
+              <Briefcase className="w-6 h-6 text-secondary" />
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold">{summary.completedProjects} <span className="text-lg text-muted-foreground font-normal">/ {summary.totalProjects}</span></div>
@@ -57,7 +57,7 @@ export default function Dashboard() {
           <Card className="glass rounded-2xl border-border/50 hover-elevate">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Roadmap Progress</CardTitle>
-              <Map className="w-4 h-4 text-green-500" />
+              <Map className="w-6 h-6 text-green-500" />
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold">{summary.roadmapProgress}%</div>
@@ -68,7 +68,7 @@ export default function Dashboard() {
           <Card className="glass rounded-2xl border-border/50 hover-elevate">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Strongest Tech</CardTitle>
-              <Zap className="w-4 h-4 text-yellow-500" />
+              <Zap className="w-6 h-6 text-yellow-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold truncate">{summary.strongestTech || "N/A"}</div>

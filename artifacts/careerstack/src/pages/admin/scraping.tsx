@@ -286,7 +286,7 @@ export default function AdminScrapingPortal() {
           </p>
         </div>
         <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 border border-primary/20">
-          <Database className="w-4 h-4 text-primary" />
+          <Database className="w-6 h-6 text-primary" />
           <span className="text-sm font-medium text-primary">
             {trendData?.total_jobs_analyzed || 0} jobs in database
           </span>
@@ -300,7 +300,7 @@ export default function AdminScrapingPortal() {
           <Card className="glass rounded-2xl border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-lg">
-                <RefreshCw className="w-5 h-5 text-primary" />
+                <RefreshCw className="w-6 h-6 text-primary" />
                 Run Scraper
               </CardTitle>
               <CardDescription>
@@ -315,9 +315,9 @@ export default function AdminScrapingPortal() {
                 size="lg"
               >
                 {scraping ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <Loader2 className="w-6 h-6 mr-2 animate-spin" />
                 ) : (
-                  <RefreshCw className="w-4 h-4 mr-2" />
+                  <RefreshCw className="w-6 h-6 mr-2" />
                 )}
                 {scraping ? "Scraping..." : "Start Scraping Run"}
               </Button>
@@ -330,7 +330,7 @@ export default function AdminScrapingPortal() {
           <Card className="glass rounded-2xl border-border/50 h-full">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <BarChart3 className="w-4 h-4" />
+                <BarChart3 className="w-6 h-6" />
                 Total Jobs Analyzed
               </CardTitle>
             </CardHeader>
@@ -350,7 +350,7 @@ export default function AdminScrapingPortal() {
           <Card className="glass rounded-2xl border-border/50 h-full">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Layers className="w-4 h-4" />
+                <Layers className="w-6 h-6" />
                 Unique Technologies
               </CardTitle>
             </CardHeader>
@@ -369,7 +369,7 @@ export default function AdminScrapingPortal() {
         <Card className="glass rounded-2xl border-orange-500/20 bg-gradient-to-br from-orange-500/5 to-transparent">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <Search className="w-5 h-5 text-orange-500" />
+              <Search className="w-6 h-6 text-orange-500" />
               Naukri.com Listing Scraper
             </CardTitle>
             <CardDescription>
@@ -397,12 +397,12 @@ export default function AdminScrapingPortal() {
               >
                 {naukriScraping ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="w-6 h-6 mr-2 animate-spin" />
                     Scraping...
                   </>
                 ) : (
                   <>
-                    <Search className="w-4 h-4 mr-2" />
+                    <Search className="w-6 h-6 mr-2" />
                     Scrape Naukri
                   </>
                 )}
@@ -411,7 +411,7 @@ export default function AdminScrapingPortal() {
 
             {naukriScraping && (
               <div className="flex items-start gap-3 p-3 rounded-lg bg-orange-500/10 border border-orange-500/20 text-sm text-orange-700 dark:text-orange-400">
-                <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                <AlertCircle className="w-6 h-6 mt-0.5 shrink-0" />
                 <span>
                   Scraping all pages — please wait. This typically takes 2–5 minutes for a full listing page.
                   Do not close this tab.
@@ -485,7 +485,7 @@ export default function AdminScrapingPortal() {
           <Card className="glass rounded-2xl border-border/50 h-full">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Globe className="w-5 h-5 text-primary" />
+                <Globe className="w-6 h-6 text-primary" />
                 Manage Job Sources
               </CardTitle>
               <CardDescription>
@@ -508,9 +508,9 @@ export default function AdminScrapingPortal() {
                   className="rounded-xl"
                 >
                   {addingUrl ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="w-6 h-6 mr-2 animate-spin" />
                   ) : (
-                    <Plus className="w-4 h-4 mr-2" />
+                    <Plus className="w-6 h-6 mr-2" />
                   )}
                   Add
                 </Button>
@@ -520,7 +520,7 @@ export default function AdminScrapingPortal() {
               <div className="space-y-2 max-h-[300px] overflow-y-auto">
                 {loadingSources ? (
                   <div className="flex items-center justify-center py-8">
-                    <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                    <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
                   </div>
                 ) : sources.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
@@ -537,7 +537,7 @@ export default function AdminScrapingPortal() {
                       className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/50"
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <ExternalLink className="w-4 h-4 text-muted-foreground shrink-0" />
+                        <ExternalLink className="w-6 h-6 text-muted-foreground shrink-0" />
                         <span className="text-sm truncate">{source.url}</span>
                       </div>
                       <Button
@@ -546,7 +546,7 @@ export default function AdminScrapingPortal() {
                         className="h-8 w-8 text-destructive/60 hover:text-destructive"
                         onClick={() => handleRemoveSource(source.url)}
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-6 h-6" />
                       </Button>
                     </motion.div>
                   ))
@@ -561,7 +561,7 @@ export default function AdminScrapingPortal() {
           <Card className="glass rounded-2xl border-border/50 h-full">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-primary" />
+                <TrendingUp className="w-6 h-6 text-primary" />
                 Top Tech Stack Combinations
               </CardTitle>
               <CardDescription>
@@ -620,7 +620,7 @@ export default function AdminScrapingPortal() {
             <Card className="glass rounded-2xl border-border/50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-primary" />
+                  <Clock className="w-6 h-6 text-primary" />
                   Latest Scrape Results
                 </CardTitle>
                 <CardDescription>
@@ -654,9 +654,9 @@ export default function AdminScrapingPortal() {
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
                         {result.status === "success" ? (
-                          <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
+                          <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
                         ) : (
-                          <XCircle className="w-4 h-4 text-red-500 shrink-0" />
+                          <XCircle className="w-6 h-6 text-red-500 shrink-0" />
                         )}
                         <div className="min-w-0">
                           <p className="text-sm font-medium truncate">{result.title || result.url}</p>
@@ -686,7 +686,7 @@ export default function AdminScrapingPortal() {
           <Card className="glass rounded-2xl border-border/50">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Layers className="w-5 h-5 text-primary" />
+                <Layers className="w-6 h-6 text-primary" />
                 All Technologies ({trendData.all_technologies.length})
               </CardTitle>
               <CardDescription>

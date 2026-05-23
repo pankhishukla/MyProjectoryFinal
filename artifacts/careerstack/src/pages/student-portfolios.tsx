@@ -80,7 +80,7 @@ export default function StudentPortfolios() {
         <CardHeader className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex items-center gap-2">
             <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Filter className="w-4 h-4 text-primary" />
+              <Filter className="w-6 h-6 text-primary" />
             </div>
             <div>
               <CardTitle className="text-lg">Filter & Sort</CardTitle>
@@ -165,7 +165,7 @@ export default function StudentPortfolios() {
                 </div>
                 {selectedTechs.length > 0 && portfolio.combinedTechScore !== null && (
                   <div className="flex items-center gap-2 text-sm text-primary">
-                    <Sparkles className="w-4 h-4" />
+                    <Sparkles className="w-6 h-6" />
                     Score: {portfolio.combinedTechScore} for {selectedTechs.join(" + ")}
                   </div>
                 )}

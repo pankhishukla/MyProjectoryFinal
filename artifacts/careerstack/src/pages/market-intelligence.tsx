@@ -209,7 +209,7 @@ export default function MarketIntelligence() {
           <CardHeader className="pb-2">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Trophy className="w-5 h-5 text-primary" />
+                <Trophy className="w-6 h-6 text-primary" />
               </div>
               <div>
                 <CardTitle className="text-xl">Top 3 Trending Tech Stacks in Market</CardTitle>
@@ -305,7 +305,7 @@ export default function MarketIntelligence() {
             <Card className="glass rounded-2xl border-border/50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-primary" />
+                  <BarChart3 className="w-6 h-6 text-primary" />
                   Technology Frequency Distribution
                 </CardTitle>
                 <CardDescription>Top 10 most in-demand technologies across all scraped postings</CardDescription>
@@ -353,7 +353,7 @@ export default function MarketIntelligence() {
             <Card className="glass rounded-2xl border-border/50 h-full">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <ArrowUp className="w-5 h-5 text-green-500" />
+                  <ArrowUp className="w-6 h-6 text-green-500" />
                   Top Technologies
                 </CardTitle>
               </CardHeader>

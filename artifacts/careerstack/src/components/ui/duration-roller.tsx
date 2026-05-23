@@ -127,7 +127,7 @@ export function DurationRoller({
           onClick={() => onChange(Math.max(min, value - step))}
           disabled={value <= min}
         >
-          <ChevronUp className="w-4 h-4" />
+          <ChevronUp className="w-6 h-6" />
         </Button>
         <Button
           type="button"
@@ -136,7 +136,7 @@ export function DurationRoller({
           onClick={() => onChange(Math.min(max, value + step))}
           disabled={value >= max}
         >
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown className="w-6 h-6" />
         </Button>
       </div>
 

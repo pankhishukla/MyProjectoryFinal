@@ -35,7 +35,7 @@ export default function Jobs() {
       {jobMatches && jobMatches.length > 0 && (
         <section>
           <h2 className="text-xl font-bold mb-4 flex items-center">
-            <Sparkles className="w-5 h-5 text-primary mr-2" />
+            <Sparkles className="w-6 h-6 text-primary mr-2" />
             Top Matches For You
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -56,8 +56,8 @@ export default function Jobs() {
                   <CardHeader className="pb-2 pr-24">
                     <CardTitle className="text-xl">{match.job.title}</CardTitle>
                     <div className="flex items-center text-muted-foreground mt-1 gap-4 text-sm">
-                      <span className="flex items-center"><Building className="w-4 h-4 mr-1.5" />{match.job.company}</span>
-                      {match.job.location && <span className="flex items-center"><MapPin className="w-4 h-4 mr-1.5" />{match.job.location}</span>}
+                      <span className="flex items-center"><Building className="w-6 h-6 mr-1.5" />{match.job.company}</span>
+                      {match.job.location && <span className="flex items-center"><MapPin className="w-6 h-6 mr-1.5" />{match.job.location}</span>}
                     </div>
                   </CardHeader>
                   <CardContent className="flex-1 pb-4">
@@ -118,9 +118,9 @@ export default function Jobs() {
                   <div className="flex-1">
                     <h3 className="text-lg font-bold">{job.title}</h3>
                     <div className="flex flex-wrap items-center text-muted-foreground mt-1.5 gap-y-1 gap-x-4 text-sm">
-                      <span className="flex items-center"><Building className="w-4 h-4 mr-1.5" />{job.company}</span>
-                      {job.location && <span className="flex items-center"><MapPin className="w-4 h-4 mr-1.5" />{job.location}</span>}
-                      {job.experience && <span className="flex items-center"><Briefcase className="w-4 h-4 mr-1.5" />{job.experience}</span>}
+                      <span className="flex items-center"><Building className="w-6 h-6 mr-1.5" />{job.company}</span>
+                      {job.location && <span className="flex items-center"><MapPin className="w-6 h-6 mr-1.5" />{job.location}</span>}
+                      {job.experience && <span className="flex items-center"><Briefcase className="w-6 h-6 mr-1.5" />{job.experience}</span>}
                       <span className="flex items-center text-xs opacity-70"><Clock className="w-3 h-3 mr-1" />{formatDistanceToNow(new Date(job.postedAt), { addSuffix: true })}</span>
                     </div>
                     <div className="flex flex-wrap gap-1.5 mt-3">

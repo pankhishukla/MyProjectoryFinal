@@ -175,7 +175,7 @@ export default function PublicPortfolioPage({ mode }: PublicPortfolioPageProps) 
             <div />
           )}
           <Button variant="outline" size="sm" onClick={handleDownloadPdf} disabled={isGeneratingPdf} className="gap-2">
-            {isGeneratingPdf ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+            {isGeneratingPdf ? <Loader2 className="w-6 h-6 animate-spin" /> : <Download className="w-6 h-6" />}
             {isGeneratingPdf ? "Generating..." : "Download PDF"}
           </Button>
         </div>
@@ -204,7 +204,7 @@ export default function PublicPortfolioPage({ mode }: PublicPortfolioPageProps) 
           <Card className="glass rounded-2xl border-border/50">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
-                <Sparkles className="w-4 h-4 text-primary" />
+                <Sparkles className="w-6 h-6 text-primary" />
                 Skills Snapshot
               </CardTitle>
             </CardHeader>
@@ -257,14 +257,14 @@ export default function PublicPortfolioPage({ mode }: PublicPortfolioPageProps) 
                       {project.githubLink && (
                         <Button asChild variant="outline" size="sm" className="gap-2">
                           <a href={project.githubLink} target="_blank" rel="noreferrer">
-                            <Github className="w-4 h-4" /> GitHub
+                            <Github className="w-6 h-6" /> GitHub
                           </a>
                         </Button>
                       )}
                       {project.liveLink && (
                         <Button asChild variant="secondary" size="sm" className="gap-2">
                           <a href={project.liveLink} target="_blank" rel="noreferrer">
-                            <ExternalLink className="w-4 h-4" /> Live
+                            <ExternalLink className="w-6 h-6" /> Live
                           </a>
                         </Button>
                       )}
@@ -277,7 +277,7 @@ export default function PublicPortfolioPage({ mode }: PublicPortfolioPageProps) 
         </section>
 
           <footer className="text-sm text-muted-foreground text-center py-6">
-            Built with MyProjectory
+            Built with myProjectory
           </footer>
         </div>
       </div>

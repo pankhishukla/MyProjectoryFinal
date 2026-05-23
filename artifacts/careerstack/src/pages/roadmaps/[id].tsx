@@ -134,7 +134,7 @@ export default function RoadmapDetail() {
       {/* Header */}
       <div className="flex items-center space-x-4 mb-2">
         <Link href="/roadmaps" className="inline-flex items-center justify-center rounded-xl p-2 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-6 h-6" />
         </Link>
         <div className="flex-1">
           <h1 className="text-3xl font-bold tracking-tight">{roadmap.technology} Roadmap</h1>
@@ -187,11 +187,11 @@ export default function RoadmapDetail() {
                 isCompleted ? "bg-green-500" : isInProgress ? "bg-yellow-500" : "bg-muted"
               )}>
                 {isCompleted ? (
-                  <CheckCircle2 className="w-5 h-5 text-white" />
+                  <CheckCircle2 className="w-6 h-6 text-white" />
                 ) : isInProgress ? (
-                  <MilestoneIcon className="w-5 h-5 text-white" />
+                  <MilestoneIcon className="w-6 h-6 text-white" />
                 ) : (
-                  <Circle className="w-5 h-5 text-muted-foreground" />
+                  <Circle className="w-6 h-6 text-muted-foreground" />
                 )}
               </div>
 

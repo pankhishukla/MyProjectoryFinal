@@ -86,7 +86,7 @@ export default function JobsPage() {
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Filter className="w-4 h-4" />
+                  <Filter className="w-6 h-6" />
                   Filters
                 </CardTitle>
                 <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 px-2 text-xs font-normal">
@@ -117,7 +117,7 @@ export default function JobsPage() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Location</label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground" />
                   <Input 
                     placeholder="Remote, City..." 
                     className="pl-9 bg-background/50"
@@ -130,7 +130,7 @@ export default function JobsPage() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Key Skills</label>
                 <div className="relative">
-                  <Sparkles className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Sparkles className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground" />
                   <Input 
                     placeholder="React, Java..." 
                     className="pl-9 bg-background/50"
@@ -170,7 +170,7 @@ export default function JobsPage() {
               <span>Showing {data.jobs.length} relevant positions</span>
             )}
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
+              <Clock className="w-6 h-6" />
               <span>Real-time market sync</span>
             </div>
           </div>
@@ -218,11 +218,11 @@ export default function JobsPage() {
                               <h3 className="text-xl font-bold group-hover:text-primary transition-colors line-clamp-1">{job.title}</h3>
                               <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-sm text-muted-foreground">
                                 <span className="flex items-center gap-1.5">
-                                  <Building2 className="w-4 h-4" />
+                                  <Building2 className="w-6 h-6" />
                                   {job.company}
                                 </span>
                                 <span className="flex items-center gap-1.5">
-                                  <MapPin className="w-4 h-4" />
+                                  <MapPin className="w-6 h-6" />
                                   {job.location}
                                 </span>
                               </div>
@@ -240,7 +240,7 @@ export default function JobsPage() {
                               </div>
                             </div>
                             <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full border border-border group-hover:bg-primary group-hover:border-primary group-hover:text-primary-foreground transition-all">
-                              <ChevronRight className="w-5 h-5" />
+                              <ChevronRight className="w-6 h-6" />
                             </div>
                           </div>
                         </CardContent>
@@ -261,7 +261,7 @@ export default function JobsPage() {
                 className="gap-2"
               >
                 Load More
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-6 h-6" />
               </Button>
             </div>
           )}

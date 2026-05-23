@@ -72,7 +72,7 @@ export default function JobDetailPage() {
         className="mb-6 -ml-2 text-muted-foreground hover:text-foreground"
         onClick={() => setLocation("/jobs")}
       >
-        <ArrowLeft className="w-4 h-4 mr-2" />
+        <ArrowLeft className="w-6 h-6 mr-2" />
         Back to Jobs
       </Button>
 
@@ -98,7 +98,7 @@ export default function JobDetailPage() {
               <div className="flex flex-wrap items-center gap-6 text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center">
-                    <Building2 className="w-5 h-5" />
+                    <Building2 className="w-6 h-6" />
                   </div>
                   <div>
                     <div className="text-foreground font-semibold">{job.company}</div>
@@ -107,7 +107,7 @@ export default function JobDetailPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center">
-                    <MapPin className="w-5 h-5" />
+                    <MapPin className="w-6 h-6" />
                   </div>
                   <div>
                     <div className="text-foreground font-semibold">{job.location}</div>
@@ -129,7 +129,7 @@ export default function JobDetailPage() {
                 
                 <div className="mt-10 space-y-4">
                   <h3 className="font-bold flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-primary" />
+                    <CheckCircle2 className="w-6 h-6 text-primary" />
                     Key Requirements & Skills
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -155,7 +155,7 @@ export default function JobDetailPage() {
                   onClick={() => window.open(job.sourceUrl, "_blank")}
                 >
                   Apply on Original Site
-                  <ExternalLink className="w-4 h-4" />
+                  <ExternalLink className="w-6 h-6" />
                 </Button>
                 <Button 
                   variant="outline" 
@@ -164,15 +164,15 @@ export default function JobDetailPage() {
                   disabled={saveMutation.isPending}
                 >
                   {saveMutation.isPending ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-6 h-6 animate-spin" />
                   ) : job.isSaved ? (
                     <>
-                      <BookmarkCheck className="w-4 h-4 text-primary fill-primary" />
+                      <BookmarkCheck className="w-6 h-6 text-primary fill-primary" />
                       Saved
                     </>
                   ) : (
                     <>
-                      <Bookmark className="w-4 h-4" />
+                      <Bookmark className="w-6 h-6" />
                       Save Job
                     </>
                   )}
@@ -184,14 +184,14 @@ export default function JobDetailPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-6 h-6" />
                     Posted At:
                   </span>
                   <span className="font-medium">{format(new Date(job.postedAt), "MMM d, yyyy")}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
+                    <Sparkles className="w-6 h-6" />
                     Source:
                   </span>
                   <span className="font-medium text-primary">Adzuna Sync</span>
@@ -206,7 +206,7 @@ export default function JobDetailPage() {
                   className="w-full justify-start text-muted-foreground h-9 px-2 hover:bg-muted/30"
                   onClick={handleShare}
                 >
-                  <Share2 className="w-4 h-4 mr-2" />
+                  <Share2 className="w-6 h-6 mr-2" />
                   Share Job Listing
                 </Button>
               </div>
