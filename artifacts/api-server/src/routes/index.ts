@@ -12,6 +12,7 @@ import analysisRouter from "./analysis";
 import stacksRouter from "./stacks";
 import jobListingsRouter from "./job-listings";
 import jobIntelligenceRouter from "./job-intelligence";
+import waitlistRouter from "./waitlist";
 
 const router: IRouter = Router();
 
@@ -28,5 +29,6 @@ router.use(domainsRouter);
 router.use(portfolioRouter);
 router.use(analysisRouter);
 router.use(stacksRouter);
+router.use(waitlistRouter);
 
 export default router;

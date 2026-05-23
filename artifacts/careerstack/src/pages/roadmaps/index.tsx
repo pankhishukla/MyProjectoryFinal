@@ -438,64 +438,67 @@ export default function Roadmaps() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
                 >
-                  <Card className="h-full flex flex-col glass rounded-2xl border-border/50 hover-elevate transition-all cursor-pointer group">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 text-primary font-bold text-lg">
-                          {roadmap.technology.charAt(0).toUpperCase()}
+                    <Card 
+                      className="h-full flex flex-col glass rounded-2xl border-border/50 hover-elevate transition-all cursor-pointer group"
+                      onClick={() => setLocation(`/roadmaps/${roadmap.id}`)}
+                    >
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 text-primary font-bold text-lg">
+                            {roadmap.technology.charAt(0).toUpperCase()}
+                          </div>
+                          <div className="flex gap-1">
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button type="button" onClick={(e) => e.stopPropagation()} className="p-1.5 rounded-lg hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors">
+                                  <Info className="w-4 h-4" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="max-w-[250px] text-sm">
+                                <p className="font-semibold mb-1">Why {roadmap.technology}?</p>
+                                <p className="text-xs">{getStackDescription(roadmap.technology)}</p>
+                              </TooltipContent>
+                            </Tooltip>
+  
+                            <button 
+                              type="button" 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteRoadmap(roadmap.id, roadmap.technology);
+                              }}
+                              disabled={deletingId === roadmap.id}
+                              className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                            >
+                              {deletingId === roadmap.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex gap-1">
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button type="button" className="p-1.5 rounded-lg hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors">
-                                <Info className="w-4 h-4" />
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent side="top" className="max-w-[250px] text-sm">
-                              <p className="font-semibold mb-1">Why {roadmap.technology}?</p>
-                              <p className="text-xs">{getStackDescription(roadmap.technology)}</p>
-                            </TooltipContent>
-                          </Tooltip>
-
-                          <button 
-                            type="button" 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteRoadmap(roadmap.id, roadmap.technology);
-                            }}
-                            disabled={deletingId === roadmap.id}
-                            className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-                          >
-                            {deletingId === roadmap.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                          </button>
+                        <Link href={`/stacks/${roadmap.id}`} onClick={(e) => e.stopPropagation()}>
+                          <CardTitle className="text-xl group-hover:text-primary transition-colors cursor-pointer inline-block">
+                            {roadmap.technology}
+                          </CardTitle>
+                        </Link>
+                      </CardHeader>
+                      <CardContent className="flex-1">
+                        <div className="flex justify-between text-sm mb-2 text-muted-foreground">
+                          <span>{roadmap.completedMilestones} of {roadmap.totalMilestones} milestones</span>
+                          <span className="font-medium text-foreground">{roadmap.progressPercent}%</span>
                         </div>
-                      </div>
-                      <Link href={`/stacks/${roadmap.id}`}>
-                        <CardTitle className="text-xl group-hover:text-primary transition-colors cursor-pointer">
-                          {roadmap.technology}
-                        </CardTitle>
-                      </Link>
-                    </CardHeader>
-                    <CardContent className="flex-1">
-                      <div className="flex justify-between text-sm mb-2 text-muted-foreground">
-                        <span>{roadmap.completedMilestones} of {roadmap.totalMilestones} milestones</span>
-                        <span className="font-medium text-foreground">{roadmap.progressPercent}%</span>
-                      </div>
-                      <Progress value={roadmap.progressPercent} className="h-2" />
-                    </CardContent>
-                    <CardFooter className="pt-4 border-t border-border/50 bg-muted/20 flex justify-between text-xs text-muted-foreground">
-                      <span>Started {formatDistanceToNow(new Date(roadmap.createdAt), { addSuffix: true })}</span>
-                      <div className="flex items-center gap-2">
-                        <Link href={`/stacks/${roadmap.id}`} className="flex items-center gap-1 text-primary hover:underline font-medium">
-                          <Layers className="w-3.5 h-3.5" />
-                          Stack Detail
-                        </Link>
-                        <Link href={`/roadmaps/${roadmap.id}`}>
-                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                      </div>
-                    </CardFooter>
-                  </Card>
+                        <Progress value={roadmap.progressPercent} className="h-2" />
+                      </CardContent>
+                      <CardFooter className="pt-4 border-t border-border/50 bg-muted/20 flex justify-between text-xs text-muted-foreground">
+                        <span>Started {formatDistanceToNow(new Date(roadmap.createdAt), { addSuffix: true })}</span>
+                        <div className="flex items-center gap-2">
+                          <Link href={`/stacks/${roadmap.id}`} onClick={(e) => e.stopPropagation()} className="flex items-center gap-1 text-primary hover:underline font-medium p-1">
+                            <Layers className="w-3.5 h-3.5" />
+                            Stack Detail
+                          </Link>
+                          <Link href={`/roadmaps/${roadmap.id}`} onClick={(e) => e.stopPropagation()} className="p-2 -mr-2 cursor-pointer inline-block">
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          </Link>
+                        </div>
+                      </CardFooter>
+                    </Card>
                 </motion.div>
               ))}
             </div>

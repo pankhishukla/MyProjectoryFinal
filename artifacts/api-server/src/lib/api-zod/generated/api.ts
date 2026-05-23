@@ -314,7 +314,7 @@ export const GetRoadmapResponse = zod.object({
           id: zod.number(),
           milestoneId: zod.number(),
           title: zod.string(),
-          completed: zod.boolean(),
+          completed: zod.coerce.boolean(),
         }),
       ),
     }),
@@ -334,7 +334,7 @@ export const ToggleTaskResponse = zod.object({
   id: zod.number(),
   milestoneId: zod.number(),
   title: zod.string(),
-  completed: zod.boolean(),
+  completed: zod.coerce.boolean(),
 });
 
 /**

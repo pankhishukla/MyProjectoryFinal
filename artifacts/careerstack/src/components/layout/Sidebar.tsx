@@ -40,9 +40,7 @@ export function Sidebar() {
     <aside className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 border-r border-border bg-card/50 backdrop-blur-xl glass">
       <div className="flex flex-col h-full px-4 py-6">
         <div className="flex items-center space-x-2 mb-10 px-2">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-xl">V</span>
-          </div>
+          <img src="/logo.png" alt="MyProjectory Logo" className="w-8 h-auto rounded-md" />
           <span className="text-xl font-bold tracking-tight text-foreground">MyProjectory</span>
         </div>
 

@@ -194,17 +194,20 @@ router.get("/roadmaps/:id", requireAuth, async (req, res): Promise<void> => {
     return {
       ...ms,
       status,
-      tasks,
+      // Convert MySQL tinyint (0/1) to boolean for Zod validation
+      tasks: tasks.map(t => ({ ...t, completed: Boolean(t.completed) })),
     };
   }));
 
-  res.json(GetRoadmapResponse.parse({
+  const responsePayload = {
     id: roadmap.id,
     userId: roadmap.userId,
     technology: roadmap.technology,
     milestones: milestonesWithTasks,
     createdAt: roadmap.createdAt.toISOString(),
-  }));
+  };
+
+  res.json(GetRoadmapResponse.parse(responsePayload));
 });
 
 router.patch("/roadmaps/:roadmapId/tasks/:taskId/toggle", requireAuth, async (req, res): Promise<void> => {
@@ -318,7 +321,7 @@ router.patch("/roadmaps/:roadmapId/tasks/:taskId/toggle", requireAuth, async (re
     console.error("Error syncing roadmap completion to user skills:", syncErr);
   }
 
-  res.json(ToggleTaskResponse.parse(updated));
+  res.json(ToggleTaskResponse.parse({ ...updated, completed: Boolean(updated.completed) }));
 });
 
 router.delete("/roadmaps/:id", requireAuth, async (req, res): Promise<void> => {

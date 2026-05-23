@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coming Soon | MyProjectory</title>
+  <meta name="description" content="MyProjectory is launching soon. A smart workspace for students to build, evaluate, and showcase developer portfolios.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --orange: hsl(25, 90%, 55%);
+      --orange-light: hsl(25, 90%, 96%);
+      --orange-hover: hsl(25, 90%, 48%);
+      --white: #ffffff;
+      --bg: hsl(240, 20%, 98%);
+      --text: hsl(240, 10%, 10%);
+      --text-muted: hsl(240, 5%, 45%);
+      --border: hsl(240, 10%, 90%);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ─── Page wrapper — true vertical + horizontal center ─────────── */
+    .page {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* ─── Logo ─────────────────────────────────────────────────────── */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .brand img {
+      width: 38px;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .brand span {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    /* ─── Badge ────────────────────────────────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      background: var(--orange-light);
+      color: var(--orange);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 1.75rem;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--orange);
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ─── Heading ──────────────────────────────────────────────────── */
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 .accent {
+      color: var(--orange);
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 400px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ─── Form ─────────────────────────────────────────────────────── */
+    .form {
+      width: 100%;
+      margin-bottom: 2.5rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .input-row input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-row input::placeholder {
+      color: hsl(240, 5%, 65%);
+    }
+
+    .input-row input:focus {
+      border-color: var(--orange);
+    }
+
+    .input-row button {
+      padding: 0.75rem 1.35rem;
+      border-radius: 10px;
+      border: none;
+      background: var(--orange);
+      color: white;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .input-row button:hover {
+      background: var(--orange-hover);
+    }
+
+    .msg {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      min-height: 20px;
+      font-weight: 500;
+    }
+
+    .msg--ok  { color: hsl(160, 60%, 40%); }
+    .msg--err { color: hsl(0, 70%, 55%); }
+
+    /* ─── Divider ──────────────────────────────────────────────────── */
+    .divider {
+      width: 36px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--orange);
+      opacity: 0.4;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ─── Socials ──────────────────────────────────────────────────── */
+    .socials {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .soc {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .soc svg {
+      width: 15px;
+      height: 15px;
+      fill: currentColor;
+    }
+
+    .soc:hover {
+      color: var(--orange);
+      border-color: var(--orange);
+    }
+
+    /* ─── Footer ───────────────────────────────────────────────────── */
+    .footer {
+      font-size: 0.72rem;
+      color: hsl(240, 5%, 70%);
+    }
+
+    /* ─── Responsive ───────────────────────────────────────────────── */
+    @media (max-width: 520px) {
+      h1 { font-size: 2.25rem; }
+      .subtitle { font-size: 0.9rem; }
+
+      .input-row {
+        flex-direction: column;
+      }
+
+      .input-row button {
+        width: 100%;
+        padding: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+
+    <!-- Brand -->
+    <div class="brand">
+      <img src="Logo.png" alt="MyProjectory Logo">
+      <span>MyProjectory</span>
+    </div>
+
+    <!-- Badge -->
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Under Development
+    </div>
+
+    <!-- Heading -->
+    <h1>Coming <span class="accent">Soon!</span></h1>
+    <p class="subtitle">We're building a workspace for students to build, evaluate, and showcase outstanding developer portfolios.</p>
+
+    <!-- Email Form -->
+    <form class="form" id="form">
+      <div class="input-row">
+        <input type="email" placeholder="Your email for early access" required id="email">
+        <button type="submit">Notify Me</button>
+      </div>
+      <div class="msg" id="msg"></div>
+    </form>
+
+    <!-- Divider -->
+    <div class="divider"></div>
+
+    <!-- Socials -->
+    <div class="socials">
+      <a href="#" class="soc" aria-label="GitHub">
+        <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      </a>
+      <a href="#" class="soc" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+      </a>
+      <a href="#" class="soc" aria-label="X / Twitter">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">&copy; 2026 MyProjectory. All rights reserved.</div>
+
+  </div>
+
+  <script>
+    document.getElementById('form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const msg = document.getElementById('msg');
+      const emailInput = document.getElementById('email');
+      
+      msg.textContent = 'Sending…';
+      msg.className = 'msg';
+      
+      try {
+        const response = await fetch('http://localhost:3000/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailInput.value.trim() })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          msg.textContent = '✓ You\'re on the list!';
+          msg.className = 'msg msg--ok';
+          emailInput.value = '';
+        } else {
+          msg.textContent = data.message || 'Something went wrong. Please try again.';
+          msg.className = 'msg msg--err';
+        }
+      } catch (err) {
+        msg.textContent = 'Failed to connect. Please try again later.';
+        msg.className = 'msg msg--err';
+      }
+    });
+  </script>
+
+</body>
+</html>

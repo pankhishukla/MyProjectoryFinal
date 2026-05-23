@@ -12,3 +12,4 @@ export * from "./job_listings";
 export * from "./user_saved_jobs";
 export * from "./trends";
 export * from "./scraped_jobs";
+export * from "./waitlist";
