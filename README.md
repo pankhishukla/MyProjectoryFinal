@@ -8,7 +8,7 @@ A full-stack web platform that helps fresh graduates build, track, and showcase 
 - **Frontend**: React + Vite + Tailwind CSS + ShadCN UI + Framer Motion + Recharts
 - **Backend**: Express 5 + Node.js
 - **Database**: PostgreSQL + Drizzle ORM
-- **Authentication**: Clerk
+-- **Authentication**: Custom header-based (Clerk removed)
 - **Validation**: Zod, drizzle-zod
 - **API Codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle for backend)
@@ -43,12 +43,7 @@ copy .env.example .env
 cp .env.example .env
 ```
 
-Edit `.env` and fill in your Clerk API keys (get them from [Clerk Dashboard](https://dashboard.clerk.com)):
-
-```env
-CLERK_SECRET_KEY=sk_test_your_key_here
-VITE_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
-```
+Edit `.env` and provide `DATABASE_URL` and optional header-based auth keys for non-production testing.
 
 ### 3. Start PostgreSQL (Docker)
 

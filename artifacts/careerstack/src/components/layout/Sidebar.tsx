@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { UserButton, useUser } from "@clerk/react";
+import { UserButton, useUser } from "../../lib/fakeClerk";
 import { 
   LayoutDashboard, 
   Briefcase, 

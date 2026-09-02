@@ -9,7 +9,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@clerk/express": "^2.0.11",
+    "@clerk/backend": "^3.16.9",
     "axios": "^1.15.0",
     "cheerio": "^1.0.0",
     "cookie-parser": "^1.4.7",
@@ -17,6 +17,8 @@
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.1",
     "drizzle-zod": "^0.8.3",
+    "esbuild": "0.25.8",
+    "esbuild-plugin-pino": "2.3.3",
     "express": "^5.1.0",
     "http-proxy-middleware": "^3.0.5",
     "mysql2": "^3.9.9",
@@ -25,10 +27,9 @@
     "pino-http": "^10.5.0",
     "pino-pretty": "^13.1.1",
     "playwright": "^1.42.1",
+    "serpapi": "^2.2.1",
     "thread-stream": "3.1.0",
-    "zod": "^3.25.76",
-    "esbuild": "0.25.8",
-    "esbuild-plugin-pino": "2.3.3"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",

@@ -1,7 +1,6 @@
 import { Router, type IRouter } from "express";
 import { eq, and, sql } from "drizzle-orm";
 import { randomUUID } from "crypto";
-import { clerkClient } from "@clerk/express";
 import {
   db,
   usersTable,
@@ -47,17 +46,16 @@ async function getOrCreateUserId(clerkId: string): Promise<number | null> {
     return userId;
   }
 
+  // Clerk is no longer used. Create a basic user record using the clerkId as an identifier.
   try {
-    const clerkUser = await clerkClient.users.getUser(clerkId);
-    const name = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ") || "User";
-    const email = clerkUser.emailAddresses[0]?.emailAddress ?? "";
-    // MySQL doesn't support .returning() — insert then select
+    const name = "User";
+    const email = "";
     await db.insert(usersTable).values({ clerkId, name, email });
     const userId = await getUserId(clerkId);
-    logger.info({ clerkId }, "Auto-created user profile from Clerk data");
+    logger.info({ clerkId, userId }, "Auto-created user profile");
     return userId;
   } catch (err) {
-    logger.error({ clerkId, err }, "Failed to auto-create user from Clerk data");
+    logger.error({ clerkId, err }, "Failed to auto-create user");
     return null;
   }
 }

@@ -1,0 +1,128 @@
+/**
+ * Created by caoxp on 2015/6/16.
+ */
+
+var pool = require('odbc-pool');
+var sysconfig = require('../config/sys.config');
+var util = require('util');
+
+
+var p = new pool({
+    min:1,
+    max:3
+});
+var conn = sysconfig.dbconnstr;
+
+exports.daohelper = {
+    query:function(sql,callback){
+        if(!sql){
+            console.log('query方法中参数sql为空');
+            callback(new Error('query方法中参数sql为空'));
+            return;
+        }
+        try{
+            p.open(conn,function(er,client){
+                if(er){
+                    console.error(er.message);
+                    callback(er);
+                    return;
+                }
+                client.query(sql,function(e,data){
+                    callback(e,data);
+                    client.close();
+                });
+            })
+        }catch (ex){
+            console.error(ex.message);
+            callback(ex);
+        }
+
+    },
+    queryPageCount:function(sql,cb){
+        if(!sql){
+            console.log('query方法中参数sql为空');
+            callback(new Error('query方法中参数sql为空'));
+            return;
+        }
+        sql = util.format('select count(1) count from (%s) A',sql);
+        this.query(sql,cb);
+    },
+    queryPage:function(sql,primarykey,page,rowSize,cb){
+        if(!sql){
+            console.log('query方法中参数sql为空');
+            callback(new Error('query方法中参数sql为空'));
+            return;
+        }
+        //sql = util.format('select A.* from (%s) A offset %d limit %d',sql,(page-1)*rowSize,rowSize);
+        sql = util.format('%s  offset %d limit %d',sql,(page-1)*rowSize,rowSize);
+        this.query(sql,cb);
+    },
+    queryNoRecord:function(sql,callback){
+        if(!sql){
+            console.log('queryNoRecord方法中参数sql为空');
+            callback(new Error('queryNoRecord方法中参数sql为空'));return;
+        }
+        try{
+            p.open(conn,function(er,client){
+                if(er){
+                    console.error(er.message);
+                    callback(er);
+                    return;
+                }
+                client.prepare(sql,function(e,stat){
+                    if(e){
+                        console.error(e.message);
+                        callback(e);return;
+                    }
+                    stat.executeNonQuery(function(e,result){
+                        if(e){
+                            console.error(e.message);
+                            return callback(e);
+                        }
+                        result.close();
+                        client.close();
+                    })
+                })
+            })
+
+        }catch(ex){
+            console.error(ex.message);
+            callback(ex);
+        }
+    },
+    queryTransaction:function(sqls,callback){
+        if(!sqls){
+            console.log('queryTransaction方法中参数sql为空');
+            callback(new Error('queryTransaction方法中参数sql为空'));return;
+        }
+        p.open(conn,function(er,client){
+            if(er){
+                console.error(er.message);
+                callback(er);
+                return;
+            }
+            client.beginTransaction(function(e){
+                if(e){
+                    console.error(e.message);
+                    return client.closeSync();
+                }
+                try{
+                    sqls.forEach(function(item){
+                        client.querySync(item);
+                    })
+                    client.commitTransactionSync();
+                    client.closeSync();
+
+                }catch(ee){
+                    console.error(ee.message);
+                    client.rollbackTransactionSync();
+                    client.closeSync();
+                }
+
+
+            })
+        })
+    }
+
+};
+

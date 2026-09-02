@@ -1,0 +1,35 @@
+==============================sql配置信息============
+
+{
+  "module": "m1",   //模块ID
+  "flag": "vertical", //数据库标示
+  "configs": [  //具体的数据查询配置
+    {
+      "key": "0_1",//唯一值，方法名称
+      "config": {
+        "parameters": [ //sql中参数配置
+          {
+            "name": "starttime", //接口传递过来的参数名称
+            "columnname": "requesttime",//数据库中列的名称
+            "type":"date", //数据转换类型，分为date,string,int,float,projects
+            "format": "yyyy-MM-dd,yyyy-MM-dd HH",//条件格式化，float时，为2,3,4等精度
+            "conditionid": "c0",//sql文本中的条件占位符名称,sql中是[@c0]
+            "symbol":">="  //操作符标示 分为 =,>,>=,<,<=,in
+          },{
+                        "name": "preData",//此为本系统特殊的逻辑参数，此数据为项目列表数组，最终将循环组装sql后union all
+                        "columnname": "p_en",//项目编号，用来替换数据库表名称
+                        "type":"projects",//特殊类别
+                        "format": "",
+                        "conditionid": "c0",//条件占位符名称
+                        "symbol":""
+                      }
+        ],
+        "value": ""
+      }
+    }
+  ]
+}
+
+特殊参数类型：projects，循环遍历项目表，组装sql从不同的项目业务表中取数据；
+            giscolor，按照传递过来的gis颜色区间，根据指标(从传递过来的区间中item.name)值，返回不同的颜色值；
+

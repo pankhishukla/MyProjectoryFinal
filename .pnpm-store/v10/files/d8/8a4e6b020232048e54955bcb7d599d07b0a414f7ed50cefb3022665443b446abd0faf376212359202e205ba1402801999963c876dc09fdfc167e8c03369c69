@@ -1,0 +1,31 @@
+{
+  "module": "验证用户-创建cookie",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "validUser",
+      "desc": "验证用户-创建cookie",
+      "config": {
+        "parameters": [
+          {
+            "name": "username",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol": ""
+          },
+          {
+            "name": "password",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol": ""
+          }
+        ],
+        "value": "select u.id as uid,u.username as uname,u.password as pwd,r.roleid as roleid from lte_sys.T_BASE_SYS_USER u inner join lte_sys.T_BASE_SYS_USERROLE r on u.id=r.userid where u.username='[@c0]' and u.password='[@c1]' and isenabled='Y'"
+      }
+    }
+  ]
+}

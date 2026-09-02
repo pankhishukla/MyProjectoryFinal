@@ -1,0 +1,368 @@
+{
+  "module": "Videolistinfo.List",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "Videolistinfo1",
+      "desc": "客户感知-视频列表",
+      "config": {
+        "parameters": [
+             {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },{
+            "name": "city",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT * FROM LTE_SYS.[@c0]_T_TO_VIDEO where City='[@c1]' "
+      }
+    },
+    {
+      "key": "Videolistinfo1export",
+      "desc": "客户感知-视频列表导出",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "city",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT City,VideoType,UserCount,downflow,(Speedn+SDn)*100 as 'speedsd',HDn*100 as 'Hdn',Ultraclearn*100 as 'Ultraclearn',(Speed1+SD)*100 as 'speed',HD*100 as 'hd',Ultraclear*100 as 'Ultraclear',first_delay/(first_delay+first_delay25+first_delay58+first_delay8) as '2min',first_delay25/(first_delay+first_delay25+first_delay58+first_delay8) as '2-5min',first_delay58/(first_delay+first_delay25+first_delay58+first_delay8) as '5-8min',first_delay8/(first_delay+first_delay25+first_delay58+first_delay8) as '8min',SuccesscountAccounting as 'successa',downflow as 'downflow' FROM LTE_SYS.[@c0]_T_TO_VIDEO where City='[@c1]' "
+      }
+    },
+    {
+      "key": "VideolistinfoCity",
+      "desc": "地市-视频列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT * FROM lte_sys.T_BASE_CITY where CiTY_NO in(SELECT distinct City FROM LTE_SYS.[@c0]_T_TO_VIDEO)"
+      }
+    },
+    {
+      "key": "VideolistinfoMoreCity1",
+      "desc": "多地市-视频列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "mcity",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "videotype",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT b.CITYNAME,a.* FROM LTE_SYS.[@c0]_T_TO_VIDEO a left join lte_sys.T_BASE_CITY b on a.City=b.CITY_NO  where a.City in([@c1]) and a.VideoType in([@c2])"
+      }
+    }
+  ,
+    {
+      "key": "VideolistinfoMoreCityexport",
+      "desc": "多地市-视频列表导出",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "mcity",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "videotype",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT b.CITYNAME as cityname,City,VideoType,UserCount,Successcount,(Speedn+SDn)*100 as 'speedsd',HDn*100 as 'Hdn',Ultraclearn*100 as 'Ultraclearn',(Speed1+SD)*100 as 'speed',HD*100 as 'hd',Ultraclear*100 as 'Ultraclear',first_delay/(first_delay+first_delay25+first_delay58+first_delay8) as '2min',first_delay25/(first_delay+first_delay25+first_delay58+first_delay8) as '2-5min',first_delay58/(first_delay+first_delay25+first_delay58+first_delay8) as '5-8min',first_delay8/(first_delay+first_delay25+first_delay58+first_delay8) as '8min',SuccesscountAccounting as 'successa',downflow as 'downflow',CountdelayAccounting FROM LTE_SYS.[@c0]_T_TO_VIDEO a left join lte_sys.T_BASE_CITY b on a.City=b.CITY_NO  where a.City in([@c1]) and a.VideoType in([@c2])"
+      }
+    }
+  ,
+    {
+      "key": "VideoLevexport",
+      "desc": "多地市-视频列表-lev乐视视频",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "cityno",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "topnumber",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT CityID as City,imsi,imei,msisdn,ECI,Procedure_Start_Time as ProcedureStartTime,Procedure_End_Time as ProcedureEndTime,App_Type as AppType,App_Sub_type as AppSub_type,AppStatus,USER_IP as App_Server_IP_IPv4,downbytes as dl_flow_bytes,DL_IP_FRAG_PACKETS, http_waptatus as action_state, firsthttpresponddelay as first_res_delay, lasthttpresponddelay as last_res_delay,lastackresponddelay as last_ACK_delay,Host,USER_Agent as USERAgent,HTTP_content_type as ContentType,refer_URI as ReferURI FROM lte_sys.[@c0]_T_S1U_HTTP where  (App_Type=5 and App_Sub_type=14) or  host like '%letv%' or uri like '%letv-%' limit  ([@c2])"
+      }
+    }
+  ,
+    {
+      "key": "VideoCmvexport",
+      "desc": "多地市-视频列表-Cmv和视频",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "cityno",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "topnumber",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT CityID as City,imsi,imei,msisdn,ECI,Procedure_Start_Time as ProcedureStartTime,Procedure_End_Time as ProcedureEndTime,App_Type as AppType,App_Sub_type as AppSub_type,AppStatus,USER_IP as App_Server_IP_IPv4,downbytes as dl_flow_bytes,DL_IP_FRAG_PACKETS, http_waptatus as action_state, firsthttpresponddelay as first_res_delay, lasthttpresponddelay as last_res_delay,lastackresponddelay as last_ACK_delay,Host,USER_Agent as USERAgent,HTTP_content_type as ContentType,refer_URI as ReferURI FROM lte_sys.[@c0]_T_S1U_HTTP where  (App_Type=5 and App_Sub_type=2) or  host like '%cmvideo%' limit [@c2]"
+      }
+    }  ,
+    {
+      "key": "VideoYoukuexport",
+      "desc": "多地市-视频列表-优酷视频",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "cityno",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "topnumber",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT CityID as City,imsi,imei,msisdn,ECI,Procedure_Start_Time as ProcedureStartTime,Procedure_End_Time as ProcedureEndTime,App_Type as AppType,App_Sub_type as AppSub_type,AppStatus,USER_IP as App_Server_IP_IPv4,downbytes as dl_flow_bytes,DL_IP_FRAG_PACKETS, http_waptatus as action_state, firsthttpresponddelay as first_res_delay, lasthttpresponddelay as last_res_delay,lastackresponddelay as last_ACK_delay,Host,USER_Agent as USERAgent,HTTP_content_type as ContentType,refer_URI as ReferURI FROM lte_sys.[@c0]_T_S1U_HTTP where (App_Type=5 and App_Sub_type=3) or  host like '%.youku.%' or  host like '%.ykimg.%' or  host like '%.soku.%' or  User_Agent like '%.youku.%' or uri like '%/youku/%' limit ([@c2])"
+      }
+    }
+  ,
+    {
+      "key": "VideoSokuexport",
+      "desc": "多地市-视频列表-搜狐视频",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "cityno",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "topnumber",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT CityID as City,imsi,imei,msisdn,ECI,Procedure_Start_Time as ProcedureStartTime,Procedure_End_Time as ProcedureEndTime,App_Type as AppType,App_Sub_type as AppSub_type,AppStatus,USER_IP as App_Server_IP_IPv4,downbytes as dl_flow_bytes,DL_IP_FRAG_PACKETS, http_waptatus as action_state, firsthttpresponddelay as first_res_delay, lasthttpresponddelay as last_res_delay,lastackresponddelay as last_ACK_delay,Host,USER_Agent as USERAgent,HTTP_content_type as ContentType,refer_URI as ReferURI FROM lte_sys.[@c0]_T_S1U_HTTP where  (App_Type=5 and App_Sub_type=7) or  host like '%tv.sohu.%' or host like '%.hd.sohu.%' or host like '%vod.itc.cn%' or  URI like '%/sohu/%' or (host like '%photocdn.sohu.%' and URI like '%/tvmobile/%') or User_Agent like '%sohuvideo%' limit ([@c2])"
+      }
+    }
+  ,
+    {
+      "key": "VideoQqexport",
+      "desc": "多地市-视频列表-腾讯视频",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "cityno",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "topnumber",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT CityID as City,imsi,imei,msisdn,ECI,Procedure_Start_Time as ProcedureStartTime,Procedure_End_Time as ProcedureEndTime,App_Type as AppType,App_Sub_type as AppSub_type,AppStatus,USER_IP as App_Server_IP_IPv4,downbytes as dl_flow_bytes,DL_IP_FRAG_PACKETS, http_waptatus as action_state, firsthttpresponddelay as first_res_delay, lasthttpresponddelay as last_res_delay,lastackresponddelay as last_ACK_delay,Host,USER_Agent as USERAgent,HTTP_content_type as ContentType,refer_URI as ReferURI FROM lte_sys.[@c0]_T_S1U_HTTP where (App_Type=5 and App_Sub_type=6) or  host like '%.video.qq.%' or host like '%.v.qq.com%' or host like '%live.qq.com%' or   host  like '%live%qq.com%' or  host like '%video.dispatch.tc.qq.com%' or host like '%vkp.tc.qq.com%' or host like '%qqvideo.tc.qq.com%' or  (host like '%ugc.qpic.cn%' and URI like '%/tv/%') limit ([@c2])"
+      }
+    }
+  ,
+    {
+      "key": "VideoQiyiexport",
+      "desc": "多地市-视频列表-奇艺视频",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "cityno",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "topnumber",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT CityID as City,imsi,imei,msisdn,ECI,Procedure_Start_Time as ProcedureStartTime,Procedure_End_Time as ProcedureEndTime,App_Type as AppType,App_Sub_type as AppSub_type,AppStatus,USER_IP as App_Server_IP_IPv4,downbytes as dl_flow_bytes,DL_IP_FRAG_PACKETS, http_waptatus as action_state, firsthttpresponddelay as first_res_delay, lasthttpresponddelay as last_res_delay,lastackresponddelay as last_ACK_delay,Host,USER_Agent as USERAgent,HTTP_content_type as ContentType,refer_URI as ReferURI FROM lte_sys.[@c0]_T_S1U_HTTP where ((App_Type=5 and App_Sub_type=17) or host like '%.iqiyi.com%' or host like '%.qiyi.com%' or host like '%.qiyipic.com%' or URI like '%/videos/v1/%' or URI like '%/videos/v0/%' or URI like '%/videos/vip/%')  LIMIT ([@c2]) "
+      }
+    } ,
+    {
+      "key": "VideoTovideoAllExport",
+      "desc": "视频列表-中间表所有数据",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "cityno",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT * FROM LTE_SYS.[@c0]_T_TO_VIDEO"
+      }
+    }
+
+  ]
+}

@@ -1,0 +1,123 @@
+/**
+ * Created by caoxp on 2015/6/16.
+ * 统一数据接口，所有提取数据都从此接口提取
+ */
+var config = require('../../config/sys.config.js');
+var sqls = require('../../core/sqljson');
+var helper = (config.dbtype === 'mysql'?require('../../core/mysqldao').mysqlhelper:require('../../core/verticadao').daohelper) ;
+var _ = require('lodash');
+var async = require('async');
+var log = require('../../core/log')();
+
+module.exports = function (server) {
+    server.get('/data/:fun', function (req, res, next) {
+        var funname = req.params.fun, param = (Object.keys(req.query).length > 0 ? req.query : null);
+        if(param && param.rowSize && param.rowSize>1){
+            pageQuery(funname,param,res);
+        }else{
+            noPageQuery(funname,param,res);
+        }
+    });
+    server.post('/data/:fun', function (req, res, next) {
+        var funname = req.params.fun, param = (Object.keys(req.body).length>0 ? req.body : null);
+        if(param.rowSize && param.rowSize>1){
+            pageQuery(funname,param,res)
+        }else{
+            noPageQuery(funname,param,res);
+        }
+    });
+
+    function pageQuery(funname,param,res) {
+        async.waterfall([function (callback) {
+            //根据方法名称key从json文件中获取sql配置
+            try {
+                var config = sqls.sqlInfo.getsql(funname);
+                var text = sqls.sqlInfo.getsqltext(config, param);
+                log.info('查询接口:' + funname + '\r\n');
+                log.info('sql语句:' + text + '\r\n');
+                callback(null, text);
+            } catch (e) {
+                log.error('替换接口:' + funname + 'sql文本出错，错误信息为\r\n' + e);
+                callback(e);
+            }
+        }, function (text, cb) {
+
+            //调用dao操作数据库
+            helper.queryPageCount(text, function (e, data) {
+                if (e) {
+                    log.error('查询接口:' + funname + '数据总数量出错，错误信息为\r\n' + e);
+                    cb(e);
+                }
+
+                cb(null, {rows:((!data)?0:data[0].count),sql:text});
+
+            })
+
+
+        },function(data,cb){
+            helper.queryPage(data.sql,null,param.page,param.rowSize,function(e,re){
+                if (e) {
+                    log.error('查询接口:' + funname + '数据出错，错误信息为\r\n' + e);
+                    cb(e);
+                }
+                res.charSet('utf-8');
+                var lowData = (!re)?'': re.map(function (item) {
+                    return _.mapKeys(item, function (v, k) {
+                        return k.toLowerCase();
+                    })
+                });
+                cb(null, {data:lowData,row:data.rows});
+            })
+        }], function (err, result) {
+            if (err) {
+                res.send(500, err.message);
+                return;
+            }
+            log.info('查询完成');
+            res.json(200, result);
+        })
+
+    };
+    function noPageQuery(funname,param,res) {
+        async.waterfall([function (callback) {
+            //根据方法名称key从json文件中获取sql配置
+            try {
+                var config = sqls.sqlInfo.getsql(funname);
+                var text = sqls.sqlInfo.getsqltext(config, param);
+                log.info('查询接口:' + funname + '\r\n');
+                log.info('sql语句:' + text + '\r\n');
+                callback(null, text);
+            } catch (e) {
+                log.error('替换接口:' + funname + 'sql文本出错，错误信息为\r\n' + e);
+                callback(e);
+            }
+        }, function (text, cb) {
+
+            //调用dao操作数据库
+            helper.query(text, function (e, data) {
+                if (e) {
+                    log.error('查询接口:' + funname + '数据出错，错误信息为\r\n' + e);
+                    cb(e);
+                }
+                res.charSet('utf-8');
+                var lowData = (!data)?'' : data.map(function (item) {
+                    return _.mapKeys(item, function (v, k) {
+                        return k.toLowerCase();
+                    })
+                });
+                cb(null, lowData);
+
+            })
+
+
+        }], function (err, result) {
+            if (err) {
+                res.send(500, err.message);
+                return;
+            }
+            log.info('查询完成');
+            res.json(200, result);
+        })
+    }
+
+}

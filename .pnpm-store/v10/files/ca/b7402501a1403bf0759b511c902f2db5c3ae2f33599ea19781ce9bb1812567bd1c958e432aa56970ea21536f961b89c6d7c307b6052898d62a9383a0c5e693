@@ -1,0 +1,164 @@
+{
+  "module": "base",
+  "flag": "",
+  "configs": [{
+    "key": "test",
+    "desc":"获取各个项目下的地市",
+    "config": {
+      "value": "select * from lte_sys.p1_t_base_cell"
+    }
+  },
+    {
+      "key": "projects",
+      "desc":"获取项目列表",
+      "config": {
+
+        "value": "SELECT province,date_format(mintime,'%Y-%m-%d %h') pstarttime,date_format(maxtime,'%Y-%m-%d %h') pendtime,p_Chn, p_En, p_Desc, p_State, p_IsEnabled, p_CreateTime, p_CreateUser FROM lte_sys.T_BASE_Project left join lte_sys.T_BASE_P_Table on lte_sys.T_BASE_Project.p_En=lte_sys.T_BASE_P_Table.PName where p_IsEnabled =1 order by p_CreateTime desc"
+      }
+    },
+    {
+      "key": "getCityByPro",
+      "desc":"获取地市",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT DISTINCT CITY FROM LTE_SYS.[@c0]_T_QUALITYSTATISTICS_ALLUSER"
+      }
+    },
+    {
+      "key": "pCitys",
+      "desc":"获取各个项目下的地市",
+      "config": {
+        "parameters": [
+          {
+            "name": "preData",
+            "type":"projects",
+            "conditions":[{
+              "key":"p_en",
+              "columnname": "",
+              "type":"string",
+              "format": "",
+              "conditionid": "c0",
+              "symbol":""
+            },{ "key":"p_chn",
+              "columnname": "",
+              "type":"string",
+              "format": "",
+              "conditionid": "c1",
+              "symbol":""}]
+          }
+        ],
+        "value": "SELECT '[@c1]' pname,'[@c0]' pcode, CONCAT('[@c0]','_',city) ID,city from (select distinct city FROM lte_sys.[@c0]_T_BASE_Cell) t "
+      }
+    },{
+      "key": "citycell",
+      "desc":"获取各个项目下的地市小区",
+      "config": {
+        "parameters": [
+          {
+            "name": "code",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },{
+            "name": "city",
+            "columnname": "city",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":"="
+          }
+        ],
+        "value": "SELECT CONCAT('[@c0]','_',ID) ID, CELL_NAME, ENODEBNAME, enodebid, latitude , longitude , antdirctangle, ECI FROM lte_sys.[@c0]_T_BASE_Cell [@where] [@c1] and latitude is not null and antdirctangle is not null order by ENODEBNAME"
+      }
+    },
+    {
+      "key": "pCells",
+      "desc":"获取某个项目下的小区信息列表,gis使用",
+      "config": {
+        "parameters": [
+          {
+            "name": "code",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT ID ID, CELL_NAME,latitude lat, longitude lng, case when HOMEYCOMBTYPE ='室内' then -1 when HOMEYCOMBTYPE='室外' and  antdirctangle = 360 then 0 else antdirctangle end angle FROM lte_sys.[@c0]_T_BASE_Cell where latitude is not null and antdirctangle is not null order by ENODEBNAME"
+      }
+    },{
+      "key": "pCityCells",
+      "desc":"获取各个项目下的小区信息列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "preData",
+            "columnname": "p_en",
+            "type":"projects",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },{
+            "name": "preData",
+            "columnname": "p_chn",
+            "type":"projects",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT '[@c1]' pname,'[@c0]' pcode, CONCAT('[@c0]','_',ID) ID, city, CELL_NAME, ENODEBNAME, enodebid, latitude, longitude, antdirctangle, ECI FROM lte_sys.[@c0]_T_BASE_Cell where latitude is not null and antdirctangle is not null order by ENODEBNAME"
+      }
+    },{
+      "key": "pCellInfo",
+      "desc":"获取某个项目下单个小区信息",
+      "config": {
+        "parameters": [
+          {
+            "name": "code",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },{
+            "name": "eci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":"="
+          },{
+            "name": "cellname",
+            "columnname": "CELL_NAME",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":"="
+          },{
+            "name": "id",
+            "columnname": "id",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":"="
+          }
+        ],
+        "value": "SELECT ID, CITY, CELL_NAME, COUNTY_NAME, ENODEBNAME, ENODEBID, TAC, CGI, LATITUDE lat, LONGITUDE lng, HOMEYCOMBTYPE, ANTDIRCTANGLE angle, VENDORNAME, EARFCN, WSNAME, ECI FROM lte_sys.[@c0]_T_BASE_Cell [@where] [@c1] [@and] [@c2] [@and] [@c3]"
+      }
+    }
+
+  ]
+}

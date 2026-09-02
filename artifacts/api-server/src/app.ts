@@ -1,9 +1,7 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
-import { clerkMiddleware } from "@clerk/express";
 import { createProxyMiddleware } from "http-proxy-middleware";
-import { CLERK_PROXY_PATH, clerkProxyMiddleware } from "./middlewares/clerkProxyMiddleware";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import { initializeJobsSync } from "./services/jobsSync";
@@ -34,16 +32,39 @@ app.use(
   }),
 );
 
-app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 
-app.use(cors({ credentials: true, origin: true }));
+// ---------------------------------------------------------------------------
+// CORS configuration
+//
+// In production only the configured production origins are allowed.
+// In development all origins are permitted for convenience.
+// ---------------------------------------------------------------------------
+const allowedOrigins = (process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+const isProduction = process.env.NODE_ENV === "production";
+
+app.use(
+  cors({
+    credentials: true,
+    origin: isProduction
+      ? (origin, callback) => {
+          // Allow requests with no origin (e.g. server-to-server, curl)
+          if (!origin) return callback(null, true);
+          if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+          }
+          callback(new Error("Not allowed by CORS"));
+        }
+      : true, // allow all origins in development
+  }),
+);
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Skip Clerk middleware entirely when auth bypass is enabled (no valid keys needed)
-if (!(process.env.NODE_ENV === "development" && process.env.SKIP_ADMIN_CHECK === "true")) {
-  app.use(clerkMiddleware());
-}
+// Authentication is handled by simple header-based middleware in `requireAuth`.
 
 app.use("/api", router);
 

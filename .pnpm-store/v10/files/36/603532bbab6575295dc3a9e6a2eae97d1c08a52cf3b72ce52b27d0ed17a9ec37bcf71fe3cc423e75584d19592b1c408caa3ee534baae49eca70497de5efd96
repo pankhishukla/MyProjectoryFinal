@@ -1,0 +1,882 @@
+{
+  "module": "m3",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "weakcoverage_list",
+      "desc":"弱覆盖列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          }
+        ],
+        "value": "select (select province from LTE_SYS.T_BASE_P_Table where PName='[@c0]' limit 1) pro,*,round(count1/allcount*100,2.0) from (select city,count(0) allcount,sum(case when totleRSRPMR>[@c3] and (totleRSRPMR-CoverMR)/totleRSRPMR>[@c5] then 1 else 0 end) count1 from (select city,eci,sum(totleRSRPMR) totleRSRPMR,sum([@c4]) CoverMR from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci) a group by city) a"
+      }
+    },
+    {
+      "key": "weakcoveragexx_list",
+      "desc":"弱覆盖小区详细列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          }
+        ],
+        "value": "select (select province from LTE_SYS.T_BASE_P_Table where PName='[@c0]' limit 1) pro,city,eci,(case when cellname is null then '暂无名称' else cellname end) cellname,allcount,count1,round(count1/allcount*100,2.0) from (select city,eci,cellname,sum(totleRSRPMR) allcount,sum(totleRSRPMR)-sum([@c4]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci,cellname) a where allcount>[@c3] and count1/allcount>[@c5] order by eci"
+      }
+    },
+    {
+      "key": "weakcoveragegrid_list",
+      "desc":"获取栅格列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":"="
+          },
+          {
+            "name": "giscolor",
+            "columnname": "",
+            "type":"giscolor",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":""
+          }
+        ],
+        "value": "select t.gridid id,[@c4],t1.LONGILEFT lng,t1.latileft lat,t1.longiright lng1, t1.latiright lat1,t1.longileftbot lng2,t1.latileftbot lat2,t1.longirightbot lng3,t1.langirightbot lat3 from (select GridID,round((sum(totleRSRPMR)-sum([@c6]))/sum(totleRSRPMR)*100,2.0) from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh')  [@and] [@c3] and eci in (select eci from (select eci,sum(totleRSRPMR) allcount,sum(totleRSRPMR)-sum([@c6]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') group by city,eci) a where allcount>[@c5] and count1/allcount>[@c7]) group by city,GridID) t left join lte_sys.[@c0]_t_base_grid t1 on t.gridid = t1.id"
+      }
+    },
+    {
+      "key": "weakcoveragegridcell_list",
+      "desc":"根据栅格查询弱小区列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          },
+          {
+            "name": "gridid",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":"="
+          }
+        ],
+        "value": "select ROW_NUMBER() OVER (ORDER BY allcount desc) row_id,'[@c7]' gridid,eci,(case when cellname is null then '暂无名称' else cellname end) cellname,allcount,count1,round(count1/allcount*100,2.0) from (select city,eci,cellname,sum(totleRSRPMR) allcount,sum(totleRSRPMR)-sum([@c4]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci,cellname) a where eci in (select distinct eci from LTE_SYS.[@c0]_T_MR_GRID where gridid='[@c7]') and count1<>0"
+      }
+    },
+    {
+      "key": "overcoverage_list",
+      "desc":"过覆盖列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          }
+        ],
+        "value": "select (select province from LTE_SYS.T_BASE_P_Table where PName='[@c0]' limit 1) pro,* from (select city,count(0) allcount,sum(case when a.count1>=8 then 1 else 0 end) as count1,round(sum(case when a.count1>=8 then 1 else 0 end)/count(0)*100,2.0) from (select *,round(count1/allcount*100,2.0) from (select city,eci,(case when cellname is null then '暂无名称' else cellname end) cellname,count(0) allcount,sum(case when allcount>[@c3] and round>[@c5] then 1 else 0 end) count1 from (select a.city,a.eci,a.cellname,a.count1,b.allcount,round(a.count1/b.allcount,3.0) from (select city,eci,cellname,NCI,sum([@c4]) count1 from LTE_SYS.[@c0]_T_Overcover where NCI is not null and STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci,cellname,NCI) a left join (select city,eci,sum(NCOVERMR)/6 allcount from LTE_SYS.[@c0]_T_Overcover where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci) b on  a.eci=b.eci) a group by city,eci,cellname ) a) a group by city) tt"
+      }
+    },
+    {
+      "key": "overcoveragexx_list",
+      "desc":"过覆盖小区详细列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          }
+        ],
+        "value": "select (select province from LTE_SYS.T_BASE_P_Table where PName='[@c0]' limit 1) pro,a.*,b.longitude,b.latitude,round(count1/allcount*100,2.0) from (select city,eci,(case when cellname is null then '暂无名称' else cellname end) cellname,sum(distinct allcount),count(0) allcount,sum(case when allcount>[@c3] and round>[@c5] then 1 else 0 end) count1 from (select a.city,a.eci,a.cellname,a.count1,b.allcount,case when b.allcount=0 then 0 else round(a.count1/b.allcount,3.0) end from (select city,eci,cellname,NCI,sum([@c4]) count1 from LTE_SYS.[@c0]_T_Overcover where NCI is not null and STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6]   group by city,eci,cellname,NCI) a left join (select city,eci,round(sum(NCOVERMR)/6,0) allcount from LTE_SYS.[@c0]_T_Overcover where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6]  group by city,eci) b on  a.eci=b.eci) a group by city,eci,cellname ) a left join lte_sys.[@c0]_T_BASE_Cell b on a.eci =b.eci where count1>=8 order by a.eci"
+      }
+    },
+    {
+      "key": "overcoveragegrid_list",
+      "desc":"获取栅格列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":"="
+          },
+          {
+            "name": "giscolor",
+            "columnname": "",
+            "type":"giscolor",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT ID ID, CELL_NAME,latitude lat, longitude lng, case when HOMEYCOMBTYPE ='室内' then -1 when HOMEYCOMBTYPE='室外' and  antdirctangle = 360 then 0 else antdirctangle end angle,round_c FROM lte_sys.[@c0]_T_BASE_Cell a left join (select eci,'#ff0000' round_c from (select city,eci,(case when cellname is null then '暂无名称' else cellname end) cellname,count(0) allcount,sum(case when allcount>[@c5] and round>[@c7] then 1 else 0 end) count1 from (select a.city,a.eci,a.cellname,a.count1,b.allcount,round(a.count1/b.allcount,3.0) from (select city,eci,cellname,NCI,sum([@c6]) count1 from LTE_SYS.[@c0]_T_Overcover where NCI is not null and STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c3]   group by city,eci,cellname,NCI) a left join (select city,eci,sum(NCOVERMR)/6 allcount from LTE_SYS.[@c0]_T_Overcover where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c3]  group by city,eci) b on a.eci=b.eci) a group by city,eci,cellname ) a where count1>=8 order by eci) b on a.eci=b.eci where latitude is not null and antdirctangle is not null order by ENODEBNAME"
+      }
+    },
+    {
+      "key": "overcoverageline_list",
+      "desc":"小区划线",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          }
+        ],
+        "value": "select ROW_NUMBER() OVER (ORDER BY allcount) row_id,NRSECI eci,cellname,count1,allcount,round,ANTDIRCTANGLE angle,longitude,latitude from (select a.city,a.eci,a.cellname,a.count1,b.allcount,NRSECI,round(a.count1/b.allcount,3.0) from (select city,eci,cellname,NRSECI,sum([@c4]) count1 from LTE_SYS.[@c0]_T_Overcover where NRSECI is not null and STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci,cellname,NRSECI) a left join (select city,eci,round(sum(NCOVERMR)/6,3.0) allcount from LTE_SYS.[@c0]_T_Overcover where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6]  group by city,eci) b on a.eci=b.eci) a left join LTE_SYS.[@c0]_T_BASE_Cell b on a.NRSECI=b.eci where allcount>[@c3] and round>[@c5]"
+      }
+    },
+    {
+      "key": "overlapcoverage_list",
+      "desc":"重叠覆盖列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          }
+        ],
+        "value": "select (select province from LTE_SYS.T_BASE_P_Table where PName='[@c0]' limit 1) pro,*,round(count1/allcount*100,2.0) from (select city,count(0) allcount,sum(case when allcount>[@c3] and count1/allcount>[@c5] then 1 else 0 end) count1 from (select city,eci,sum(totleRSRPMR) allcount,sum([@c4]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci) a group by city) a"
+      }
+    },
+    {
+      "key": "overlapcoveragexx_list",
+      "desc":"重叠覆盖小区详细列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          }
+        ],
+        "value": "select (select province from LTE_SYS.T_BASE_P_Table where PName='[@c0]' limit 1) pro,city,eci,(case when cellname is null then '暂无名称' else cellname end) cellname,allcount,count1,round(count1/allcount*100,2.0) from (select city,eci,cellname,sum(totleRSRPMR) allcount,sum([@c4]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci,cellname) a where allcount>[@c3] and count1/allcount>[@c5] order by eci"
+      }
+    },
+    {
+      "key": "overlapcoveragegrid_list",
+      "desc":"获取栅格列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":"="
+          },
+          {
+            "name": "giscolor",
+            "columnname": "",
+            "type":"giscolor",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":""
+          }
+        ],
+        "value": "select t.gridid id,[@c4],t1.LONGILEFT lng,t1.latileft lat,t1.longiright lng1, t1.latiright lat1,t1.longileftbot lng2,t1.latileftbot lat2,t1.longirightbot lng3,t1.langirightbot lat3 from (select GridID,round(sum([@c6])/sum(totleRSRPMR)*100,2.0) from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c3] and eci in (select eci from (select eci,sum(totleRSRPMR) allcount,sum([@c6]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') group by city,eci) a where allcount>[@c5] and count1/allcount>[@c7]) group by city,GridID) t left join lte_sys.[@c0]_t_base_grid t1 on t.gridid = t1.id"
+      }
+    },
+    {
+      "key": "overlapcoveragegridcell_list",
+      "desc":"根据栅格查询小区信息",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          },
+          {
+            "name": "gridid",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":""
+          }
+        ],
+        "value": "select ROW_NUMBER() OVER (ORDER BY allcount desc) row_id,'[@c7]' gridid,eci,(case when cellname is null then '暂无名称' else cellname end) cellname,allcount,count1,round(count1/allcount*100,2.0) from (select city,eci,cellname,sum(totleRSRPMR) allcount,sum([@c4]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci,cellname) a where eci in (select distinct eci from LTE_SYS.[@c0]_T_MR_GRID where gridid='[@c7]') and count1<>0"
+      }
+    },
+    {
+      "key": "poorcellgrid_list",
+      "desc":"质差小区占比",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          }
+        ],
+        "value": "select * from (select count(0) weak from (select sum(totleRSRPMR) totleRSRPMR,sum(CoverMR110) CoverMR from LTE_SYS.[@c0]_T_MR_GRID group by eci) a where totleRSRPMR>1000 and (totleRSRPMR-CoverMR)/totleRSRPMR>0.2)  a,(select count(0) downsnr from (select sum(TotleDLSINRMR) count2,sum(TotleDLSINRMR)-sum(TotleLteScSinrDLMR_3) count1 from LTE_SYS.[@c0]_T_MR_GRID group by eci) a where count2>1000 and count1/count2>0.05)  b,(select count(0) upsnr from (select sum(TotleULSINRMR) count2,sum(TotleULSINRMR)-sum(TotleLteScSinrULMR3) count1 from LTE_SYS.[@c0]_T_MR_GRID group by eci) a where count2>100 and count1/count2>0.05)  c,(select count(0) downprb from (select sum(TotleDLPRBMR) count2,sum(TotleDLPRBMR75) count1 from LTE_SYS.[@c0]_T_MR_GRID group by eci) a where count2>100 and count1/count2>0.1)  d,(select count(0) upprb from (select sum(TotleULPRBMR) count2,sum(TotleULPRBMR75) count1 from LTE_SYS.[@c0]_T_MR_GRID group by eci) a where count2>1000 and count1/count2>0.01)  e,(select sum(case when a.count1>=8 then 1 else 0 end) as 'over' from (select eci,sum(case when allcount>1000 and round>0.05 then 1 else 0 end) count1 from (select a.eci,b.allcount,round(a.count1/b.allcount,3.0) from (select eci,sum(NRS6) count1 from LTE_SYS.[@c0]_T_Overcover where NCI is not null  group by eci,NCI) a left join (select eci,sum(NCOVERMR)/6 allcount from LTE_SYS.[@c0]_T_Overcover group by eci) b on a.eci=b.eci) a group by eci) a)  f,(select count(0) overlap from (select sum(totleRSRPMR) allcount,sum(overlayMR_6) count1 from LTE_SYS.[@c0]_T_MR_GRID group by eci) a where allcount>100 and count1/allcount>0.15) g,(select count(0) rsrq from (select sum(TotleDLRSRQMR) allcount,sum(RSRQMR_14) count1 from LTE_SYS.[@c0]_T_MR_GRID group by eci) a where allcount>1000 and count1/allcount>0.05) h,(select count(distinct eci) alleci from LTE_SYS.[@c0]_T_MR_GRID ) i,(select count(distinct eci) diseci from LTE_SYS.[@c0]_T_END_TO_END_ECI ) j"
+      }
+    },
+    {
+      "key": "allcellby_p_list",
+      "desc":"所有小区列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT ID ID, CELL_NAME,latitude lat, longitude lng, case when HOMEYCOMBTYPE ='室内' then -1 when HOMEYCOMBTYPE='室外' and  antdirctangle = 360 then 0 else antdirctangle end angle FROM lte_sys.[@c0]_T_BASE_Cell;"
+      }
+    },{
+      "key": "GridCellLine",
+      "desc":"gis删格小区连线",
+      "config": {
+        "parameters": [{
+          "name": "code",
+          "columnname": "",
+          "type":"string",
+          "format": "",
+          "conditionid": "c0",
+          "symbol":""
+        },{
+          "name": "gridid",
+          "columnname": "gridid",
+          "type":"string",
+          "format": "",
+          "conditionid": "c1",
+          "symbol":"="
+        }
+        ],
+        "value":"select t.gridid,t.eci,t1.id,t1.longitude lng,latitude lat,t1.antdirctangle angle from  (select distinct gridid,eci from lte_sys.[@c0]_t_mr_grid [@where] [@c1])t left join lte_sys.[@c0]_t_base_cell t1 on t.eci = t1.eci"
+      }
+    }
+  ]
+}

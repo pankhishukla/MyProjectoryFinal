@@ -1,0 +1,20 @@
+/**
+ * Created by caoxp on 2015/6/25.
+ */
+
+var log4js = require('log4js');
+var log_config = require('../log.config.json');
+var sysconfig = require('../config/sys.config.js');
+
+var logging = function(){
+    var log ;
+    log4js.configure(log_config);
+    if(sysconfig.env === 'development'){
+        log = log4js.getLogger('console');
+    }else{
+        log = log4js.getLogger('log_date');
+    }
+    return log;
+};
+
+module.exports = logging;

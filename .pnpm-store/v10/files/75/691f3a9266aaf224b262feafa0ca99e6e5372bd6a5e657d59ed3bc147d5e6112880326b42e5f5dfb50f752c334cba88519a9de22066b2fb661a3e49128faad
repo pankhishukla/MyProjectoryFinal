@@ -1,0 +1,46 @@
+{
+  "module": "MultiSceneAnalysis.T5",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "data.MultiSceneAnalysis.T5",
+      "desc": "LTE室内外场景分析",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol": ""
+          },
+          {
+            "name": "starttime",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol": ""
+          },
+          {
+            "name": "endtime",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol": ""
+          }, {
+            "name": "province",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          }
+        ],
+        "value": ""
+      }
+    }
+  ]
+}

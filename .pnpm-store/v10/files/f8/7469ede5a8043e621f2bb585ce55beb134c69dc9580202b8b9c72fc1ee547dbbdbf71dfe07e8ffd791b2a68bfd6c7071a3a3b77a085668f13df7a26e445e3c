@@ -1,0 +1,232 @@
+{
+    "module": "SysRoleManager.RoleManager",
+    "flag": "vertical",
+    "configs": [
+        {
+            "key": "dataSysRoleManager.roleList",
+            "desc": "系统管理-角色管理",
+            "config": {
+                "parameters": [
+                ],
+                "value": "SELECT id,rolename,remark,isenabled,createuser,TO_DATE(createtime||'','YYYY-MM-DD') as createtime,updateuser, updatetime FROM LTE_SYS.T_BASE_SYS_ROLE"
+            }
+        },
+        {
+            "key": "dataSysRoleManager.roletreeList",
+            "desc": "系统管理-角色tree管理",
+            "config": {
+                "parameters": [
+                ],
+                "value": "select id,parentid,menuname from lte_sys.T_BASE_SYS_MENU order by id,parentid"
+            }
+        },
+        {
+            "key": "dataSysRoleManager.roleAdd",
+            "desc": "添加角色",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "rolename",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "remark",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c1",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "isenabled",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c2",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "createuser",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c3",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "createtime",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c4",
+                        "symbol": ""
+                    }
+                ],
+    "value": "INSERT INTO LTE_SYS.T_BASE_SYS_ROLE (id, rolename, remark, isenabled, createuser, createtime, updateuser, updatetime)  VALUES (t_base_sys_role_sequence.nextval, '[@c0]', '[@c1]', '[@c2]','[@c3]','[@c4]', '[@c3]', '[@c4]') "
+}
+},
+         {
+            "key": "dataSysRoleManager.rolemenuidAdd",
+            "desc": "添加角色权限值",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "roleid",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "menuid",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c1",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "isindex",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c2",
+                        "symbol": ""
+                    }
+
+                ],
+                "value": "INSERT INTO LTE_SYS.T_BASE_SYS_MENUSOFROLES(id, roleid, menuid, isindex)VALUES(t_base_sys_menusofroles_sequence.nextval,'[@c0]', '[@c1]', '[@c2]') "
+            }
+        },
+
+        {
+            "key": "dataSysRoleManager.update",
+            "desc": "修改角色信息",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "rolename",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "remark",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c1",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "isenabled",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c2",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "updatetime",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c3",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "updateuser",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c4",
+                        "symbol": ""
+                    },{
+                        "name": "id",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c5",
+                        "symbol": ""
+                    }
+                ],
+                "value":"UPDATE    LTE_SYS.T_BASE_SYS_ROLE  SET    rolename='[@c0]' , remark= '[@c1]' , isenabled='[@c2]'  , updatetime='[@c3]' ,updateuser='[@c4]'   WHERE     id= cast('[@c5]' as integer) "
+            }
+        },
+        {
+            "key": "dataSysRoleManager.roleDelete",
+            "desc": "删除角色信息",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "id",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    }
+                ],
+                "value": "DELETE FROM  LTE_SYS.T_BASE_SYS_ROLE WHERE id=[@c0] "
+            }
+        },
+        {
+            "key": "dataSysRoleMenuManager.UserRoleMenuList",
+            "desc": "用户-角色-所属菜单管理",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "username",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    }
+                ],
+                "value": "SELECT        a.id,        a.menuname,        a.parentid,        a.orderid,        a.menuurl,        b.isindex    FROM        LTE_SYS.T_BASE_SYS_MENU a    RIGHT JOIN        (            SELECT         distinct       menuid ,                isindex            FROM                LTE_SYS.T_BASE_SYS_MENUSOFROLES            WHERE                roleid IN ([@c0]))b    ON        a.id=b.menuid    WHERE        a.isenabled='Y'    ORDER BY        a.orderid ASC "
+            }
+        },
+        {
+            "key": "dataSysRoleMenuManager.UserRoleGetIndexMenuList",
+            "desc": "用户-角色-默认首页列表管理",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "menuidlist",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    }
+                ],
+                "value": " select id,menuname from LTE_SYS.T_BASE_SYS_MENU where id in([@c0])and CHAR_LENGTH(menuurl)>2 order by id  "
+            }
+        },
+        {
+            "key": "dataSysRoleMenuManager.UserRoleGetMenuIdlist",
+            "desc": "用户-角色-所属菜单ID管理",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "roleid",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    }
+                ],
+                "value": "SELECT menuid,isindex FROM LTE_SYS.T_BASE_SYS_MENUSOFROLES where roleid=[@c0] order by menuid "
+            }
+        }
+    ]
+}

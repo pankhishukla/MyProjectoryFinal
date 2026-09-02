@@ -1,0 +1,46 @@
+{
+  "module": "MultiSceneAnalysis.T7",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "dataMultiSceneAnalysisT7",
+      "desc": "LTE室内外场景分析-网间互操作统计",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol": ""
+          },
+          {
+            "name": "starttime",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol": ""
+          },
+          {
+            "name": "endtime",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol": ""
+          }, {
+            "name": "province",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          }
+        ],
+        "value": "select * from (SELECT      city AS data1,      (          CASE              WHEN scene=0              THEN '全网'              WHEN SCENE=1              THEN '室外用户'              WHEN SCENE=2              THEN '占用室分的室内稳定用户(有室分)'              WHEN SCENE=3              THEN '占用宏站的室内稳定用户(无室分)'              WHEN SCENE=4              THEN '室内稳定用户(占用宏站和室分)'              WHEN SCENE=5              THEN '高铁用户'              WHEN SCENE=6              THEN '地铁用户'              WHEN SCENE=7              THEN '校园用户'              WHEN SCENE=8              THEN '商业区用户'              WHEN SCENE=9              THEN '风景区用户'              WHEN SCENE=10              THEN '居民区用户'              WHEN SCENE=11              THEN '高速公路'              ELSE '未知场景'          END )         AS data2,      USERNUM           AS data3,      MUTUALOPERUSERNUM AS data4,      ROUND(          CASE              WHEN USERNUM>0              THEN MUTUALOPERUSERNUM/USERNUM              ELSE 0          END ,2.0)       AS data5,      MUTUALOPERUSERCOUNT AS data6,      ROUND(          CASE              WHEN MUTUALOPERUSERNUM>0              THEN MUTUALOPERUSERCOUNT/MUTUALOPERUSERNUM              ELSE 0          END,2.0)  AS data7,      USERNUM4G_23G AS data8,      ROUND(          CASE              WHEN USERNUM>0              THEN USERNUM4G_23G/USERNUM              ELSE 0          END ,2.0) AS data9,      MUTUALMORE50  AS data10,      ROUND(          CASE              WHEN USERNUM>0              THEN MUTUALMORE50/USERNUM              ELSE 0          END ,2.0)    AS data11,      USERNUM          AS data12,      SIGNALINGUSERNUM AS data13,      ROUND(          CASE              WHEN USERNUM>0              THEN SIGNALINGUSERNUM/USERNUM              ELSE 0          END ,2.0)      AS data14,      SIGNALINGUSERCOUNT AS data15,      ROUND(          CASE              WHEN USERNUM>0              THEN SIGNALINGUSERCOUNT/USERNUM              ELSE 0          END,2.0)    AS data16,      TOTALUSER       AS data17,      LONGTERM23GUSER AS data18,      ROUND(          CASE              WHEN TOTALUSER>0              THEN LONGTERM23GUSER/TOTALUSER              ELSE 0          END ,2.0) AS data19,      LTEUSER       AS data20,      WIFIUSER      AS data21,      ROUND(          CASE              WHEN LTEUSER>0              THEN WIFIUSER/LTEUSER              ELSE 0          END ,2.0)AS data22  FROM      LTE_SYS.[@c0]_T_INTENETWORK  WHERE      HOUR>='[@c1]'  AND HOUR<='[@c2]'  AND city='[@c3]'  UNION  SELECT      MIN(city)              AS data1,      '室内用户'                 AS data2,      SUM(USERNUM)           AS data3,      SUM(MUTUALOPERUSERNUM) AS data4,      ROUND(          CASE              WHEN SUM(USERNUM)>0              THEN SUM(MUTUALOPERUSERNUM)/SUM(USERNUM)              ELSE 0          END ,2.0)            AS data5,      SUM(MUTUALOPERUSERCOUNT) AS data6,      ROUND(          CASE              WHEN SUM(MUTUALOPERUSERNUM)>0              THEN SUM(MUTUALOPERUSERCOUNT)/SUM(MUTUALOPERUSERNUM)              ELSE 0          END,2.0)       AS data7,      SUM(USERNUM4G_23G) AS data8,      ROUND(          CASE              WHEN SUM(USERNUM)>0              THEN SUM(USERNUM4G_23G)/SUM(USERNUM)              ELSE 0          END ,2.0)     AS data9,      SUM(MUTUALMORE50) AS data10,      ROUND(          CASE              WHEN SUM(USERNUM)>0              THEN SUM(MUTUALMORE50)/SUM(USERNUM)              ELSE 0          END ,2.0)         AS data11,      SUM(USERNUM)          AS data12,      SUM(SIGNALINGUSERNUM) AS data13,      ROUND(          CASE              WHEN SUM(USERNUM)>0              THEN SUM(SIGNALINGUSERNUM)/SUM(USERNUM)              ELSE 0          END ,2.0)           AS data14,      SUM(SIGNALINGUSERCOUNT) AS data15,      ROUND(          CASE              WHEN SUM(USERNUM)>0              THEN SUM(SIGNALINGUSERCOUNT)/SUM(USERNUM)              ELSE 0          END,2.0)         AS data16,      SUM(TOTALUSER)       AS data17,      SUM(LONGTERM23GUSER) AS data18,      ROUND(          CASE              WHEN SUM(TOTALUSER)>0              THEN SUM(LONGTERM23GUSER)/SUM(TOTALUSER)              ELSE 0          END ,2.0) AS data19,      SUM(LTEUSER)  AS data20,      SUM(WIFIUSER) AS data21,      ROUND(          CASE              WHEN SUM(LTEUSER)>0              THEN SUM(WIFIUSER)/SUM(LTEUSER)              ELSE 0          END ,2.0)AS data22  FROM      LTE_SYS.[@c0]_T_INTENETWORK  WHERE      HOUR>='[@c1]'  AND HOUR<='[@c2]'  AND scene IN (2,3,4)  AND city='[@c3]')T where t.data2!='未知场景'"
+      }
+    }
+  ]
+}

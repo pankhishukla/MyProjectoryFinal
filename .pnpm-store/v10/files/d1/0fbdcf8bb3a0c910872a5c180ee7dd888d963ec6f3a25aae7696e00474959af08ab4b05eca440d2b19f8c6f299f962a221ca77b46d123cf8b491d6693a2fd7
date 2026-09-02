@@ -1,0 +1,70 @@
+{
+  "module": "Test.tb8_sceneData",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "Test.tb8_sceneData",
+      "desc": "LTE室内外场景分析",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol": ""
+          },
+          {
+            "name": "starttime",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol": ""
+          },
+          {
+            "name": "endtime",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol": ""
+          },
+          {
+            "name": "scenename",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol": ""
+          },
+          {
+            "name": "fieldname",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol": ""
+          },
+          {
+            "name": "scenevalue",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol": ""
+          }, {
+            "name": "province",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT      '[@c6]' AS data1,      '[@c3]' AS data2,      b.*  FROM      (          SELECT  MIN(RSRP_MIN_50)+(-140)||'--'||MAX(RSRP_MAX_50)+(-140)     AS data3,              ROUND(AVG(mr.RSRP_SUM / mr.MR_COUNT -140))            AS data4,              MIN(RSRP_MIN_5000)+(-140)||'--'||MAX(RSRP_MAX_5000)+(-140) AS data5,              SUM(MR_COUNT_5000)                                         AS data6,              0                                                          AS data7,              0                                                          AS data8,              SUM(MR_COUNT)                                              AS data9,              SUM(RSRP_COUNT_less110)                                    AS data10,              SUM(RSRP_COUNT_less100)                                    AS data11,              ROUND(SUM(RSRP_COUNT_less110)/SUM(MR_COUNT),2.0)           AS data12,              ROUND(SUM(RSRP_COUNT_less100)/SUM(MR_COUNT) ,2.0)          AS data13,              SUM(SinrUL_less0)                                          AS data14,              ROUND(SUM(SinrUL_less0)/SUM(MR_COUNT) ,2.0)                AS data15,              ''                                                       AS data16,              ''                                                      AS data17,              SUM(SinrDL_less3)                                          AS data18,              ROUND( SUM(SinrDL_less3)/SUM(MR_COUNT) ,2.0)               AS data19,              SUM(MR_Count_KK)                                           AS data20,              ROUND( SUM(MR_Count_KK)/SUM(MR_COUNT) ,2.0)                AS data21          FROM              lte_sys.[@c0]_T_MR_STATISTICS mr          WHERE              mr.hour>='[@c1]'          AND mr.hour<='[@c2]'          AND mr.[@c4])b"
+      }
+    }
+  ]
+}

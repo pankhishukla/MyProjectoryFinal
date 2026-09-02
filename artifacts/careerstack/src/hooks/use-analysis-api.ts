@@ -2,7 +2,7 @@
  * Manual React Query hooks for the Analysis extension APIs (S3.4, S3.6, S3.8).
  */
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@clerk/react";
+import { useAuth } from "../lib/fakeClerk";
 import { useCallback } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────

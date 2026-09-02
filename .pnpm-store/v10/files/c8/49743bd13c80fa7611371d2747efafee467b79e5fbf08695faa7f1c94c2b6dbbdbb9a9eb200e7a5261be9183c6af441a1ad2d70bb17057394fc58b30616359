@@ -1,0 +1,26 @@
+/**
+ * Created by caoxp on 2015/6/16.
+ */
+
+var fs = require('fs');
+var path = require('path');
+var sysconfig = require('../config/sys.config');
+
+var baseRouter = function(server){
+    var dir = fs.readdirSync(path.join(sysconfig.rootDir,'./routes'));
+    if(dir){
+        dir.forEach(function(item){
+            if(path.extname(item)!=='.js'){
+                var files = fs.readdirSync(path.join(sysconfig.rootDir,'./routes/',item));
+                files.forEach(function(itm){
+                    require('./'+item+'/'+path.basename(itm))(server);
+                })
+
+            }
+        })
+
+    }
+
+}
+
+module.exports = baseRouter;

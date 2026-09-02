@@ -1,0 +1,44 @@
+{
+  "module": "MultiSceneAnalysis.T1",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "dataMultiSceneAnalysisT1",
+      "desc": "LTE室内外场景分析-数据采集情况",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          }, {
+            "name": "starttime",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          }, {
+            "name": "endtime",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          }, {
+            "name": "province",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          }
+        ],
+        "value": "select t1.*, dt10.data10,dt11.data11,dt12.data12,dt13.data13,dt14.data14 from (  select '[@c3]' as data1,'[@c3]' as data2,'' as data3, to_char(min(hour),'mm-dd HH24:mi')||'-' ||to_char(max(hour),'HH24:mi')  as data4,  '' data5,'' as data6,'' as data7,'' as data8,'' as data9  from lte_sys.[@c0]_T_QUALITYSTATISTICS_ALLUSER)t1  ,(  select count(distinct imsi)  data10 from lte_sys.[@c0]_T_S1U_HTTP_MRO_MME_DW   )dt10,  (  select sum(newDLData)+sum(newULData)/1000 as data11 from lte_sys.[@c0]_T_S1U_DW  )dt11,  (   select count(0) as data12  from lte_sys.[@c0]_T_S1U_DW dw   where exists(          select 1  from lte_sys.[@c0]_T_GN_LTE_DW gn  where dw.imsi=gn.imsi          )  )dt12,  (   select count(distinct imsi) as data13 from lte_sys.[@c0]_T_S1U_DW dw   where exists(          select 1  from lte_sys.[@c0]_T_GN_LTE_DW gn  where dw.imsi=gn.imsi          )  )dt13,  (select count(distinct dw.App_Type) as data14 from lte_sys.[@c0]_T_S1U_DW  dw where exists (  select 1 from lte_sys.[@c0]_T_BASE_CATEGORYTYPE apt where dw.App_Type=apt.apptype and dw.App_Sub_type=apt.appsubtype  ))dt14 "
+      }
+    }
+  ]
+}

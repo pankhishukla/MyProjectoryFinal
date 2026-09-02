@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { eq, and, sql } from "drizzle-orm";
-import { clerkClient } from "@clerk/express";
+
 import { db, usersTable, projectsTable, activityTable, portfoliosTable, portfolioProjectsTable } from "../lib/db/index.js";
 import {
   CreateProjectBody,
@@ -44,16 +44,14 @@ async function getOrCreateUserId(clerkId: string): Promise<number | null> {
   }
 
   try {
-    const clerkUser = await clerkClient.users.getUser(clerkId);
-    const name = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ") || "User";
-    const email = clerkUser.emailAddresses[0]?.emailAddress ?? "";
-    // MySQL doesn't support .returning() — insert then select
+    const name = "User";
+    const email = "";
     await db.insert(usersTable).values({ clerkId, name, email });
     const userId = await getUserId(clerkId);
-    logger.info({ clerkId }, "Auto-created user profile from Clerk data");
+    logger.info({ clerkId, userId }, "Auto-created user profile");
     return userId;
   } catch (err) {
-    logger.error({ clerkId, err }, "Failed to auto-create user from Clerk data");
+    logger.error({ clerkId, err }, "Failed to auto-create user");
     return null;
   }
 }

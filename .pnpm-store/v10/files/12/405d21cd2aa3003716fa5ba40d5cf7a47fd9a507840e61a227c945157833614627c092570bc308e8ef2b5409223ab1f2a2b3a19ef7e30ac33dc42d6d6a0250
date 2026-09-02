@@ -1,0 +1,98 @@
+{
+  "module": "Appstorelistinfo.List",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "Appstorelistinfo1",
+      "desc": "客户感知-应用商店列表",
+      "config": {
+        "parameters": [
+             {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },{
+            "name": "city",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT * FROM LTE_SYS.[@c0]_T_TO_AppStore where City='[@c1]' "
+      }
+    },
+    {
+      "key": "AppstorelistinfoCity",
+      "desc": "地市-应用商店列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT * FROM lte_sys.T_BASE_CITY where CiTY_NO in(SELECT distinct City FROM LTE_SYS.[@c0]_T_TO_AppStore)"
+      }
+    },
+    {
+      "key": "Appstorelistinfo1export",
+      "desc": "客户感知-应用商店列表导出",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "city",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT City,VideoType,UserCount,downflow,(Speedn+SDn)*100 as 'speedsd',HDn*100 as 'Hdn',Ultraclearn*100 as 'Ultraclearn',(Speed1+SD)*100 as 'speed',HD*100 as 'hd',Ultraclear*100 as 'Ultraclear',first_delay/(first_delay+first_delay25+first_delay58+first_delay8) as '2min',first_delay25/(first_delay+first_delay25+first_delay58+first_delay8) as '2-5min',first_delay58/(first_delay+first_delay25+first_delay58+first_delay8) as '5-8min',first_delay8/(first_delay+first_delay25+first_delay58+first_delay8) as '8min',SuccesscountAccounting as 'successa',downflow as 'downflow' FROM LTE_SYS.[@c0]_T_TO_VIDEO where City='[@c1]' "
+      }
+    },
+    {
+      "key": "AppstoreTovideoAllExport",
+      "desc": "应用商店列表-中间表所有数据",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "cityno",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT * FROM LTE_SYS.[@c0]_T_TO_AppStore"
+      }
+    }
+
+  ]
+}

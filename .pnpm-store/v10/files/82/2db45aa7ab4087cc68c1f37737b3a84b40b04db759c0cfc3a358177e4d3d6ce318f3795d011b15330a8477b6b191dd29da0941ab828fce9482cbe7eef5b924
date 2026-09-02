@@ -1,0 +1,558 @@
+{
+  "module": "m3",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "downprb_list",
+      "desc":"下行PRB利用率列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          }
+        ],
+        "value": "select (select province from LTE_SYS.T_BASE_P_Table where PName='[@c0]' limit 1) pro,*,round(count1/allcount*100,2.0) from (select city,count(0) allcount,sum(case when count2>[@c3] and count1/count2>[@c5] then 1 else 0 end) count1 from (select city,eci,sum(totleRSRPMR) allcount,sum(TotleDLPRBMR) count2,sum([@c4]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci) a group by city) a"
+      }
+    },
+    {
+      "key": "downprbxx_list",
+      "desc":"下行PRB利用率小区详细列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          }
+        ],
+        "value": "select (select province from LTE_SYS.T_BASE_P_Table where PName='[@c0]' limit 1) pro,city,eci,(case when cellname is null then '暂无名称' else cellname end) cellname,allcount,count1,round(count1/allcount*100,2.0) from (select city,eci,cellname,sum(TotleDLPRBMR) allcount,sum([@c4]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci,cellname) a where allcount>[@c3] and count1/allcount>[@c5] order by eci"
+      }
+    },
+    {
+      "key": "downprbgrid_list",
+      "desc":"获取栅格列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":"="
+          },
+          {
+            "name": "giscolor",
+            "columnname": "",
+            "type":"giscolor",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":""
+          }
+        ],
+        "value": "select t.gridid id,[@c4],t1.LONGILEFT lng,t1.latileft lat,t1.longiright lng1, t1.latiright lat1,t1.longileftbot lng2,t1.latileftbot lat2,t1.longirightbot lng3,t1.langirightbot lat3 from (select GridID,round(sum([@c6])/sum(TotleDLPRBMR)*100,2.0) from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c3] and eci in (select eci from (select eci,sum(TotleDLPRBMR) allcount,sum([@c6]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') group by city,eci) a where allcount>[@c5] and count1/allcount>[@c7] ) group by city,GridID) t left join lte_sys.[@c0]_t_base_grid t1 on t.gridid = t1.id"
+      }
+    },
+    {
+      "key": "downprbgridcell_list",
+      "desc":"根据栅格查询小区信息",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          },
+          {
+            "name": "gridid",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":""
+          }
+        ],
+        "value": "select ROW_NUMBER() OVER (ORDER BY allcount desc) row_id,'[@c7]' gridid,eci,(case when cellname is null then '暂无名称' else cellname end) cellname,allcount,count1,round(count1/allcount*100,2.0) from (select city,eci,cellname,sum(TotleDLPRBMR) allcount,sum([@c4]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci,cellname) a where eci in (select distinct eci from LTE_SYS.[@c0]_T_MR_GRID where gridid='[@c7]') and count1<>0"
+      }
+    },
+    {
+      "key": "upprb_list",
+      "desc":"上行PRB利用率列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          }
+        ],
+        "value": "select (select province from LTE_SYS.T_BASE_P_Table where PName='[@c0]' limit 1) pro,*,round(count1/allcount*100,2.0) from (select city,count(0) allcount,sum(case when count2>[@c3] and count1/count2>[@c5] then 1 else 0 end) count1 from (select city,eci,sum(totleRSRPMR) allcount,sum(TotleULPRBMR) count2,sum([@c4]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci) a group by city) a"
+      }
+    },
+    {
+      "key": "upprbxx_list",
+      "desc":"上行PRB利用率小区详细列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          }
+        ],
+        "value": "select (select province from LTE_SYS.T_BASE_P_Table where PName='[@c0]' limit 1) pro,city,eci,(case when cellname is null then '暂无名称' else cellname end) cellname,allcount,count1,round(count1/allcount*100,2.0) from (select city,eci,cellname,sum(TotleULPRBMR) allcount,sum([@c4]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci,cellname) a where allcount>[@c3] and count1/allcount>[@c5] order by eci"
+      }
+    },
+    {
+      "key": "upprbgrid_list",
+      "desc":"获取栅格列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":"="
+          },
+          {
+            "name": "giscolor",
+            "columnname": "",
+            "type":"giscolor",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":""
+          }
+        ],
+        "value": "select t.gridid id,[@c4],t1.LONGILEFT lng,t1.latileft lat,t1.longiright lng1, t1.latiright lat1,t1.longileftbot lng2,t1.latileftbot lat2,t1.longirightbot lng3,t1.langirightbot lat3 from (select GridID,round(sum([@c6])/sum(TotleULPRBMR)*100,2.0) from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c3] and eci in (select eci from (select eci,sum(TotleULPRBMR) allcount,sum([@c6]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') group by city,eci) a where allcount>[@c5] and count1/allcount>[@c7]) group by city,GridID) t left join lte_sys.[@c0]_t_base_grid t1 on t.gridid = t1.id"
+      }
+    },
+    {
+      "key": "upprbgridcell_list",
+      "desc":"根据栅格查询小区信息",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "txteci",
+            "columnname": "eci",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          },
+          {
+            "name": "gridid",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":""
+          }
+        ],
+        "value": "select ROW_NUMBER() OVER (ORDER BY allcount desc) row_id,'[@c7]' gridid,eci,(case when cellname is null then '暂无名称' else cellname end) cellname,allcount,count1,round(count1/allcount*100,2.0) from (select city,eci,cellname,sum(TotleULPRBMR) allcount,sum([@c4]) count1 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c6] group by city,eci,cellname) a where eci in (select distinct eci from LTE_SYS.[@c0]_T_MR_GRID where gridid='[@c7]') and count1<>0"
+      }
+    }
+  ]
+}

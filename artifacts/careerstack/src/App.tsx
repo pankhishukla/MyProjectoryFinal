@@ -10,8 +10,8 @@ import {
   useClerk,
   useAuth,
   useUser,
-} from "@clerk/react";
-import { setAuthTokenGetter } from "@workspace/api-client-react";
+} from "./lib/fakeClerk";
+import { setAuthTokenGetter, setBaseUrl } from "@workspace/api-client-react";
 import { Switch, Route, Redirect, useLocation, Router as WouterRouter, useParams } from "wouter";
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -34,8 +34,18 @@ function stripBase(path: string): string {
     : path;
 }
 
-if (!clerkPubKey) {
-  throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY in .env file");
+const isDevMode = import.meta.env.DEV;
+if (!clerkPubKey && !isDevMode) {
+  throw new Error(
+    "Missing VITE_CLERK_PUBLISHABLE_KEY. Add it to your .env file or environment variables.",
+  );
+}
+
+// In production, if the API lives on a different origin, configure the base URL
+// so all generated API calls are prefixed correctly.
+const apiBaseUrl = import.meta.env.VITE_API_URL;
+if (apiBaseUrl) {
+  setBaseUrl(apiBaseUrl);
 }
 
 function SignInPage() {
@@ -182,6 +192,9 @@ function AdminProtectedRoute({ component: Component }: { component: any }) {
   );
 }
 
+/**
+ * Renders the full application with Clerk authentication.
+ */
 function ClerkProviderWithRoutes() {
   const [, setLocation] = useLocation();
 
@@ -233,10 +246,64 @@ function ClerkProviderWithRoutes() {
   );
 }
 
+/**
+ * Fallback when VITE_CLERK_PUBLISHABLE_KEY is missing in development.
+ * Renders the app without Clerk auth — all protected routes are accessible.
+ * The backend must run with SKIP_ADMIN_CHECK=true for API calls to work.
+ */
+function DevWithoutClerk() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <div style={{
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 9999,
+          background: "#fef3c7", borderBottom: "1px solid #f59e0b",
+          padding: "8px 16px", fontSize: "13px", color: "#92400e",
+          fontFamily: "system-ui, sans-serif",
+        }}>
+          <strong>Dev mode (no Clerk):</strong> Set{" "}
+          <code style={{ background: "#fef9c3", padding: "1px 4px", borderRadius: "3px" }}>
+            VITE_CLERK_PUBLISHABLE_KEY
+          </code>{" "}
+          in the root <code>.env</code> to enable authentication. Backend must run with{" "}
+          <code style={{ background: "#fef9c3", padding: "1px 4px", borderRadius: "3px" }}>
+            SKIP_ADMIN_CHECK=true
+          </code>.
+        </div>
+        <div style={{ marginTop: "40px" }}>
+          <Switch>
+            <Route path="/" component={HomeRedirect} />
+            <Route path="/sign-in/*?" component={SignInPage} />
+            <Route path="/sign-up/*?" component={SignUpPage} />
+            <Route path="/portfolio-share/:token" component={PublicPortfolioTokenRoute} />
+            <Route path="/portfolio/private/:token" component={PublicPortfolioTokenRoute} />
+            <Route path="/portfolio/:slug" component={PublicPortfolioSlugRoute} />
+            <Route path="/dashboard" component={AppRoutes} />
+            <Route path="/portfolio" component={AppRoutes} />
+            <Route path="/portfolio/:id" component={AppRoutes} />
+            <Route path="/student-portfolios" component={AppRoutes} />
+            <Route path="/scores" component={AppRoutes} />
+            <Route path="/roadmaps" component={AppRoutes} />
+            <Route path="/roadmaps/:id" component={AppRoutes} />
+            <Route path="/stacks/:id" component={AppRoutes} />
+            <Route path="/jobs" component={AppRoutes} />
+            <Route path="/admin/domains" component={AppRoutes} />
+            <Route path="/admin/scraping" component={AppRoutes} />
+            <Route path="/market-intelligence" component={AppRoutes} />
+            <Route path="/profile" component={AppRoutes} />
+            <Route component={NotFound} />
+          </Switch>
+          <Toaster />
+        </div>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
+
 function App() {
   return (
     <WouterRouter base={basePath}>
-      <ClerkProviderWithRoutes />
+      {clerkPubKey ? <ClerkProviderWithRoutes /> : <DevWithoutClerk />}
     </WouterRouter>
   );
 }

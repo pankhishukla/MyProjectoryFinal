@@ -1,7 +1,7 @@
 import { useParams, Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useAuth } from "@clerk/react";
+import { useAuth } from "../../lib/fakeClerk";
 import { useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 function useAuthedFetch() {
   const { getToken } = useAuth();
   return useCallback(
-    async <T>(url: string, init: RequestInit = {}): Promise<T> => {
+    async <T,>(url: string, init: RequestInit = {}): Promise<T> => {
       const token = await getToken();
       const headers: Record<string, string> = {
         ...(init.headers as Record<string, string>),

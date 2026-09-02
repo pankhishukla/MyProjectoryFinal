@@ -1,0 +1,40 @@
+{
+  "name": "odbc",
+  "description": "unixodbc bindings for node",
+  "version": "1.4.10",
+  "main": "lib/odbc.js",
+  "types": "./lib/odbc.d.ts",
+  "homepage": "http://github.com/wankdanker/node-odbc/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wankdanker/node-odbc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/w1nk/node-odbc/issues"
+  },
+  "contributors": [
+    {
+      "name": "Dan VerWeire",
+      "email": "dverweire@gmail.com"
+    },
+    {
+      "name": "Lee Smith",
+      "email": "notwink@gmail.com"
+    }
+  ],
+  "directories": {
+    "lib": "."
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "scripts": {
+    "install": "node-gyp configure build",
+    "test": "cd test && node run-tests.js"
+  },
+  "dependencies": {
+    "bindings": "^1.3.0",
+    "nan": "^2.14.2"
+  },
+  "gypfile": true
+}

@@ -1,0 +1,366 @@
+/**
+ * Created by caoxp on 2015/6/16.
+ * 对sql配置json文件进行加载，并进行管理
+ */
+var fs = require('fs');
+var path = require('path');
+var sysconfig = require('../config/sys.config');
+var _ = require('lodash');
+var util = require('./util');
+var utils = require('util');
+
+var _sql = [];
+var sqlinfo = {
+    load: function () {
+        _sql = [];
+        var rs = [], sqlconfigpath = sysconfig.dbtype === 'mysql' ? path.join(sysconfig.rootDir, './config/mysql') : path.join(sysconfig.rootDir, './config/vertica');
+
+        fs.readdir(sqlconfigpath, function (e, files) {
+            if (!e) {
+                files.forEach(function (item) {
+                    if (path.extname(item) !== '.js') {//json
+                        fs.readFile(path.join(sqlconfigpath, item), {encoding: 'utf8'}, function (err, data) {
+                            if (!err) {
+                                try {
+                                    _sql.push(JSON.parse(data).configs);
+                                    _sql = _.flattenDeep(_sql);
+                                    console.log('加载sql配置文件%s完成', item);
+
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                            }
+                        })
+                    }
+                })
+
+            }
+        })
+    },
+    getsql: function (key) {
+        var config = '';
+        if (_sql.length > 0) {
+            config = _.first(_.filter(_sql, function (n) {
+                return n.key === key;
+            })).config;
+        }
+        if (!config) {
+            console.log('方法key为%s没有找到配置项', key);
+            return "";
+        }
+        return config;
+    },
+    getsqltext: function (config, param) {
+        var params = config.parameters, sql = config.value, count = 0, matchStr = '';
+        //根据conditionid替换condition条件,从传递过来的param中取出值。param和params中key是一致的，
+        if (!params || params.length <= 0 || !param) {//若没有参数的话，将sql中的[@]都去除
+            sql = sql.replace(/\[@\w*\]/g, '');
+            return sql;
+        }
+        params.forEach(function (item) {
+            var reg = new RegExp('(\\[@and\\]|\\[@or\\])?(\\s)*\\[@' + item.conditionid + '\\]', 'g');
+            //根据类型，转换参数值
+            //如果参数类型是projects，单独处理
+            var paramValue = param[item.name];
+            if (!paramValue) {
+                sql = sql.replace(reg, '');
+                count++;
+
+            }
+                paramValue = sqlinfo._transferValue(item, paramValue);
+                if (item.type === 'projects') {
+                    sql = sqlinfo._transferProjects(sql, paramValue, item.conditions);
+                } else if (item.type === 'giscolor') {
+                    sql = sqlinfo._transferGisColors(sql, paramValue, item.conditionid, item.columnname);
+                } else if (item.type === 'object') {
+                    sql = sqlinfo._transferObject(sql, paramValue, item, reg);
+                }else if(item.type === 'text'){
+                    sql = sqlinfo._transferText(sql,item,reg);
+                } else if(paramValue) {
+
+                    matchStr = sql.match(reg);
+                    if (matchStr) {
+                        if (matchStr[0].indexOf('[@and]') >= 0)
+                            sql = sql.replace(reg, ' and ' + sqlinfo._getsymboltext(item, paramValue));
+                        else if (matchStr[0].indexOf('[@or]') >= 0)
+                            sql = sql.replace(reg, ' or ' + sqlinfo._getsymboltext(item, paramValue));
+                        else
+                            sql = sql.replace(reg, sqlinfo._getsymboltext(item, paramValue));
+                    }
+                    //sql = sql.replace(new RegExp('\\[@' + item.conditionid  + '\\](\\s)*(\\[@and\\]|\\[@or\\])?','g'), sqlinfo._getsymboltext(item, paramValue)+' $2');
+                }
+
+        });
+        //如果sql中还有where并且后面为空则将where去掉
+        if (params.length == count) {//表示params中没有匹配的条件
+            sql = sql.replace('[@where]', '');
+        } else {
+
+            sql = sql.replace(/(\[@where\](\s)*(and)?)/, ' where ');
+        }
+        return sql;
+    },
+    _getsymboltext: function (item, value) {
+        var text = '';
+        if (!item.columnname || !item.symbol) {
+            //如果没有配置columnname，则表示直接替换数据
+            text = value;
+            return text;
+        }
+        switch (item.symbol) {
+            case '>=':
+            case '>':
+            case '=':
+            case '<=':
+            case '<':
+                if (item.type == 'string' || item.type == 'date') {
+                    text = item.columnname + item.symbol + "'" + value + "'";
+                } else {
+                    text = item.columnname + item.symbol + value;
+                }
+                break;
+            case 'in':
+                if (item.type == 'string' || item.type == 'date') {
+                    text = "'" + value.join("','") + "'";
+                } else {
+                    text = value.join(",");
+                }
+                text = item.columnname + ' ' + item.symbol + '(' + text + ')';//此处value应该是Array类型
+
+        }
+        return text;
+    },
+    _transferValue: function (configParam, value) {
+        var retValue = value, format = configParam.format;
+        try {
+            switch (configParam.type.toLowerCase()) {
+                case 'int':
+                    retValue = util.format.ToInt(value);
+                    break
+                case 'float':
+                    //获取其中的format
+                    retValue = util.format.ToDouble(value, format);
+                    break;
+                case 'date':
+                    retValue = util.format.ToDateStr(value, format);
+                    break;
+            }
+        } catch (ex) {
+            retValue = value;
+        }
+        return retValue;
+
+    },
+    _transferProjects: function (sql, value, conditions) {
+        if(!value) return sql;
+        var sqls = [], basesql = sql, self = this, req = '';
+        if (!_.isArray(value)) {
+            value = [value];
+        }
+        if (!_.isArray(conditions)) {
+            conditions = [conditions];
+        }
+        value.forEach(function (project, index) {
+            basesql = sql;
+            conditions.forEach(function (con, idx) {
+                var conditionid = con.conditionid, columnname = con.columnname, symbol = con.symbol, key = con.key, text = '', reg = new RegExp('(\\[@and\\]|\\[@or\\])?(\\s)*\\[@' + conditionid + '\\]', 'g');
+                if (!symbol || !columnname) {
+                    text = project[key];
+                } else {
+                    text = self._getsymboltext(con, project[key]);
+                }
+                //替换and or
+                var matchStr = basesql.match(reg);
+                if (matchStr) {
+                    if (matchStr[0].indexOf('[@and]') >= 0)
+                        basesql = basesql.replace(reg, ' and ' + text);
+                    else if (matchStr[0].indexOf('[@or]') >= 0)
+                        basesql = basesql.replace(reg, ' or ' + text);
+                    else
+                        basesql = basesql.replace(reg, text);
+                }
+
+            });
+            sqls.push(basesql);
+        });
+        sql = sqls.join(' union all ');
+        return sql;
+    },
+    _transferGisColors: function (sql, value, conditionid) {
+        if(!value) return sql;
+        if (!_.isArray(value)) {
+            value = [value];
+        }
+        var regexp = new RegExp('\\[@' + conditionid + '\\]', 'g'), replaceText = '', columnname = '';
+        if (value.length > 0) {
+            replaceText = ' case when ';
+        }
+        value.forEach(function (item, index) {
+            columnname = item.name;
+            if (index != 0) {
+                replaceText += ' case when ';
+            }
+            item.range.forEach(function (itm, idx) {
+                if (itm.text) {
+                    replaceText = replaceText + utils.format("  %s = '%s' then '&s'", columnname, itm.text, itm.color);
+                } else {
+                    if (!!itm.min && !!itm.max) {
+                        replaceText = replaceText + utils.format("  %s >= %d and %s < %d then '%s' ", columnname, itm.min, columnname, itm.max, itm.color);
+                    } else if (!!itm.min) {
+                        replaceText = replaceText + utils.format("  %s >= %d then '%s' ", columnname, itm.min, itm.color);
+                    } else if (!!itm.max) {
+                        replaceText = replaceText + utils.format("   %s < %d then '%s' ", columnname, itm.max, itm.color);
+                    }
+
+                }
+                if (idx != item.range.length - 1) {
+                    replaceText = replaceText + ' when ';
+                } else {
+                    replaceText = replaceText + ' end ' + columnname + '_c';
+                }
+
+            })
+            if (index != value.length - 1) {
+                replaceText = replaceText + ',';
+            }
+
+        })
+        sql = sql.replace(regexp, replaceText);
+        return sql;
+    },
+    _transferObject: function (sql, valueObj, item, reg) {
+        var matchStr = sql.match(reg);
+        if(!valueObj ){
+            if(item.conditions){
+                var conditionsFlag = item.conditions.cnd,conFlags ='';
+                for(var c= 0;c<conditionsFlag.length;c++){
+                    conFlags +=  '\\[@'+conditionsFlag[c].conditionid+'\\]';
+                    if(c<conditionsFlag.length-1)
+                        conFlags += '(\\s)*(\\[@and\\]|\\[@or\\])?(\\s)*';
+                }
+                reg = new RegExp('(\\[@and\\]|\\[@or\\])?(\\s)*(\\$\\{)*' + conFlags + '(\\}\\&)*', 'g');
+                sql = sql.replace(reg,'');
+                return sql;
+            }
+        }
+        if (!_.isArray(valueObj)) {
+            valueObj = [valueObj];
+        }
+        if (item.conditions) {
+
+            //reg = new RegExp('(\\[@and\\]|\\[@or\\])?(\\s)*\\[@' + conditionid + '\\]', 'g')
+            var conditions = item.conditions.cnd,coa = item.conditions.co,flags=[];
+
+            //获取sql中的条件配置，进行循环替换，在{}之间
+            var regcon =sql.slice(sql.indexOf('{'),sql.indexOf('}')+1),end= '',regflag = regcon.replace('{','\\{').replace('}','\\}').replace(/\[/g,'\\[').replace(/\]/g,'\\]');
+            //保存{位置，以后替换使用
+            reg = new RegExp(regflag,'g');
+            matchStr =  sql.match(reg);
+
+            matchStr.forEach(function (matchItem,matchIndex) {
+                flags.push(sql.indexOf(matchItem,(matchIndex==0?0:flags[matchIndex-1]+1)));
+            })
+            valueObj.forEach(function (value,indx) {
+                flags = [];
+                matchStr.forEach(function (matchItem,matchIndex) {
+                    flags.push(sql.indexOf(matchItem,(matchIndex==0?0:flags[matchIndex-1]+1)));
+                });
+                var splitsqll ='',splitsqlr='',rightindex=0;
+                if(!_.isArray(conditions)){
+                    conditions = [conditions];
+                }
+                conditions.forEach(function (con,inx) {
+                    reg = new RegExp('(\\[@and\\]|\\[@or\\])?(\\s)*(\\$\\{)*\\[@' + con.conditionid + '\\]', 'g');
+                    matchStr = sql.match(reg);
+                    if (matchStr) {
+                        if(matchStr[0].indexOf('{')>=0){
+                            //保存{位置，以后替换使用
+                            //matchStr.forEach(function (matchItem,matchIndex) {
+                            //    flags.push(sql.indexOf(matchItem,(matchIndex==0?0:flags[matchIndex-1]+1)));
+                            //})
+
+                            if (matchStr[0].indexOf('[@and]') >= 0){
+                                //sql = sql.replace(matchStr[0],' and {'+sqlinfo._getsymboltext(con, value[con.key]));
+                                sql = sql.replace(reg, ' and ${' + sqlinfo._getsymboltext(con, value[con.key]));
+                            }
+                            else if (matchStr[0].indexOf('[@or]') >= 0){
+                                //sql = sql.replace(matchStr[0],' or {'+sqlinfo._getsymboltext(con, value[con.key]));
+                                sql = sql.replace(reg, ' or ${' + sqlinfo._getsymboltext(con, value[con.key]));
+                            }
+                            else{
+                                //sql = sql.replace(matchStr[0],' {'+sqlinfo._getsymboltext(con, value[con.key]));
+                                sql = sql.replace(reg, '${'+sqlinfo._getsymboltext(con, value[con.key]));
+                            }
+
+                        }else{
+                            if (matchStr[0].indexOf('[@and]') >= 0)
+                                sql = sql.replace(reg, ' and ' + sqlinfo._getsymboltext(con, value[con.key]));
+                            else if (matchStr[0].indexOf('[@or]') >= 0)
+                                sql = sql.replace(reg, ' or ' + sqlinfo._getsymboltext(con, value[con.key]));
+                            else
+                                sql = sql.replace(reg, sqlinfo._getsymboltext(con, value[con.key]));
+                        }
+
+                    }
+                });
+                //根据flag，在flag中}位置后进行添加
+                for(var f=0;f<flags.length;f++){
+                    rightindex = sql.indexOf("}",flags[f]);
+                    splitsqll = sql.slice(0,rightindex+1);
+                    splitsqlr = sql.slice(rightindex+1);
+                    if(indx<valueObj.length-1)
+                    sql = splitsqll+(coa ==='[@and]'?'and ':'or ')+regcon+splitsqlr;
+                }
+                //var splitsqls = sql.split('}'),basesql ='';
+                //for(var isplit = 0;isplit<splitsqls.length;isplit++){
+                //    basesql = basesql+splitsqls[isplit];
+                //    isplit<splitsqls.length-1 && (basesql=basesql+' }');
+                //    if(isplit<splitsqls.length-1 && indx<valueObj.length-1)
+                //        basesql = basesql+(coa ==='[@and]'?'and ':'or ')+regcon;
+                //}
+                //sql = basesql;
+            })
+
+            sql = sql.replace(/\{([^\[])/g,'($1').replace(/([^\]])\}/g,'$1)').replace(/\$([^\{])/g,'($1').replace(/([^\}])\&/g,'$1)');
+
+        } else {
+            valueObj.forEach(function (value) {
+                if (matchStr) {
+                    if (matchStr[0].indexOf('[@and]') >= 0)
+                        sql = sql.replace(reg, ' and ' + sqlinfo._getsymboltext(item, value[item.key]));
+                    else if (matchStr[0].indexOf('[@or]') >= 0)
+                        sql = sql.replace(reg, ' or ' + sqlinfo._getsymboltext(item, value[item.key]));
+                    else
+                        sql = sql.replace(reg, sqlinfo._getsymboltext(item, value[item.key]));
+                }
+            })
+        }
+
+
+        return sql;
+    },
+    _transferText: function (sql, item, reg) {
+        var text = item.value;
+        if(item.columnname){
+            if(item.symbol === 'in'){
+                text = item.columnname +' '+item.symbol +'('+text+')';
+            }else{
+                text = item.columnname +' '+item.symbol + text;
+            }
+        }
+        matchStr = sql.match(reg);
+        if (matchStr) {
+            if (matchStr[0].indexOf('[@and]') >= 0)
+                sql = sql.replace(reg, ' and ' + text);
+            else if (matchStr[0].indexOf('[@or]') >= 0)
+                sql = sql.replace(reg, ' or ' + text);
+            else
+                sql = sql.replace(reg, text);
+        }
+        return sql;
+    }
+
+};
+exports.sqlInfo = sqlinfo;
+
+

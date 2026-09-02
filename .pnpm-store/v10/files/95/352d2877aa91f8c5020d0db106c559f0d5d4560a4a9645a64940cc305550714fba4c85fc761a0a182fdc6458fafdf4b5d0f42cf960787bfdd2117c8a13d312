@@ -1,0 +1,714 @@
+{
+  "module": "m3",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "overallflow_list",
+      "desc":"总体流量分析",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "proname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "cityname",
+            "columnname": "city",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":"="
+          }
+        ],
+        "value": "select c.proname,a.city,round((a.DLData+a.ULData+b.totle_Data)/8/1024/1024/1024,2.0) alldata,round((a.ULData+b.ULData)/8/1024/1024/1024,2.0) ULData, round((a.DLData+b.DLData)/8/1024/1024/1024,2.0) DLData, round((a.DLData+a.ULData)/8/1024/1024/1024,2.0) alldatalte, round(a.ULData/8/1024/1024/1024,2.0) ULDatalte, round(a.DLData/8/1024/1024/1024,2.0) DLDatalte, round(b.totle_data/8/1024/1024/1024,2.0) alldata23, round(b.ULData/8/1024/1024/1024,2.0) ULData23, round(b.DLData/8/1024/1024/1024,2.0) DLData23, round(b.Data4/8/1024/1024/1024,2.0) allData4, round(b.UPData4/8/1024/1024/1024,2.0) ULData4, round(b.DLData4/8/1024/1024/1024,2.0) DLData4,a.up_packet+a.down_packet+b.totle_Packets allpackets,a.up_packet+b.ULIPPackets up_packet, a.down_packet+b.DLIPPackets down_packet, a.up_packet+a.down_packet packetslte, a.up_packet up_packetlte, a.down_packet down_packetlte, b.totle_Packets Packets23, b.ULIPPackets up_packet23, b.DLIPPackets down_packet23, totle_IPPackets4 totle_IPPackets4, ULIPPackets4 ULIPPackets4, DLIPPackets4 DLIPPackets4 from (select city,sum(DLData+ULData) totle_Data,sum(ULData) ULData,sum(UPData4+DLData4) Data4,sum(UPData4) UPData4,sum(DLData) DLData,sum(DLData4) DLData4,sum(ULIPPackets+DLIPPackets) totle_Packets,sum(ULIPPackets) ULIPPackets,sum(DLIPPackets) DLIPPackets,sum(ULIPPackets4+DLIPPackets4) totle_IPPackets4,sum(ULIPPackets4) ULIPPackets4,sum(DLIPPackets4) DLIPPackets4 from LTE_SYS.[@c0]_T_Flow_Summary where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c4] group by city) as b left join (select city,sum(DL_FLOW) DLData,sum(UL_FLOW) ULData,sum(ul_package_lte) up_packet,sum(dl_package_lte) down_packet from LTE_SYS.[@c0]_T_LTE_flow_summary where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c4] group by city) as a on a.city=b.city left join LTE_SYS.T_BASE_CITY c on a.city=c.CITYNAME order by a.city"
+      }
+    },
+    {
+      "key": "terminalflow_list",
+      "desc":"终端流量分析",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "proname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "cityname",
+            "columnname": "city",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":"="
+          },
+          {
+            "name": "rat",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "nettype",
+            "columnname": "b.nettype",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          },
+          {
+            "name": "factory",
+            "columnname": "b.factory",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":"="
+          }
+        ],
+        "value": "select c.proname,a.city,'[@c5]' rat,b.NETTYPE,b.FACTORY,b.MOBILETYPE,round(sum(ULData+DLData+ULData_gn+DLData_gn)/8/1024/1024,2.0) alldata, round(sum(ULData+ULData_gn)/8/1024/1024,2.0) ULData, round(sum(DLData+DLData_gn)/8/1024/1024,2.0) DLData, round(sum(ULData+DLData)/8/1024/1024,2.0) alldatalte, round(sum(ULData)/8/1024/1024,2.0) ULDatalte, round(sum(DLData)/8/1024/1024,2.0) DLDatalte, round(sum(ULData_gn+DLData_gn)/8/1024/1024,2.0) alldata23, round(sum(ULData_gn)/8/1024/1024,2.0) ULData23, round(sum(DLData_gn)/8/1024/1024,2.0) DLData23, round(sum(ULData_alluser+DLData_alluser)/8/1024/1024,2.0) allData4, round(sum(ULData_alluser)/8/1024/1024,2.0) ULData4, round(sum(DLData_alluser)/8/1024/1024,2.0) DLData4, sum(ulpackage_lte+dlpackage_lte+ulpackage_gn+dlpackage_gn) allpackets, sum(ulpackage_lte+ulpackage_gn) up_packet, sum(dlpackage_lte+dlpackage_gn) down_packet, sum(ulpackage_lte+dlpackage_lte) packetslte, sum(ulpackage_lte) up_packetlte, sum(dlpackage_lte) down_packetlte, sum(ulpackage_gn+dlpackage_gn) Packets23, sum(ulpackage_gn) up_packet23, sum(dlpackage_gn) down_packet23, sum(ulpackage_alluser+dlpackage_alluser) totle_IPPackets4, sum(ulpackage_alluser) ULIPPackets4, sum(dlpackage_alluser) DLIPPackets4 from LTE_SYS.[@c0]_T_END_TO_END_ANALYSIS_TAC a left join LTE_SYS.T_Base_Terminal_D b on to_char(a.TAC)=b.IMEI left join LTE_SYS.T_BASE_CITY c on a.city=c.CITYNAME where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') and b.FACTORY is not null [@and] [@c4] [@and] [@c6] [@and] [@c7] group by c.proname,city,b.IMEI,b.NETTYPE,b.FACTORY,b.MOBILETYPE order by a.city,b.IMEI"
+      }
+    },
+    {
+      "key": "terminalflow_factory_list",
+      "desc":"终端流量分析-终端厂商",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "colum",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "cityname",
+            "columnname": "city",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":"="
+          },
+          {
+            "name": "nettype",
+            "columnname": "b.nettype",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          },
+          {
+            "name": "factory",
+            "columnname": "b.factory",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":"="
+          }
+        ],
+        "value": "select c.proname,city,b.factory,round(sum([@c3])/8/1024/1024,2.0) alldata from LTE_SYS.[@c0]_T_END_TO_END_ANALYSIS_TAC a left join LTE_SYS.T_Base_Terminal_D b on to_char(a.tac)=b.imei left join LTE_SYS.T_BASE_CITY c on a.city=c.CITYNAME where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') and b.factory is not null [@and] [@c4] [@and] [@c6] [@and] [@c7] group by c.proname,city,b.factory order by sum([@c3]) desc"
+      }
+    },
+    {
+      "key": "terminalflow_mobiletype_list",
+      "desc":"终端流量分析-终端型号",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "colum",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "cityname",
+            "columnname": "city",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":"="
+          },
+          {
+            "name": "nettype",
+            "columnname": "b.nettype",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          },
+          {
+            "name": "factory",
+            "columnname": "b.factory",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":"="
+          }
+        ],
+        "value": "select c.proname,city,b.mobiletype,round(sum([@c3])/8/1024/1024,2.0) alldata from LTE_SYS.[@c0]_T_END_TO_END_ANALYSIS_TAC a left join LTE_SYS.T_Base_Terminal_D b on to_char(a.tac)=b.imei left join LTE_SYS.T_BASE_CITY c on a.city=c.CITYNAME where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c4] [@and] [@c6] [@and] [@c7] group by c.proname,city,b.mobiletype"
+      }
+    },
+    {
+      "key": "businessanalysis_list",
+      "desc":"业务分析",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "proname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "cityname",
+            "columnname": "city",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":"="
+          },
+          {
+            "name": "rat",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "categoryname",
+            "columnname": "b.CATEGORYNAME",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          },
+          {
+            "name": "bussinessname",
+            "columnname": "b.bussinessname",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":"="
+          }
+        ],
+        "value": "select c.proname,a.city,'[@c5]' rat,b.CATEGORYNAME,b.bussinessname,round(sum(ULData+DLData+GNDUData+GNDLData)/8/1024/1024,2.0) alldata, round(sum(ULData+GNDUData)/8/1024/1024,2.0) ULData, round(sum(DLData+GNDLData)/8/1024/1024,2.0) DLData, round(sum(ULData+DLData)/8/1024/1024,2.0) alldatalte, round(sum(ULData)/8/1024/1024,2.0) ULDatalte, round(sum(DLData)/8/1024/1024,2.0) DLDatalte, round(sum(GNDUData+GNDLData)/8/1024/1024,2.0) alldata23, round(sum(GNDUData)/8/1024/1024,2.0) ULData23, round(sum(GNDLData)/8/1024/1024,2.0) DLData23, round(sum(commonULData+commonDLData)/8/1024/1024,2.0) allData4, round(sum(commonULData)/8/1024/1024,2.0) ULData4, round(sum(commonDLData)/8/1024/1024,2.0) DLData4, sum(up_packet+down_packet+gn_up_packet+gn_down_packet) allpackets, sum(up_packet+gn_up_packet) up_packet, sum(down_packet+gn_down_packet) down_packet, sum(up_packet+down_packet) packetslte, sum(up_packet) up_packetlte, sum(down_packet) down_packetlte, sum(gn_up_packet+gn_down_packet) Packets23, sum(gn_up_packet) up_packet23, sum(gn_up_packet) down_packet23, sum(commonpacket+commonup_packet) totle_IPPackets4, sum(commonpacket) ULIPPackets4, sum(commonup_packet) DLIPPackets4 from LTE_SYS.[@c0]_T_APP_KPI_60 a left join LTE_SYS.[@c0]_T_BASE_CATEGORYTYPE b on a.App_Type=b.CATEGORYID and a.App_Sub_Type=b.BUSSINESSTYPE left join LTE_SYS.T_BASE_CITY c on a.city=c.CITYNAME where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c4] [@and] [@c6] [@and] [@c7] group by c.proname,city,b.CATEGORYNAME,b.bussinessname order by a.city,b.CATEGORYNAME,b.bussinessname"
+      }
+    },
+    {
+      "key": "businessanalysis_chart_list",
+      "desc":"业务分析-图形",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "colum",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "cityname",
+            "columnname": "city",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":"="
+          },
+          {
+            "name": "categoryname",
+            "columnname": "b.CATEGORYNAME",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":"="
+          }
+        ],
+        "value": "select c.proname,a.city,b.CATEGORYNAME,a.App_Type,round(sum([@c3])/8/1024/1024,2.0) alldata from LTE_SYS.[@c0]_T_APP_KPI_60 a left join LTE_SYS.[@c0]_T_BASE_CATEGORYTYPE b on a.App_Type=b.CATEGORYID left join LTE_SYS.T_BASE_CITY c on a.city=c.CITYNAME where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') and CATEGORYNAME is not null [@and] [@c4] [@and] [@c5] group by c.proname,a.city,b.CATEGORYNAME,a.App_Type order by a.App_Type"
+      }
+    },
+    {
+      "key": "businessanalysis_chart2_list",
+      "desc":"业务分析-图形2",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "colum",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "cityname",
+            "columnname": "city",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":"="
+          },
+          {
+            "name": "categoryname",
+            "columnname": "b.CATEGORYNAME",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":"="
+          },
+          {
+            "name": "bussinessname",
+            "columnname": "b.bussinessname",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":"="
+          }
+        ],
+        "value": "select c.proname,a.city,b.bussinessname,round(sum([@c3])/8/1024/1024,2.0) alldata from LTE_SYS.[@c0]_T_APP_KPI_60 a left join LTE_SYS.[@c0]_T_BASE_CATEGORYTYPE b on a.App_Type=b.CATEGORYID and a.App_Sub_Type=b.BUSSINESSTYPE left join LTE_SYS.T_BASE_CITY c on a.city=c.CITYNAME where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') and  b.bussinessname is not null  [@and] [@c4] [@and] [@c5] [@and] [@c6]  group by c.proname,a.city,b.bussinessname order by sum([@c3]) desc;"
+      }
+    },
+    {
+      "key": "cellanalysis4g_list",
+      "desc":"小区分析",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "proname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "cityname",
+            "columnname": "city",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":"="
+          },
+          {
+            "name": "rat",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "area",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":""
+          }
+        ],
+        "value": "select c.proname,a.city,'[@c5]' rat,a.cellname,a.eci,round(sum(UL_FLOW+DL_FLOW)/8/1024/1024,2.0) alldatalte, round(sum(UL_FLOW)/8/1024/1024,2.0) ULDatalte, round(sum(DL_FLOW)/8/1024/1024,2.0) DLDatalte, sum(ul_package_lte+dl_package_lte) packetslte, sum(ul_package_lte) up_packetlte, sum(dl_package_lte) down_packetlte from LTE_SYS.[@c0]_T_LTE_flow_summary a left join LTE_SYS.T_BASE_CITY c on a.city=c.CITYNAME where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c4] group by c.proname,a.city,a.eci,a.cellname order by a.city,a.eci"
+      }
+    },
+    {
+      "key": "cellanalysis23g_list",
+      "desc":"小区分析",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "proname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "cityname",
+            "columnname": "city",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":"="
+          },
+          {
+            "name": "rat",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },
+          {
+            "name": "area",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":""
+          }
+        ],
+        "value": "select c.proname,a.city,'[@c5]' rat,a.CID eci,round(sum(DLData+ULData)/8/1024/1024,2.0) alldata23, round(sum(ULData)/8/1024/1024,2.0) ULData23, round(sum(DLData)/8/1024/1024,2.0) DLData23, round(sum(UPData4+DLData4)/8/1024/1024,2.0) allData4, round(sum(UPData4)/8/1024/1024,2.0) ULData4, round(sum(DLData4)/8/1024/1024,2.0) DLData4, sum(ULIPPackets+DLIPPackets) Packets23, sum(ULIPPackets) up_packet23, sum(DLIPPackets) down_packet23, sum(ULIPPackets4+DLIPPackets4) totle_IPPackets4, sum(ULIPPackets4) ULIPPackets4, sum(DLIPPackets4) DLIPPackets4 from LTE_SYS.[@c0]_T_Flow_Summary a left join LTE_SYS.T_BASE_CITY c on a.city=c.CITYNAME where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c4] group by c.proname,a.city,a.CID order by a.city,a.CID"
+      }
+    },
+    {
+      "key": "ceshi_list",
+      "desc":"测试",
+      "config": {
+        "parameters": [
+          {
+            "name": "preData",
+            "key":"name",
+            "columnname": "",
+            "type":"object",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          }
+        ],
+        "value": "select '[@c0]'"
+      }
+    },
+    {
+      "key": "province_list",
+      "desc":"省份列表",
+      "config": {
+        "parameters": [
+
+        ],
+        "value": "select proname from LTE_SYS.T_BASE_CITY where CAPITALCITY='1' order by proname"
+      }
+    },
+    {
+      "key": "city_list",
+      "desc":"地市列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "proname",
+            "columnname": "proname",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":"="
+          },{
+            "name": "pronames",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                { "key":"param",
+                  "columnname": "proname",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "c1",
+                  "symbol":"in"
+                }
+              ]
+            }
+          },{
+            "name": "citynames",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                { "key":"param",
+                  "columnname": "cityname",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "c2",
+                  "symbol":"in"
+                }
+              ]
+            }
+          }
+        ],
+        "value": "select cityname from LTE_SYS.T_BASE_CITY [@where] [@c0] [@c1] [@and] [@c2] order by cityname"
+      }
+    },
+    {
+      "key": "apptype_list",
+      "desc":"业务大类列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":"="
+          }
+        ],
+        "value": "select distinct categoryid,categoryname from LTE_SYS.[@c0]_T_BASE_CATEGORYTYPE order by categoryid;"
+      }
+    },
+    {
+      "key": "appsubtype_list",
+      "desc":"业务小类列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "categoryname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          }
+        ],
+        "value": "select bussinesstype,bussinessname from LTE_SYS.[@c0]_T_BASE_CATEGORYTYPE where categoryname='[@c1]' order by bussinesstype;"
+      }
+    },
+    {
+      "key": "nettype_list",
+      "desc":"终端类型列表",
+      "config": {
+        "parameters": [],
+        "value": "select distinct NETTYPE from LTE_SYS.T_Base_Terminal_D"
+      }
+    },
+    {
+      "key": "factory_list",
+      "desc":"终端厂商列表",
+      "config": {
+        "parameters": [],
+        "value": "select FACTORY from LTE_SYS.T_Base_Terminal_D group by FACTORY order by min(IMEI)"
+      }
+    }
+  ]
+}

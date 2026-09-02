@@ -1,0 +1,273 @@
+{
+    "module": "SysMenuManager.MenuManager",
+    "flag": "vertical",
+    "configs": [
+        {
+            "key": "dataSysMenuManager.menuList",
+            "desc": "系统管理-菜单管理",
+            "config": {
+                "parameters": [
+                ],
+                "value": "SELECT id,menuname,parentid,remark,menuurl,orderid,isenabled,TO_DATE(createtime||'','YYYY-MM-DD') as createtime,createuser FROM LTE_SYS.T_BASE_SYS_MENU order by orderid desc"
+            }
+        },
+        {
+            "key": "dataSysMenuManager.menuAdd",
+            "desc": "添加菜单",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "menuname",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "parentid",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c1",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "remark",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c2",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "orderid",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c3",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "menuicon",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c4",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "menuurl",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c5",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "isvisible",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c6",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "isenabled",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c7",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "createuser",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c8",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "createtime",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c9",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "menucode",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c10",
+                        "symbol": ""
+                    }
+
+
+                ],
+    "value": "INSERT INTO LTE_SYS.T_BASE_SYS_MENU (id ,menuname ,parentid ,remark ,orderid ,menuicon ,menuurl ,isvisible  ,isenabled ,createuser ,createtime ,updateuser ,updatetime ,menucode)  VALUES (t_base_sys_menu_sequence.nextval, '[@c0]', '[@c1]', '[@c2]','[@c3]','[@c4]', '[@c5]', '[@c6]', '[@c7]','[@c8]','[@c9]', '[@c8]', '[@c9]', '[@c10]') "
+}
+},
+        {
+            "key": "dataSysMenuManager.update",
+            "desc": "修改菜单信息",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "menuname",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "parentid",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c1",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "remark",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c2",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "orderid",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c3",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "menuicon",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c4",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "menuurl",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c5",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "isvisible",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c6",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "isenabled",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c7",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "updatetime",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c8",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "updateuser",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c9",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "menucode",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c10",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "id",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c11",
+                        "symbol": ""
+                    }
+                ],
+                "value":"UPDATE    LTE_SYS.T_BASE_SYS_MENU  SET  menuname='[@c0]' ,parentid='[@c1]' ,remark='[@c2]' ,orderid='[@c3]' ,menuicon='[@c4]' ,menuurl='[@c5]' ,isvisible='[@c6]' ,isenabled='[@c7]' ,updatetime='[@c8]' ,updateuser='[@c9]' ,menucode='[@c10]'   WHERE     id= cast('[@c11]' as integer) "
+            }
+        },
+        {
+            "key": "dataSysMenuManager.menuDelete",
+            "desc": "删除菜单信息",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "id",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    }
+                ],
+                "value": "DELETE FROM  LTE_SYS.T_BASE_SYS_MENU WHERE id=[@c0] "
+            }
+        },
+        {
+            "key": "dataSysMenuManager.roleormenuDelete",
+            "desc": "删除角色菜单中间关系表信息",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "id",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    }
+                ],
+                "value": "DELETE FROM LTE_SYS.T_BASE_SYS_MENUSOFROLES WHERE roleid=[@c0] "
+            }
+        },
+        {
+            "key": "dataSysManager.userInsertRoleDataid",
+            "desc": "系统管理-用户管理-查询角色插入ID",
+            "config": {
+                "parameters": [
+
+                ],
+                "value": "select max(id) as ids from lte_sys.T_BASE_SYS_ROLE"
+            }
+        },
+        {
+            "key": "dataSysManager.getmaxmenuorderid",
+            "desc": "系统管理-菜单管理-查询菜单默认最大序号",
+            "config": {
+                "parameters": [
+
+                ],
+                "value": " SELECT max(orderid)+1 as defultorderid FROM lte_sys.T_BASE_SYS_MENU;"
+            }
+        }
+    ]
+}

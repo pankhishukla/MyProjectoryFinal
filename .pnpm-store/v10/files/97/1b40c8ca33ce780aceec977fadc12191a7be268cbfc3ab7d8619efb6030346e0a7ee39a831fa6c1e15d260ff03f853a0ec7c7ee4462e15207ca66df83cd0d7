@@ -1,0 +1,341 @@
+{
+  "module": "GridBlank.UpSNR",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "gridblankUpSNR",
+      "desc": "栅格黑点-上行SNR",
+      "config": {
+        "parameters": [{
+          "name": "isweekcell",
+          "columnname": "",
+          "type":"text",
+          "format": "",
+          "value":"with tmp as (select city,eci,sum(totleRSRPMR) totleRSRPMR,sum(CoverMR120) CoverMR120,sum(CoverMR115) CoverMR115,sum(CoverMR110) CoverMR110,sum(CoverMR105) CoverMR105,sum(CoverMR100) CoverMR100,sum(CoverMR95) CoverMR95,sum(CoverMR90) CoverMR90,sum(overlayMR_5) overlayMR_5,sum(overlayMR_6) overlayMR_6,sum(overlayMR_7) overlayMR_7,sum(overlayMR_8) overlayMR_8,sum(overlayMR_9) overlayMR_9,sum(TotleLteScSinrULMR_10) TotleLteScSinrULMR_10,sum(TotleLteScSinrULMR_5) TotleLteScSinrULMR_5,sum(TotleLteScSinrULMR_3) TotleLteScSinrULMR_3,sum(TotleLteScSinrULMR0) TotleLteScSinrULMR0,sum(TotleLteScSinrULMR3) TotleLteScSinrULMR3,sum(TotleLteScSinrULMR5) TotleLteScSinrULMR5,sum(TotleLteScSinrULMR10) TotleLteScSinrULMR10,sum(TotleLteScSinrDLMR_10) TotleLteScSinrDLMR_10,sum(TotleLteScSinrDLMR_5) TotleLteScSinrDLMR_5,sum(TotleLteScSinrDLMR_3) TotleLteScSinrDLMR_3,sum(TotleLteScSinrDLMR0) TotleLteScSinrDLMR0,sum(TotleLteScSinrDLMR3) TotleLteScSinrDLMR3,sum(TotleLteScSinrDLMR5) TotleLteScSinrDLMR5,sum(TotleLteScSinrDLMR10) TotleLteScSinrDLMR10,sum(RSRQMR_13) RSRQMR_13,sum(RSRQMR_135) RSRQMR_135,sum(RSRQMR_14) RSRQMR_14,sum(RSRQMR_145) RSRQMR_145,sum(RSRQMR_15) RSRQMR_15,sum(RSRQMR_155) RSRQMR_155,sum(RSRQMR_16) RSRQMR_16,sum(TotleULPRBMR60) TotleULPRBMR60,sum(TotleULPRBMR65) TotleULPRBMR65,sum(TotleULPRBMR70) TotleULPRBMR70,sum(TotleULPRBMR75) TotleULPRBMR75,sum(TotleULPRBMR80) TotleULPRBMR80,sum(TotleDLPRBMR60) TotleDLPRBMR60,sum(TotleDLPRBMR65) TotleDLPRBMR65,sum(TotleDLPRBMR70) TotleDLPRBMR70,sum(TotleDLPRBMR75) TotleDLPRBMR75,sum(TotleDLPRBMR80) TotleDLPRBMR80 from LTE_SYS.[@c0]_T_MR_GRID where STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh' ) group by city,eci)",
+          "conditionid": "c50",
+          "symbol":""
+        },{
+          "name": "weekcell",
+          "columnname": "eci",
+          "type":"text",
+          "format": "",
+          "value":" select eci from (select eci, totleRSRPMR,case totleRSRPMR when 0  then 0 else round((totleRSRPMR-[@c7])/totleRSRPMR,2.0) end poor from tmp) t where t.totleRSRPMR>[@c6] and t.poor>[@c8]",
+          "conditionid": "c5",
+          "symbol":"in"
+        },{
+          "name": "overlaycell",
+          "columnname": "eci",
+          "type":"text",
+          "format": "",
+          "value":"select eci from (select eci, totleRSRPMR,case totleRSRPMR when 0  then 0 else round((totleRSRPMR-[@c10])/totleRSRPMR,2.0) end poor from tmp) t1 where  t1.totleRSRPMR>[@c9] and t1.poor>[@c11]",
+          "conditionid": "c51",
+          "symbol":"in"
+        },{
+          "name": "overcell",
+          "columnname": "eci",
+          "type":"text",
+          "format": "",
+          "value":"select eci from (select city,eci,round(sum(NCOVERMR)/6,2.0) allmrcount,sum([@c13]) count1, case sum(NCOVERMR)  when 0 then 0 else round(sum([@c13])/(sum(NCOVERMR)/6),2.0 ) end poor from LTE_SYS.[@c0]_T_Overcover where NCI is not null and STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh') and STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh')  group by city,eci) a where a.allmrcount>[@c12] and a.poor>[@c14]",
+          "conditionid": "c52",
+          "symbol":"in"
+        },{
+          "name": "upsinrcell",
+          "columnname": "eci",
+          "type":"text",
+          "format": "",
+          "value":"select eci from (select eci, totleRSRPMR,case totleRSRPMR when 0  then 0 else round((totleRSRPMR-[@c16])/totleRSRPMR,2.0) end poor from tmp) t2 where  t2.totleRSRPMR>[@c15] and t2.poor>[@c17]",
+          "conditionid": "c53",
+          "symbol":"in"
+        },{
+          "name": "downsinrcell",
+          "columnname": "eci",
+          "type":"text",
+          "format": "",
+          "value":"select eci from (select eci, totleRSRPMR,case totleRSRPMR when 0  then 0 else round((totleRSRPMR-[@c19])/totleRSRPMR,2.0) end poor from tmp) t3 where  t3.totleRSRPMR>[@c18] and t3.poor>[@c20]",
+          "conditionid": "c54",
+          "symbol":"in"
+        },{
+          "name": "rsrqcell",
+          "columnname": "eci",
+          "type":"text",
+          "format": "",
+          "value":"select eci from (select eci, totleRSRPMR,case totleRSRPMR when 0  then 0 else round((totleRSRPMR-[@c22])/totleRSRPMR,2.0) end poor from tmp) t4 where  t4.totleRSRPMR>[@c21] and t4.poor>[@c23]",
+          "conditionid": "c55",
+          "symbol":"in"
+        },{
+          "name": "upprbcell",
+          "columnname": "eci",
+          "type":"text",
+          "format": "",
+          "value":"select eci from (select eci, totleRSRPMR,case totleRSRPMR when 0  then 0 else round((totleRSRPMR-[@c25])/totleRSRPMR,2.0) end poor from tmp) t5 where  t5.totleRSRPMR>[@c24] and t5.poor>[@c26]",
+          "conditionid": "c56",
+          "symbol":"in"
+        },{
+          "name": "downprbcell",
+          "columnname": "eci",
+          "type":"text",
+          "format": "",
+          "value":"select eci from (select eci, totleRSRPMR,case totleRSRPMR when 0  then 0 else round((totleRSRPMR-[@c28])/totleRSRPMR,2.0) end poor from tmp) t6 where  t6.totleRSRPMR>[@c27] and t6.poor>[@c29]",
+          "conditionid": "c57",
+          "symbol":"in"
+        },
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },
+          {
+            "name": "start",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },
+          {
+            "name": "end",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },
+          {
+            "name": "threshold1",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },
+          {
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c31",
+            "symbol":""
+          },
+          {
+            "name": "threshold3",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },
+          {
+            "name": "weekcell",
+            "type":"object",
+            "key":"mr",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":""
+          },{
+            "name": "weekcell",
+            "type":"object",
+            "key":"thoreshold",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":""
+          },{
+            "name": "weekcell",
+            "type":"object",
+            "key":"poor",
+            "format": "",
+            "conditionid": "c8",
+            "symbol":""
+          },{
+            "name": "overlaycell",
+            "type":"object",
+            "key":"mr",
+            "format": "",
+            "conditionid": "c9",
+            "symbol":""
+          },{
+            "name": "overlaycell",
+            "type":"object",
+            "key":"thoreshold",
+            "format": "",
+            "conditionid": "c10",
+            "symbol":""
+          },{
+            "name": "overlaycell",
+            "type":"object",
+            "key":"poor",
+            "format": "",
+            "conditionid": "c11",
+            "symbol":""
+          },{
+            "name": "overcell",
+            "type":"object",
+            "key":"mr",
+            "format": "",
+            "conditionid": "c12",
+            "symbol":""
+          },{
+            "name": "overcell",
+            "type":"object",
+            "key":"thoreshold",
+            "format": "",
+            "conditionid": "c13",
+            "symbol":""
+          },{
+            "name": "overcell",
+            "type":"object",
+            "key":"poor",
+            "format": "",
+            "conditionid": "c14",
+            "symbol":""
+          },{
+            "name": "upsinrcell",
+            "type":"object",
+            "key":"mr",
+            "format": "",
+            "conditionid": "c15",
+            "symbol":""
+          },{
+            "name": "upsinrcell",
+            "type":"object",
+            "key":"thoreshold",
+            "format": "",
+            "conditionid": "c16",
+            "symbol":""
+          },{
+            "name": "upsinrcell",
+            "type":"object",
+            "key":"poor",
+            "format": "",
+            "conditionid": "c17",
+            "symbol":""
+          },{
+            "name": "downsinrcell",
+            "type":"object",
+            "key":"mr",
+            "format": "",
+            "conditionid": "c18",
+            "symbol":""
+          },{
+            "name": "downsinrcell",
+            "type":"object",
+            "key":"thoreshold",
+            "format": "",
+            "conditionid": "c19",
+            "symbol":""
+          },{
+            "name": "downsinrcell",
+            "type":"object",
+            "key":"poor",
+            "format": "",
+            "conditionid": "c20",
+            "symbol":""
+          },{
+            "name": "rsrqcell",
+            "type":"object",
+            "key":"mr",
+            "format": "",
+            "conditionid": "c21",
+            "symbol":""
+          },{
+            "name": "rsrqcell",
+            "type":"object",
+            "key":"thoreshold",
+            "format": "",
+            "conditionid": "c22",
+            "symbol":""
+          },{
+            "name": "rsrqcell",
+            "type":"object",
+            "key":"poor",
+            "format": "",
+            "conditionid": "c23",
+            "symbol":""
+          },{
+            "name": "upprbcell",
+            "type":"object",
+            "key":"mr",
+            "format": "",
+            "conditionid": "c24",
+            "symbol":""
+          },{
+            "name": "upprbcell",
+            "type":"object",
+            "key":"thoreshold",
+            "format": "",
+            "conditionid": "c25",
+            "symbol":""
+          },{
+            "name": "upprbcell",
+            "type":"object",
+            "key":"poor",
+            "format": "",
+            "conditionid": "c26",
+            "symbol":""
+          },{
+            "name": "downprbcell",
+            "type":"object",
+            "key":"mr",
+            "format": "",
+            "conditionid": "c27",
+            "symbol":""
+          },{
+            "name": "downprbcell",
+            "type":"object",
+            "key":"thoreshold",
+            "format": "",
+            "conditionid": "c28",
+            "symbol":""
+          },{
+            "name": "downprbcell",
+            "type":"object",
+            "key":"poor",
+            "format": "",
+            "conditionid": "c29",
+            "symbol":""
+          },{
+            "name": "city",
+            "columnname": "city",
+            "type":"string",
+            "format": "",
+            "conditionid": "c30",
+            "symbol":"in"
+          }
+        ],
+        "value": "[@c50]  SELECT      (          SELECT              province          FROM              LTE_SYS.T_BASE_P_Table          WHERE              PName='[@c0]' limit 1) pro,      t1.city,      t1.gridid id,      ROUND((t2.latileft+t2.latiright+t2.latileftbot+t2.langirightbot)/4,9.0)    latavg,      ROUND((t2.longileft+t2.longiright+t2.longileftbot+t2.longirightbot)/4,9.0) lngavg,      CASE          WHEN t1.avgrate >[@c4]          THEN '是'          ELSE '否'      END ismr,      t1.pointQualitative_difference_sampling_point,      t1.allcount,      t1.avgrate,t2.LONGILEFT lng,t2.latileft lat,t2.longiright lng1, t2.latiright lat1,t2.longileftbot lng2,t2.latileftbot lat2,t2.longirightbot lng3,t2.langirightbot lat3  FROM      (          SELECT              gridid,              city,              SUM(totleRSRPMR)                                allcount,              SUM(totleRSRPMR)-SUM([@c31])                    pointQualitative_difference_sampling_point,            case  SUM(totleRSRPMR) when 0 then 0 else round( (SUM(totleRSRPMR)-SUM([@c31]))/SUM(totleRSRPMR),2.0) end avgrate          FROM              LTE_SYS.[@c0]_T_MR_GRID          WHERE              STARTTIME>=to_timestamp('[@c1]','yyyy-mm-dd hh')          AND STARTTIME<to_timestamp('[@c2]','yyyy-mm-dd hh') [@and] [@c30] [@and] [@c5] [@and] [@c51] [@and] [@c52] [@and] [@c53] [@and] [@c54] [@and] [@c55] [@and] [@c56] [@and] [@c57]          GROUP BY              gridid,              city) t1  INNER JOIN      LTE_SYS.[@c0]_T_BASE_GRID t2  ON      t1.gridid = t2.id  WHERE      t1.allcount>[@c3]"
+      }
+    },{
+      "key": "gridblankUpSNR_cell",
+      "desc":"栅格黑点-上行SNR小区详细列表",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },{
+            "name": "gridid",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },{
+            "name": "threshold2",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          }
+        ],
+        "value": "select ROW_NUMBER() OVER (ORDER BY t.allcount desc) row_id,'[@c1]' gridid,t.eci,(case when cellname is null then '暂无名称' else cellname end) cellname,t1.id,t1.longitude lng,latitude lat,t1.antdirctangle angle,allcount,count1,round(count1/allcount*100,2.0) from (select eci,cellname,SUM(totleRSRPMR)                                allcount,              SUM(totleRSRPMR)-SUM([@c4])                    count1            from LTE_SYS.[@c0]_T_MR_GRID where gridid='[@c1]' group by eci,cellname) t left join lte_sys.[@c0]_t_base_cell t1 on t.eci = t1.eci where t.allcount>0 order by t.allcount desc"
+      }
+    }
+  ]
+}

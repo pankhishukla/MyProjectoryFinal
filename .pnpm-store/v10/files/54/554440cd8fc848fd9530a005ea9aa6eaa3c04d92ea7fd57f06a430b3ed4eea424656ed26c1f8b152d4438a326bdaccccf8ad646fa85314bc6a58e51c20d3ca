@@ -1,0 +1,657 @@
+{
+  "module": "m2",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "query_gntab4_0_1",
+      "desc":"HTTP大类业务统计-下行_全国_大类_小类",
+      "config": {
+        "parameters": [
+          {
+            "name": "preData",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                {
+                  "key":"city_no",
+                  "columnname": "gn.city_no",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "city0",
+                  "symbol":"="
+                },
+                { "key":"starttime",
+                  "columnname": "starttime",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "time0",
+                  "symbol":"in"}
+              ],
+              "co":"or"
+            }
+          },
+          {
+            "name": "preDatacategory",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                {
+                  "key":"service",
+                  "columnname": "gn.city_no",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "cate0",
+                  "symbol":"="
+                },
+                { "key":"bussinesstype",
+                  "columnname": "service",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "subapp0",
+                  "symbol":"in"}
+              ],
+              "co":"or"
+            }
+          },
+          {
+            "name": "preDataterminal",
+            "type":"projects",
+            "conditions":[{
+              "key":"terminal",
+              "columnname": "",
+              "type":"string",
+              "format": "",
+              "conditionid": "terminal0",
+              "symbol":""
+            },
+              {
+                "key":"terminalname",
+                "columnname": "",
+                "type":"string",
+                "format": "",
+                "conditionid": "terminalname0",
+                "symbol":""
+              },
+              {
+                "key":"filetypename",
+                "columnname": "",
+                "type":"string",
+                "format": "",
+                "conditionid": "filetypename",
+                "symbol":""
+              }
+            ]
+          },
+          {
+            "name": "usersatif",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "usersatif0",
+            "symbol": ""
+          },
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "p0",
+            "symbol": ""
+          },
+          {
+            "name": "factory",
+            "columnname": "EQUIPMENT",
+            "type": "string",
+            "format": "",
+            "conditionid": "fac0",
+            "symbol": "="
+          }
+        ],
+        "value": "SELECT       '全国' data1,       '汇总' data2,       '汇总' AS data3,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       '' data7,       '' data8,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS data9,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS data10,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS data11,       SUM(A.ALLCOUNT) AS data12,       SUM(A.SCOUNT) AS data13,       SUM(A.USERCOUNT) AS data14,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS data15,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS data16,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS data17,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS data18,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS data19,       ROUND(0.000,3.0) data20,       ROUND(0.000,3.0) data21,       ROUND(0.000,3.0) data22,       ROUND(0.000,3.0) data23       FROM       (       SELECT       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       UNION       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       '' CATEGORY,       '' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(0.000,3.0) DOWNREQESTPER,       ROUND(0.000,3.0) DOWNDLTRAFFICPER,       ROUND(0.000,3.0) DLDELAYPER,       ROUND(0.000,3.0) EMPTYDELAYPER       FROM       (       SELECT       GN.EQUIPMENT,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       )A       GROUP BY A.EQUIPMENT       union       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       D.CATEGORYNAME  CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER()),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER()),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER()),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER()),3.0) AS EMPTYDELAYPER       FROM       (       SELECT       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       )A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY D.CATEGORYNAME       UNION       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       D.CATEGORYNAME  CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER()),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER()),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER()),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER()),3.0) AS EMPTYDELAYPER       FROM       (       SELECT       GN.EQUIPMENT,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       )A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY D.CATEGORYNAME,A.EQUIPMENT       union       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS EMPTYDELAYPER       FROM       (       SELECT       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE  AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY D.CATEGORYNAME, D.BUSSINESSNAME       UNION       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS EMPTYDELAYPER       FROM       (       SELECT       GN.EQUIPMENT,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE  AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY D.CATEGORYNAME, D.BUSSINESSNAME,A.EQUIPMENT"
+      }
+    },
+    {
+      "key": "query_gntab4_1_1",
+      "desc":"HTTP大类业务统计-下行_省__大类_小类",
+      "config": {
+        "parameters": [
+          {
+            "name": "preData",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                {
+                  "key":"city_no",
+                  "columnname": "gn.city_no",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "city0",
+                  "symbol":"="
+                },
+                { "key":"starttime",
+                  "columnname": "starttime",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "time0",
+                  "symbol":"in"}
+              ],
+              "co":"or"
+            }
+          },
+          {
+            "name": "preDatacategory",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                {
+                  "key":"service",
+                  "columnname": "gn.city_no",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "cate0",
+                  "symbol":"="
+                },
+                { "key":"bussinesstype",
+                  "columnname": "service",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "subapp0",
+                  "symbol":"in"}
+              ],
+              "co":"or"
+            }
+          },
+          {
+            "name": "preDataterminal",
+            "type":"projects",
+            "conditions":[{
+              "key":"terminal",
+              "columnname": "",
+              "type":"string",
+              "format": "",
+              "conditionid": "terminal0",
+              "symbol":""
+            },
+              {
+                "key":"terminalname",
+                "columnname": "",
+                "type":"string",
+                "format": "",
+                "conditionid": "terminalname0",
+                "symbol":""
+              },
+              {
+                "key":"filetypename",
+                "columnname": "",
+                "type":"string",
+                "format": "",
+                "conditionid": "filetypename",
+                "symbol":""
+              }
+            ]
+          },
+          {
+            "name": "usersatif",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "usersatif0",
+            "symbol": ""
+          },
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "p0",
+            "symbol": ""
+          },
+          {
+            "name": "factory",
+            "columnname": "EQUIPMENT",
+            "type": "string",
+            "format": "",
+            "conditionid": "fac0",
+            "symbol": "="
+          }
+        ],
+        "value": "SELECT       A.PRONAME as data1,       '汇总' data2,       '汇总' AS data3,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       '' data7,       '' data8,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS data9,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS data10,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS data11,       SUM(A.ALLCOUNT) AS data12,       SUM(A.SCOUNT) AS data13,       SUM(A.USERCOUNT) AS data14,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS data15,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS data16,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS data17,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS data18,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS data19,       ROUND(0.000,3.0) data20,       ROUND(0.000,3.0) data21,       ROUND(0.000,3.0) data22,       ROUND(0.000,3.0) data23       FROM (       SELECT       (SELECT D.PRONAME FROM GN.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       GROUP BY A.PRONAME       UNION       SELECT       A.PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       '' CATEGORY,       '' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(0.000,3.0) DOWNREQESTPER,       ROUND(0.000,3.0) DOWNDLTRAFFICPER,       ROUND(0.000,3.0) DLDELAYPER,       ROUND(0.000,3.0) EMPTYDELAYPER       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.EQUIPMENT,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2  AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       GROUP BY A.PRONAME,A.EQUIPMENT       union       SELECT       A.PRONAME,       '汇总' CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       D.CATEGORYNAME  CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.PRONAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.PRONAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.PRONAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.PRONAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY A.PRONAME,D.CATEGORYNAME       UNION       SELECT       A.PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       D.CATEGORYNAME  CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.PRONAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.PRONAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.PRONAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.PRONAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY A.PRONAME,D.CATEGORYNAME,A.EQUIPMENT       union       SELECT       A.PRONAME,       '汇总' CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY A.PRONAME,D.CATEGORYNAME,D.BUSSINESSNAME       UNION       SELECT       A.PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2  AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY A.PRONAME,D.CATEGORYNAME,D.BUSSINESSNAME,A.EQUIPMENT"
+      }
+    },
+    {
+      "key": "query_gntab4_2_1",
+      "desc":"HTTP大类业务统计-下行_市_全网_大类_小类",
+      "config": {
+        "parameters": [
+          {
+            "name": "preData",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                {
+                  "key":"city_no",
+                  "columnname": "gn.city_no",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "city0",
+                  "symbol":"="
+                },
+                { "key":"starttime",
+                  "columnname": "starttime",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "time0",
+                  "symbol":"in"}
+              ],
+              "co":"or"
+            }
+          },
+          {
+            "name": "preDatacategory",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                {
+                  "key":"service",
+                  "columnname": "gn.city_no",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "cate0",
+                  "symbol":"="
+                },
+                { "key":"bussinesstype",
+                  "columnname": "service",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "subapp0",
+                  "symbol":"in"}
+              ],
+              "co":"or"
+            }
+          },
+          {
+            "name": "preDataterminal",
+            "type":"projects",
+            "conditions":[{
+              "key":"terminal",
+              "columnname": "",
+              "type":"string",
+              "format": "",
+              "conditionid": "terminal0",
+              "symbol":""
+            },
+              {
+                "key":"terminalname",
+                "columnname": "",
+                "type":"string",
+                "format": "",
+                "conditionid": "terminalname0",
+                "symbol":""
+              },
+              {
+                "key":"filetypename",
+                "columnname": "",
+                "type":"string",
+                "format": "",
+                "conditionid": "filetypename",
+                "symbol":""
+              }
+            ]
+          },
+          {
+            "name": "usersatif",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "usersatif0",
+            "symbol": ""
+          },
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "p0",
+            "symbol": ""
+          },
+          {
+            "name": "factory",
+            "columnname": "EQUIPMENT",
+            "type": "string",
+            "format": "",
+            "conditionid": "fac0",
+            "symbol": "="
+          }
+        ],
+        "value": "SELECT       A.PRONAME as data1,       A.CITYNAME as data2,       '汇总' AS data3,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       '' data7,       '' data8,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS data9,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS data10,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS data11,       SUM(A.ALLCOUNT) AS data12,       SUM(A.SCOUNT) AS data13,       SUM(A.USERCOUNT) AS data14,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS data15,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS data16,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS data17,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS data18,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS data19,       ROUND(0.000,3.0) data20,       ROUND(0.000,3.0) data21,       ROUND(0.000,3.0) data22,       ROUND(0.000,3.0) data23       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE  GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       GROUP BY A.PRONAME,A.CITYNAME       UNION       SELECT       A.PRONAME,       A.CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       '' CATEGORY,       '' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(0.000,3.0) DOWNREQESTPER,       ROUND(0.000,3.0) DOWNDLTRAFFICPER,       ROUND(0.000,3.0) DLDELAYPER,       ROUND(0.000,3.0) EMPTYDELAYPER       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.EQUIPMENT,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       GROUP BY A.PRONAME,A.CITYNAME,A.EQUIPMENT       union       SELECT       A.PRONAME,       A.CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       D.CATEGORYNAME CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.CITYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.CITYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.CITYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.CITYNAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2  AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY A.PRONAME,A.CITYNAME,D.CATEGORYNAME       UNION       SELECT       A.PRONAME,       A.CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       D.CATEGORYNAME CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.CITYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.CITYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.CITYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.CITYNAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2  AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY A.PRONAME,A.CITYNAME,D.CATEGORYNAME,A.EQUIPMENT       union       SELECT       A.PRONAME,       A.CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN  lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2  AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE   AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY A.PRONAME,A.CITYNAME,D.CATEGORYNAME,D.BUSSINESSNAME       UNION       SELECT       A.PRONAME,       A.CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '[@filetypename]' FILETYPE,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN  lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2  AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE   AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY A.PRONAME,A.CITYNAME,D.CATEGORYNAME,D.BUSSINESSNAME,A.EQUIPMENT"
+      }
+    },
+
+    {
+      "key": "query_gntab4_0_2",
+      "desc":"HTTP大类业务统计-下行_全国_大类_小类_500k",
+      "config": {
+        "parameters": [
+          {
+            "name": "preData",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                {
+                  "key":"city_no",
+                  "columnname": "gn.city_no",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "city0",
+                  "symbol":"="
+                },
+                { "key":"starttime",
+                  "columnname": "starttime",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "time0",
+                  "symbol":"in"}
+              ],
+              "co":"or"
+            }
+          },
+          {
+            "name": "preDatacategory",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                {
+                  "key":"service",
+                  "columnname": "gn.city_no",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "cate0",
+                  "symbol":"="
+                },
+                { "key":"bussinesstype",
+                  "columnname": "service",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "subapp0",
+                  "symbol":"in"}
+              ],
+              "co":"or"
+            }
+          },
+          {
+            "name": "preDataterminal",
+            "type":"projects",
+            "conditions":[{
+              "key":"terminal",
+              "columnname": "",
+              "type":"string",
+              "format": "",
+              "conditionid": "terminal0",
+              "symbol":""
+            },
+              {
+                "key":"terminalname",
+                "columnname": "",
+                "type":"string",
+                "format": "",
+                "conditionid": "terminalname0",
+                "symbol":""
+              },
+              {
+                "key":"filetypename",
+                "columnname": "",
+                "type":"string",
+                "format": "",
+                "conditionid": "filetypename",
+                "symbol":""
+              }
+            ]
+          },
+          {
+            "name": "usersatif",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "usersatif0",
+            "symbol": ""
+          },
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "p0",
+            "symbol": ""
+          },
+          {
+            "name": "factory",
+            "columnname": "EQUIPMENT",
+            "type": "string",
+            "format": "",
+            "conditionid": "fac0",
+            "symbol": "="
+          }
+        ],
+        "value": "SELECT       '全国' data1,       '汇总' data2,       '汇总' AS data3,       '[@terminalname0]' data4,       'LTE网络' data5,       '>500KB文件大小' data6,       '' data7,       '' data8,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS data9,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS data10,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS data11,       SUM(A.ALLCOUNT) AS data12,       SUM(A.SCOUNT) AS data13,       SUM(A.USERCOUNT) AS data14,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS data15,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS data16,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS data17,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS data18,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS data19,       ROUND(0.000,3.0) data20,       ROUND(0.000,3.0) data21,       ROUND(0.000,3.0) data22,       ROUND(0.000,3.0) data23       FROM       (       SELECT       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       )A       UNION       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       '' CATEGORY,       '' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(0.000,3.0) DOWNREQESTPER,       ROUND(0.000,3.0) DOWNDLTRAFFICPER,       ROUND(0.000,3.0) DLDELAYPER,       ROUND(0.000,3.0) EMPTYDELAYPER       FROM       (       SELECT       GN.EQUIPMENT,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       GN.EQUIPMENT,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       )A       GROUP BY A.EQUIPMENT       union       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       D.CATEGORYNAME  CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER()),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER()),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER()),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER()),3.0) AS EMPTYDELAYPER       FROM       (       SELECT       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       )A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY D.CATEGORYNAME       UNION       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       D.CATEGORYNAME  CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER()),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER()),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER()),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER()),3.0) AS EMPTYDELAYPER       FROM       (       SELECT       GN.EQUIPMENT,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       GN.EQUIPMENT,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       )A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY D.CATEGORYNAME,A.EQUIPMENT       union       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS EMPTYDELAYPER       FROM       (       SELECT       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8'AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE  AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY D.CATEGORYNAME, D.BUSSINESSNAME       UNION       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY D.CATEGORYNAME)),3.0) AS EMPTYDELAYPER       FROM       (       SELECT       GN.EQUIPMENT,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       GN.EQUIPMENT,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8'AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE  AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY D.CATEGORYNAME, D.BUSSINESSNAME,A.EQUIPMENT"
+      }
+    },
+    {
+      "key": "query_gntab4_1_2",
+      "desc":"HTTP大类业务统计-下行_省__大类_小类_500k",
+      "config": {
+        "parameters": [
+          {
+            "name": "preData",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                {
+                  "key":"city_no",
+                  "columnname": "gn.city_no",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "city0",
+                  "symbol":"="
+                },
+                { "key":"starttime",
+                  "columnname": "starttime",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "time0",
+                  "symbol":"in"}
+              ],
+              "co":"or"
+            }
+          },
+          {
+            "name": "preDatacategory",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                {
+                  "key":"service",
+                  "columnname": "gn.city_no",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "cate0",
+                  "symbol":"="
+                },
+                { "key":"bussinesstype",
+                  "columnname": "service",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "subapp0",
+                  "symbol":"in"}
+              ],
+              "co":"or"
+            }
+          },
+          {
+            "name": "preDataterminal",
+            "type":"projects",
+            "conditions":[{
+              "key":"terminal",
+              "columnname": "",
+              "type":"string",
+              "format": "",
+              "conditionid": "terminal0",
+              "symbol":""
+            },
+              {
+                "key":"terminalname",
+                "columnname": "",
+                "type":"string",
+                "format": "",
+                "conditionid": "terminalname0",
+                "symbol":""
+              },
+              {
+                "key":"filetypename",
+                "columnname": "",
+                "type":"string",
+                "format": "",
+                "conditionid": "filetypename",
+                "symbol":""
+              }
+            ]
+          },
+          {
+            "name": "usersatif",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "usersatif0",
+            "symbol": ""
+          },
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "p0",
+            "symbol": ""
+          },
+          {
+            "name": "factory",
+            "columnname": "EQUIPMENT",
+            "type": "string",
+            "format": "",
+            "conditionid": "fac0",
+            "symbol": "="
+          }
+        ],
+        "value": "SELECT       A.PRONAME data1,       '汇总' data2,       '汇总' AS data3,       '[@terminalname0]' data4,       'LTE网络' data5,       '>500KB文件大小' data6,       '' data7,       '' data8,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS data9,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS data10,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS data11,       SUM(A.ALLCOUNT) AS data12,       SUM(A.SCOUNT) AS data13,       SUM(A.USERCOUNT) AS data14,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS data15,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS data16,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS data17,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS data18,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS data19,       ROUND(0.000,3.0) data20,       ROUND(0.000,3.0) data21,       ROUND(0.000,3.0) data22,       ROUND(0.000,3.0) data23       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND  GN.SERVICE<>'8' AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       GROUP BY A.PRONAME       UNION       SELECT       A.PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       '' CATEGORY,       '' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(0.000,3.0) DOWNREQESTPER,       ROUND(0.000,3.0) DOWNDLTRAFFICPER,       ROUND(0.000,3.0) DLDELAYPER,       ROUND(0.000,3.0) EMPTYDELAYPER       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.EQUIPMENT,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.EQUIPMENT,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND  GN.SERVICE<>'8' AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       GROUP BY A.PRONAME,A.EQUIPMENT       union       SELECT       A.PRONAME,       '汇总' CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       D.CATEGORYNAME  CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.PRONAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.PRONAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.PRONAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.PRONAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2       UNION       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7       ) A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY A.PRONAME,D.CATEGORYNAME       UNION       SELECT       A.PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       D.CATEGORYNAME  CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.PRONAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.PRONAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.PRONAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.PRONAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2       UNION       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7       ) A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY A.PRONAME,D.CATEGORYNAME,A.EQUIPMENT       union       SELECT       A.PRONAME,       '汇总' CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2       UNION       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7       ) A       INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY A.PRONAME,D.CATEGORYNAME,D.BUSSINESSNAME       UNION       SELECT       A.PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.PRONAME,D.CATEGORYNAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2       UNION       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7       ) A       INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY A.PRONAME,D.CATEGORYNAME,D.BUSSINESSNAME,A.EQUIPMENT"
+      }
+    },
+    {
+      "key": "query_gntab4_2_2",
+      "desc":"HTTP大类业务统计-下行_市_大类_小类_500k",
+      "config": {
+        "parameters": [
+          {
+            "name": "preData",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                {
+                  "key":"city_no",
+                  "columnname": "gn.city_no",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "city0",
+                  "symbol":"="
+                },
+                { "key":"starttime",
+                  "columnname": "starttime",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "time0",
+                  "symbol":"in"}
+              ],
+              "co":"or"
+            }
+          },
+          {
+            "name": "preDatacategory",
+            "type":"object",
+            "conditions":{
+              "cnd":[
+                {
+                  "key":"service",
+                  "columnname": "gn.city_no",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "cate0",
+                  "symbol":"="
+                },
+                { "key":"bussinesstype",
+                  "columnname": "service",
+                  "type":"string",
+                  "format": "",
+                  "conditionid": "subapp0",
+                  "symbol":"in"}
+              ],
+              "co":"or"
+            }
+          },
+          {
+            "name": "preDataterminal",
+            "type":"projects",
+            "conditions":[{
+              "key":"terminal",
+              "columnname": "",
+              "type":"string",
+              "format": "",
+              "conditionid": "terminal0",
+              "symbol":""
+            },
+              {
+                "key":"terminalname",
+                "columnname": "",
+                "type":"string",
+                "format": "",
+                "conditionid": "terminalname0",
+                "symbol":""
+              },
+              {
+                "key":"filetypename",
+                "columnname": "",
+                "type":"string",
+                "format": "",
+                "conditionid": "filetypename",
+                "symbol":""
+              }
+            ]
+          },
+          {
+            "name": "usersatif",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "usersatif0",
+            "symbol": ""
+          },
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "p0",
+            "symbol": ""
+          },
+          {
+            "name": "factory",
+            "columnname": "EQUIPMENT",
+            "type": "string",
+            "format": "",
+            "conditionid": "fac0",
+            "symbol": "="
+          }
+        ],
+        "value": "SELECT       A.PRONAME as data1,       A.CITYNAME data2,       '汇总' AS data3,       '[@terminalname0]' data4,       'LTE网络' data5,       '>500KB文件大小' data6,       '' data7,       '' data8,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS data9,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS data10,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS data11,       SUM(A.ALLCOUNT) AS data12,       SUM(A.SCOUNT) AS data13,       SUM(A.USERCOUNT) AS data14,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS data15,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS data16,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS data17,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS data18,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS data19,       ROUND(0.000,3.0) data20,       ROUND(0.000,3.0) data21,       ROUND(0.000,3.0) data22,       ROUND(0.000,3.0) data23       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       GROUP BY A.PRONAME,A.CITYNAME       UNION       SELECT       A.PRONAME,       A.CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       '' CATEGORY,       '' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(0.000,3.0) DOWNREQESTPER,       ROUND(0.000,3.0) DOWNDLTRAFFICPER,       ROUND(0.000,3.0) DLDELAYPER,       ROUND(0.000,3.0) EMPTYDELAYPER       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.EQUIPMENT,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE  GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2  AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.EQUIPMENT,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       GROUP BY A.PRONAME,A.CITYNAME,A.EQUIPMENT       union       SELECT       A.PRONAME,       A.CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       D.CATEGORYNAME CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.CITYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.CITYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.CITYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.CITYNAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY A.PRONAME,A.CITYNAME,D.CATEGORYNAME       UNION       SELECT       A.PRONAME,       A.CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       D.CATEGORYNAME CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.CITYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.CITYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.CITYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.CITYNAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY A.PRONAME,A.CITYNAME,D.CATEGORYNAME,A.EQUIPMENT       union       SELECT       A.PRONAME,       A.CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7       ) A       INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE   AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY A.PRONAME,A.CITYNAME,D.CATEGORYNAME,D.BUSSINESSNAME       UNION       SELECT       A.PRONAME,       A.CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' TERMINAL,       'LTE网络' NETTYPE,       '>500KB文件大小' FILETYPE,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.DLDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.DLDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.DLTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.ALLCOUNT),3.0) END AS USERACCEPTPER,       SUM(A.ALLCOUNT) AS DOWNREQUEST,       SUM(A.SCOUNT) AS DOWNSUCCESS,       SUM(A.USERCOUNT) AS USERACCEPT,       CASE WHEN SUM(A.ALLCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.SCOUNT)/SUM(A.ALLCOUNT),3.0) END AS DOWNSUCCESSPER,       CASE WHEN SUM(A.SCOUNT)=0 THEN 0 ELSE ROUND(100*SUM(A.USERCOUNT)/SUM(A.SCOUNT),3.0) END AS DOWNUSERSUCCESSPER,       ROUND(SUM(A.DLTRAFFIC)/1024/1024,3.0) AS DOWNTRAFFIC,       ROUND(SUM(A.DLDELAY)/1000,3.0) AS DLDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY,       ROUND(100*SUM(A.ALLCOUNT)/(SUM(SUM(A.ALLCOUNT)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS DOWNREQESTPER,       ROUND(100*SUM(A.DLTRAFFIC)/(SUM(SUM(A.DLTRAFFIC)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS DOWNDLTRAFFICPER,       ROUND(100*SUM(A.DLDELAY)/(SUM(SUM(A.DLDELAY)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS DLDELAYPER,       ROUND(100*SUM(A.EMPTYDELAY)/(SUM(SUM(A.EMPTYDELAY)) OVER(PARTITION BY A.CITYNAME,D.CATEGORYNAME)),3.0) AS EMPTYDELAYPER       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND (GN.SERVICE='1' OR GN.SERVICE='8') AND GN.FILETYPE>=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       UNION       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ALLCOUNT,       GN.DLDELAY,       GN.EMPTYDELAY,       GN.DLTRAFFIC,       GN.SCOUNT,       [@usersatif0] AS USERCOUNT       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND GN.SERVICE<>'1' AND GN.SERVICE<>'8' AND GN.FILETYPE>=7 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE   AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY A.PRONAME,A.CITYNAME,D.CATEGORYNAME,D.BUSSINESSNAME,A.EQUIPMENT"
+      }
+    }
+
+
+  ]
+}

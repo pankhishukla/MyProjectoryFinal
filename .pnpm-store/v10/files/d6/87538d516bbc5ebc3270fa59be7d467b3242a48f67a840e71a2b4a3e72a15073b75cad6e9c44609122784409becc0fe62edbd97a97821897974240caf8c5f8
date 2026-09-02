@@ -1,0 +1,70 @@
+{
+  "module": "Test.tb3_sceneData",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "Test.tb3_sceneData",
+      "desc": "LTE室内外场景分析",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol": ""
+          },
+          {
+            "name": "starttime",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol": ""
+          },
+          {
+            "name": "endtime",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol": ""
+          },
+          {
+            "name": "scenename",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol": ""
+          },
+          {
+            "name": "fieldname",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol": ""
+          },
+          {
+            "name": "scenevalue",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol": ""
+          }, {
+            "name": "province",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT      apt.AppTypeName    AS data1,      apt.AppSubTypeName AS data2,      sc.*  FROM      (          SELECT                            AppType                           data_apptype ,              AppSubType                        data_appsubtype ,              SUM(ul_flow)                      data3 ,             ROUND( SUM(ul_flow)/MAX(t2.ul_flow1) ,2.0)    data4 ,              SUM(xdr_count)                    data5 ,              ROUND(SUM(xdr_count)/MAX(t2.xdr_count1),2.0) data6 ,              SUM(delay)                        data7 ,              ROUND(SUM(delay)/MAX(t2.delay1),2.0)         data8          FROM              lte_sys.[@c0]_T_QUALITYSTATISTICS_ALLUSER t1 ,              (                  SELECT                      SUM(delay)     delay1,                      SUM(xdr_count) xdr_count1 ,                      SUM(ul_flow)   ul_flow1                  FROM                      lte_sys.[@c0]_T_QUALITYSTATISTICS_ALLUSER t3                  WHERE                      hour>='[@c1]'                  AND hour<='[@c2]'                  AND t3.[@c4]) t2          WHERE              t1.[@c4]          AND t1.hour>='[@c1]'          AND t1.hour<='[@c2]'          GROUP BY              t1.AppType,              t1.AppSubType) sc  INNER JOIN      lte_sys.[@c0]_T_BASE_CATEGORYTYPE apt  ON      sc.data_AppType= apt.AppType  AND sc.data_AppSubType= apt.AppSubType"
+      }
+    }
+  ]
+}

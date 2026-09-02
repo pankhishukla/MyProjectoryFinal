@@ -1,0 +1,82 @@
+{
+  "module": "m2",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "query_totalquality_1",
+      "desc":"数据表",
+      "config": {
+        "parameters": [
+          {
+          "name": "pname",
+          "columnname": "",
+          "type":"string",
+          "format": "",
+          "conditionid": "c0",
+          "symbol":""
+          }
+        ],
+        "value": "select num,province_cn,province from (  select 1 num, '省份' as province_cn, p_province as province from lte_sys.T_BASE_Project where p_en='[@c0]' union all select 2 num, '地市' as city_cn, p_city as city from lte_sys.T_BASE_Project where p_en='[@c0]' union all select 3 num, '数据时间' as datatime_cn, TO_CHAR(mintime,'yyyy-mm-dd HH24')||'~'||TO_CHAR(maxtime,'yyyy-mm-dd HH24') as datatimes from lte_sys.T_BASE_P_Table where pname='[@c0]' union all  select 4 num, 'LTE平均下行速率' as dlspeed_cn,to_char(round(sum(dldata)*8*1000/1024/sum(Businesshours),2.0)) as dlspeed from lte_sys.[@c0]_T_END_TO_END_ANALYSIS_SGW union all select 5 num, 'LTE平均下行速率大于(500K)' as dlspeed_cn,to_char(round(sum(dldata_500K)*8*1000/1024/sum(Businesshours_500K),2.0)) dlspeed_500 from lte_sys.[@c0]_T_END_TO_END_ANALYSIS_SGW union all select 6 num, 'LTE访问成功率' as dlspeed_cn,to_char(round(sum(RequestSuccsessCount)/sum(RequestCount),4.0)) Requestsuccessrate from lte_sys.[@c0]_T_END_TO_END_ANALYSIS_SGW union all select 7 num, '首包响应时延' as dlspeed_cn,to_char(round(sum(RespondDelay)/sum(RespondDelayCount),2.0)) as fristdelay from lte_sys.[@c0]_T_END_TO_END_ANALYSIS_SGW union all select 8 num, '访问总次数' as dlspeed_cn,to_char(sum(RequestCount))  RequestCount from lte_sys.[@c0]_T_END_TO_END_ANALYSIS_SGW union all select 9 num, '感知差访问次数' as dlspeed_cn, to_char(count(*)) poorcount from lte_sys.[@c0]_T_End_To_End_BASE  union all  select 10 num, '感知差访问占比' as dlspeed_cn,to_char(round((select count(*) from lte_sys.[@c0]_T_End_To_End_BASE)/sum(RequestCount),4.0))  poorrate from lte_sys.[@c0]_T_END_TO_END_ANALYSIS_SGW group by (select count(*) from lte_sys.[@c0]_T_End_To_End_BASE)   )t order by t.num"
+      }
+    },
+    {
+      "key": "query_totalquality_2",
+      "desc":"char",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          }
+        ],
+        "value": "select dimension,cnt,qualityCnt,qualityRate,qualityXDRCnt,round(qualityXDRRate*100,2.0) as qualityXDRRate,orderby from lte_sys.[@c0]_T_End_To_End_Quality  order by orderby "
+      }
+    },
+    {
+      "key": "query_totalquality_3",
+      "desc":"数据表",
+      "config": {
+        "parameters": [
+          {
+            "name": "",
+            "columnname": "",
+            "type":"",
+            "format": "",
+            "conditionid": "",
+            "symbol":""
+          }
+        ],
+        "value": ""
+      }
+    }
+
+
+
+
+
+
+
+  ,
+    {
+      "key": "query_totalquality_tac",
+      "desc":"tac",
+      "config": {
+        "parameters": [
+          {
+            "name": "pname",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          }
+        ],
+        "value": "select factory as factory,qualityXDRCnt as cnt,round(qualityXDRRate,4.0)*100 as rate from  lte_sys.[@c0]_T_End_To_End_Quality_tac order by orderby "
+      }
+    }
+  ]
+}

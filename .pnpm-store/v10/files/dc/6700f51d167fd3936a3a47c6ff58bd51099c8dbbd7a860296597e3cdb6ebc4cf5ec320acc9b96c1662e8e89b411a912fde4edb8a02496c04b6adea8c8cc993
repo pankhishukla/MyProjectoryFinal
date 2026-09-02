@@ -1,0 +1,251 @@
+{
+  "module": "base",
+  "flag": "vertical",
+  "configs": [{
+      "key": "hGridTargets",
+      "desc":"��ȡ��Ŀ��ȫ��դ��ָ��",
+      "config": {
+        "parameters": [{
+          "name": "code",
+          "columnname": "",
+          "type":"string",
+          "format": "",
+          "conditionid": "c0",
+          "symbol":""
+        }
+        ],
+        "value":"select t.gridid id,t1.LONGILEFT lng,t1.latileft lat,t1.longiright lng1, t1.latiright lat1,t1.longileftbot lng2,t1.latileftbot lat2,t1.longirightbot lng3,t1.langirightbot lat3,TotalDLThroughput,dlspeed,dlrsrprate,dlsinrrate,dlprb from  (select gridid,round(sum(DLData_500)/1024,3.0) TotalDLThroughput,case sum(Businesshours_500 ) when 0 then 0 else round(sum(DLData_500)*100/1024*(sum(Businesshours_500 )/1000),3.0) END dlspeed,case sum(totleRSRPMR) when 0 then 0 else round(sum(CoverMR110)*100/sum(totleRSRPMR),3.0)  END dlrsrprate,case sum(TotleDLSINRMR) when 0 then 0 else ROUND(sum(TotleLteScSinrDLMR3)*100/sum(TotleDLSINRMR),3.0) END dlsinrrate,case sum(TotleDLPRBMR) when 0 then 0 else ROUND(sum(TotleDLPRBMR75)*100/sum(TotleDLPRBMR),3.0) END dlprb from lte_sys.[@c0]_t_mr_grid group by gridid) t inner join lte_sys.[@c0]_t_base_grid t1 on t.gridid = t1.id"
+      }
+    },{
+    "key": "hGridCellThrouphput",
+    "desc":"gis删格小区连线",
+    "config": {
+      "parameters": [{
+        "name": "code",
+        "columnname": "",
+        "type":"string",
+        "format": "",
+        "conditionid": "c0",
+        "symbol":""
+      },{
+        "name": "gridid",
+        "columnname": "gridid",
+        "type":"string",
+        "format": "",
+        "conditionid": "c1",
+        "symbol":"="
+      }
+      ],
+      "value":"select t.gridid,t.eci,t1.id,t1.longitude lng,latitude lat,t1.antdirctangle angle from  (select distinct gridid,eci from lte_sys.[@c0]_t_mr_grid [@where] [@c1] and (DLData_500>0))t left join lte_sys.[@c0]_t_base_cell t1 on t.eci = t1.eci"
+    }
+  },{
+    "key": "hGridCellRsrp",
+    "desc":"gis删格小区连线",
+    "config": {
+      "parameters": [{
+        "name": "code",
+        "columnname": "",
+        "type":"string",
+        "format": "",
+        "conditionid": "c0",
+        "symbol":""
+      },{
+        "name": "gridid",
+        "columnname": "gridid",
+        "type":"string",
+        "format": "",
+        "conditionid": "c1",
+        "symbol":"="
+      }
+      ],
+      "value":"select t.gridid,t.eci,t1.id,t1.longitude lng,latitude lat,t1.antdirctangle angle from  (select distinct gridid,eci from lte_sys.[@c0]_t_mr_grid [@where] [@c1] and ( totleRSRPMR>0 ))t left join lte_sys.[@c0]_t_base_cell t1 on t.eci = t1.eci"
+    }
+  },{
+    "key": "hGridCellSinr",
+    "desc":"gis删格小区连线",
+    "config": {
+      "parameters": [{
+        "name": "code",
+        "columnname": "",
+        "type":"string",
+        "format": "",
+        "conditionid": "c0",
+        "symbol":""
+      },{
+        "name": "gridid",
+        "columnname": "gridid",
+        "type":"string",
+        "format": "",
+        "conditionid": "c1",
+        "symbol":"="
+      }
+      ],
+      "value":"select t.gridid,t.eci,t1.id,t1.longitude lng,latitude lat,t1.antdirctangle angle from  (select distinct gridid,eci from lte_sys.[@c0]_t_mr_grid [@where] [@c1] and (TotleDLSINRMR>0 ))t left join lte_sys.[@c0]_t_base_cell t1 on t.eci = t1.eci"
+    }
+  },{
+    "key": "hGridCellPrb",
+    "desc":"gis删格小区连线",
+    "config": {
+      "parameters": [{
+        "name": "code",
+        "columnname": "",
+        "type":"string",
+        "format": "",
+        "conditionid": "c0",
+        "symbol":""
+      },{
+        "name": "gridid",
+        "columnname": "gridid",
+        "type":"string",
+        "format": "",
+        "conditionid": "c1",
+        "symbol":"="
+      }
+      ],
+      "value":"select t.gridid,t.eci,t1.id,t1.longitude lng,latitude lat,t1.antdirctangle angle from  (select distinct gridid,eci from lte_sys.[@c0]_t_mr_grid [@where] [@c1] and (TotleDLPRBMR>0))t left join lte_sys.[@c0]_t_base_cell t1 on t.eci = t1.eci"
+    }
+  },{
+    "key": "hGridCellinfoThrouphput",
+    "desc":"小区删格明细数据",
+    "config": {
+      "parameters": [{
+        "name": "code",
+        "columnname": "",
+        "type":"string",
+        "format": "",
+        "conditionid": "c0",
+        "symbol":""
+      },{
+        "name": "gridid",
+        "columnname": "gridid",
+        "type":"string",
+        "format": "",
+        "conditionid": "c1",
+        "symbol":"="
+      }
+      ],
+      "value":"select gridid,eci,cellname,TotalDLThroughput, round(TotalDLThroughput*100/alldata,4.0) dlputrate from (select  gridid,eci,cellname,round(TotalDLThroughput/1024,4.0) TotalDLThroughput,sum(TotalDLThroughput)over(partition by gridid)/1024 alldata from  (select gridid,eci,max(cellname) cellname,sum(DLData_500) TotalDLThroughput,sum(totleRSRPMR) rsrpmr,sum(TotleDLSINRMR) dlsinrmr,sum(TotleDLPRBMR) dlprbmr from lte_sys.[@c0]_t_mr_grid [@where] [@c1]  group by gridid,eci) t) t1 where alldata>0 and TotalDLThroughput>0;"
+    }
+  },{
+    "key": "hGridCellinfoRsrp",
+    "desc":"小区删格明细数据",
+    "config": {
+      "parameters": [{
+        "name": "code",
+        "columnname": "",
+        "type":"string",
+        "format": "",
+        "conditionid": "c0",
+        "symbol":""
+      },{
+        "name": "gridid",
+        "columnname": "gridid",
+        "type":"string",
+        "format": "",
+        "conditionid": "c1",
+        "symbol":"="
+      }
+      ],
+      "value":"select gridid,eci,cellname,rsrpmr, round(rsrpmr*100/allrsrpmr,4.0) rsrpmrrate from (select  gridid,eci,cellname,rsrpmr,sum(rsrpmr)over(partition by gridid) allrsrpmr from  (select gridid,eci,max(cellname) cellname,sum(DLData_500) TotalDLThroughput,sum(totleRSRPMR) rsrpmr,sum(TotleDLSINRMR) dlsinrmr,sum(TotleDLPRBMR) dlprbmr from lte_sys.[@c0]_t_mr_grid [@where] [@c1]  group by gridid,eci) t) t1 where rsrpmr>0 and allrsrpmr>0;"
+    }
+  },{
+    "key": "hGridCellinfoSinr",
+    "desc":"小区删格明细数据",
+    "config": {
+      "parameters": [{
+        "name": "code",
+        "columnname": "",
+        "type":"string",
+        "format": "",
+        "conditionid": "c0",
+        "symbol":""
+      },{
+        "name": "gridid",
+        "columnname": "gridid",
+        "type":"string",
+        "format": "",
+        "conditionid": "c1",
+        "symbol":"="
+      }
+      ],
+      "value":"select gridid,eci,cellname,dlsinrmr, round(dlsinrmr*100/alldlsinrmr,4.0) dlsinrmrrate from (select  gridid,eci,cellname,dlsinrmr,sum(dlsinrmr)over(partition by gridid) alldlsinrmr from  (select gridid,eci,max(cellname) cellname,sum(DLData_500) TotalDLThroughput,sum(totleRSRPMR) rsrpmr,sum(TotleDLSINRMR) dlsinrmr,sum(TotleDLPRBMR) dlprbmr from lte_sys.[@c0]_t_mr_grid [@where] [@c1]  group by gridid,eci) t) t1 where dlsinrmr>0 and alldlsinrmr>0;"
+    }
+  },{
+    "key": "hGridCellinfoPrb",
+    "desc":"小区删格明细数据",
+    "config": {
+      "parameters": [{
+        "name": "code",
+        "columnname": "",
+        "type":"string",
+        "format": "",
+        "conditionid": "c0",
+        "symbol":""
+      },{
+        "name": "gridid",
+        "columnname": "gridid",
+        "type":"string",
+        "format": "",
+        "conditionid": "c1",
+        "symbol":"="
+      }
+      ],
+      "value":"select gridid,eci,dlprbmr ,cellname,dlprbmr,round(dlprbmr*100/alldlprbmr,4.0) dlprbmrrate from (select  gridid,eci,cellname,dlprbmr ,sum(dlprbmr )over(partition by gridid) alldlprbmr from  (select gridid,eci,max(cellname) cellname,sum(DLData_500) TotalDLThroughput,sum(totleRSRPMR) rsrpmr,sum(TotleDLSINRMR) dlsinrmr,sum(TotleDLPRBMR) dlprbmr from lte_sys.[@c0]_t_mr_grid [@where] [@c1]  group by gridid,eci) t) t1 where dlprbmr>0 and alldlprbmr>0;"
+    }
+  },
+    {
+      "key": "gisReportsT",
+      "desc":"gis报表使用",
+      "config": {
+        "parameters": [{
+          "name": "code",
+          "columnname": "",
+          "type":"string",
+          "format": "",
+          "conditionid": "c0",
+          "symbol":""
+        },
+          {
+            "name": "giscolor",
+            "columnname": "",
+            "type":"giscolor",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          }
+        ],
+        "value":"select id,[@c1],LONGILEFT lng,latileft lat,longiright lng1, latiright lat1,longileftbot lng2,latileftbot lat2,longirightbot lng3,langirightbot lat3,target1,target2,target3,target4,target5,target6,target7,target8 from lte_sys.[@c0]_t_grid_test"
+      }
+    },{
+      "key": "hGridIdInfo",
+      "desc":"小区删格明细数据",
+      "config": {
+        "parameters": [{
+          "name": "gridid",
+          "columnname": "",
+          "type":"string",
+          "format": "",
+          "conditionid": "c1",
+          "symbol":""
+        }
+        ],
+        "value":"select '[@c1]' as gridid  "
+      }
+    },{
+      "key": "gisPointT",
+      "desc":"高松岩使用Gis撒点",
+      "config": {
+        "parameters": [{
+          "name": "gridid",
+          "columnname": "",
+          "type":"string",
+          "format": "",
+          "conditionid": "c1",
+          "symbol":""
+        }
+        ],
+        "value":"select c.longitude as lng,c.latitude as lat,-1 as angle from (select distinct a.timegroup,a.imsi,a.longitude,a.latitude from LTE.GUANGDONG_S1U_MMEANDHTTP_dw a inner join LTE.GUANGDONG_S1U_HTTP_DW b on a.imsi=b.imsi and a.IMSIINDEX=b.IMSIINDEX and b.usertype3='铁路用户' where a.XdrType=1) as c"
+      }
+    }
+  ]
+}

@@ -1,0 +1,244 @@
+{
+  "module": "m3",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "project_list",
+      "desc":"获取项目列表",
+      "config": {
+        "parameters": [
+
+        ],
+        "value": "select p_Chn,p_En,p_Province,p_City,p_Desc,p_Type,p_State,p_IsEnabled,to_char(p_CreateTime,'yyyy-mm-dd hh:mi:ss') p_CreateTime,p_CreateUser from LTE_SYS.T_BASE_Project order by p_CreateTime desc"
+      }
+    },
+    {
+      "key": "projectp_en",
+      "desc":"查询项目英文名称",
+      "config": {
+        "parameters": [
+
+        ],
+        "value": "select 'P'||max(cast(REPLACE(p_En,'P','') as integer)+1) as 'p_En' from LTE_SYS.T_BASE_Project"
+      }
+    },
+    {
+      "key": "project_add",
+      "desc":"添加项目",
+      "config": {
+        "parameters": [
+          {
+            "name": "name",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },{
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },{
+            "name": "desc",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },{
+            "name": "createtime",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },{
+            "name": "createuser",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },{
+            "name": "province",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          },{
+            "name": "city",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":""
+          },{
+            "name": "p_type",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c7",
+            "symbol":""
+          }
+        ],
+        "value": "insert into LTE_SYS.T_BASE_Project(p_Chn,p_En,p_Desc,p_State,p_IsEnabled,p_CreateTime,p_CreateUser,p_Province,p_City,p_type) values('[@c0]','[@c1]','[@c2]',0,1,to_timestamp('[@c3]','yyyy-mm-dd hh:mi:ss'),'[@c4]','[@c5]','[@c6]',[@c7]);"
+      }
+    },
+    {
+      "key": "project_update",
+      "desc":"修改项目信息",
+      "config": {
+        "parameters": [
+          {
+            "name": "name",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          },{
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },{
+            "name": "desc",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          },{
+            "name": "province",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol":""
+          },{
+            "name": "city",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol":""
+          },{
+            "name": "p_type",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol":""
+          }
+        ],
+        "value": "UPDATE LTE_SYS.T_BASE_Project SET p_Chn='[@c0]',p_Desc='[@c2]',p_Province='[@c3]',p_City='[@c4]',p_type=[@c5] WHERE p_En='[@c1]';"
+      }
+    },
+    {
+      "key": "project_delete",
+      "desc":"删除项目",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol":""
+          }
+        ],
+        "value": "DELETE FROM LTE_SYS.T_BASE_Project WHERE p_En='[@c0]';"
+      }
+    },
+    {
+      "key": "project_update_state",
+      "desc":"修改项目信息",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },{
+            "name": "p_state",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          }
+        ],
+        "value": "UPDATE LTE_SYS.T_BASE_Project SET p_State=[@c2] WHERE p_En='[@c1]';"
+      }
+
+    },{
+      "key": "project_provices",
+      "desc":"获取项目中的省份",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          }
+        ],
+        "value": "select p_Province provice from LTE_SYS.T_BASE_Project WHERE p_En='[@c1]';"
+      }
+
+    },{
+      "key": "project_cities",
+      "desc":"获取项目中的地市",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          }
+        ],
+        "value": "select p_City city from LTE_SYS.T_BASE_Project WHERE p_En='[@c1]';"
+      }
+
+    },{
+      "key": "project_provices_city",
+      "desc":"获取项目中的省份下的地市",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol":""
+          },{
+            "name": "pro",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol":""
+          }
+        ],
+        "value": "select CITYNAME city from LTE_SYS.T_BASE_CITY where PRONAME ='[@c2]' and CITYNAME in ( select p_City from LTE_SYS.T_BASE_Project WHERE p_En='[@c1]');"
+      }
+
+    }
+  ]
+}

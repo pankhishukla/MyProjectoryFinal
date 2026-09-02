@@ -1,0 +1,9 @@
+/**
+ * Created by caoxp on 2015/6/16.
+ * 提供给首页使用的数据服务
+ */
+
+module.exports = function(server){
+
+
+}

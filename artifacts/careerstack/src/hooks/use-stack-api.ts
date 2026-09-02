@@ -2,7 +2,7 @@
  * Manual React Query hooks for the Stack module APIs (S5.2, S5.3, S5.7, S5.11).
  */
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@clerk/react";
+import { useAuth } from "../lib/fakeClerk";
 import { useCallback } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────

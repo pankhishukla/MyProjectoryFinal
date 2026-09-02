@@ -1,0 +1,206 @@
+{
+    "module": "SysManager.userManager",
+    "flag": "vertical",
+    "configs": [
+        {
+            "key": "dataSysManager.userList",
+            "desc": "系统管理-用户管理",
+            "config": {
+                "parameters": [
+                ],
+                "value": "select  id as u_id,username as u_name,isenabled as u_isenabled ,to_char(createtime) as u_createtime,createuser as u_createuser from lte_sys.T_BASE_SYS_USER  "
+            }
+        },
+        {
+            "key": "dataSysManager.userAdd",
+            "desc": "添加用户",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "name",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "password",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c1",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "isenabled",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c2",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "createtime",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c3",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "createuser",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c4",
+                        "symbol": ""
+                    }
+                ],
+                "value": "INSERT INTO LTE_SYS.T_BASE_SYS_USER (id, username, password, isenabled, logincount, lastlogintime, createuser, createtime, updateuser, updatetime, cityid)  VALUES (lte_sys_base_user.nextval, '[@c0]', '[@c1]', '[@c2]',0, '[@c3]','[@c4]', '[@c3]', '[@c4]','[@c3]', null) "
+            }
+        },
+        {
+            "key": "dataSysManager.update",
+            "desc": "修改用户信息",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "name",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "password",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c1",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "isenabled",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c2",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "updatetime",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c3",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "updateuser",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c4",
+                        "symbol": ""
+                    },{
+                        "name": "id",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c5",
+                        "symbol": ""
+                    }
+                ],
+                "value":"UPDATE    LTE_SYS.T_BASE_SYS_USER  SET    username='[@c0]' , password= '[@c1]' , isenabled='[@c2]'  , logincount=logincount+1  , updateuser='[@c4]' , updatetime='[@c3]'  WHERE     id= cast('[@c5]' as integer) "
+            }
+        },
+        {
+            "key": "dataSysManager.userDelete",
+            "desc": "删除用户信息",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "id",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    }
+                ],
+                "value": "DELETE FROM  LTE_SYS.T_BASE_SYS_USER WHERE id=[@c0] "
+            }
+        },
+        {
+            "key": "dataSysManager.userRoleidAdd",
+            "desc": "添加用户角色id",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "userid",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    },
+                    {
+                        "name": "roleid",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c1",
+                        "symbol": ""
+                    }
+                ],
+                "value": "INSERT INTO LTE_SYS.T_BASE_SYS_USERROLE (userid, roleid)  VALUES ([@c0], [@c1]) "
+            }
+        },
+        {
+            "key": "dataSysManager.userRoleidDelete",
+            "desc": "删除用户角色信息",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "userid",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    }
+                ],
+                "value": "DELETE FROM  LTE_SYS.T_BASE_SYS_USERROLE WHERE userid=[@c0] "
+            }
+        },
+        {
+            "key": "dataSysManager.userRoleidData",
+            "desc": "系统管理-用户管理-获取用户角色",
+            "config": {
+                "parameters": [
+                    {
+                        "name": "userid",
+                        "columnname": "",
+                        "type": "string",
+                        "format": "",
+                        "conditionid": "c0",
+                        "symbol": ""
+                    }
+                ],
+                "value": "select * from lte_sys.T_BASE_SYS_USERROLE where userid=[@c0] "
+            }
+        },
+        {
+            "key": "dataSysManager.userInsertDataid",
+            "desc": "系统管理-用户管理-查询插入ID",
+            "config": {
+                "parameters": [
+
+                ],
+                "value": "select max(id) as ids from lte_sys.T_BASE_SYS_USER"
+            }
+        }
+    ]
+}

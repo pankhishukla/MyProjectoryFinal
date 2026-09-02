@@ -1,0 +1,321 @@
+{
+  "module": "m2",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "query_gntab5_1",
+      "desc": "HTTP大类业务统计-上行_全国",
+      "config": {
+        "parameters": [
+          {
+            "name": "preData",
+            "type": "object",
+            "conditions": {
+              "cnd": [
+                {
+                  "key": "city_no",
+                  "columnname": "gn.city_no",
+                  "type": "string",
+                  "format": "",
+                  "conditionid": "city0",
+                  "symbol": "="
+                },
+                {
+                  "key": "starttime",
+                  "columnname": "starttime",
+                  "type": "string",
+                  "format": "",
+                  "conditionid": "time0",
+                  "symbol": "in"
+                }
+              ],
+              "co": "or"
+            }
+          },
+          {
+            "name": "preDatacategory",
+            "type": "object",
+            "conditions": {
+              "cnd": [
+                {
+                  "key": "service",
+                  "columnname": "gn.city_no",
+                  "type": "string",
+                  "format": "",
+                  "conditionid": "cate0",
+                  "symbol": "="
+                },
+                {
+                  "key": "bussinesstype",
+                  "columnname": "service",
+                  "type": "string",
+                  "format": "",
+                  "conditionid": "subapp0",
+                  "symbol": "in"
+                }
+              ],
+              "co": "or"
+            }
+          },
+          {
+            "name": "preDataterminal",
+            "type": "projects",
+            "conditions": [
+              {
+                "key": "terminal",
+                "columnname": "",
+                "type": "string",
+                "format": "",
+                "conditionid": "terminal0",
+                "symbol": ""
+              },
+              {
+                "key": "terminalname",
+                "columnname": "",
+                "type": "string",
+                "format": "",
+                "conditionid": "terminalname0",
+                "symbol": ""
+              },
+              {
+                "key": "filetypename",
+                "columnname": "",
+                "type": "string",
+                "format": "",
+                "conditionid": "filetypename",
+                "symbol": ""
+              }
+            ]
+          },
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "p0",
+            "symbol": ""
+          },
+          {
+            "name": "factory",
+            "columnname": "EQUIPMENT",
+            "type": "string",
+            "format": "",
+            "conditionid": "fac0",
+            "symbol": "="
+          }
+        ],
+        "value": "SELECT       '全国' data1,       '汇总' data2,       '汇总' AS data3,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       '' data7,       '' data8,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS data9,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS data10,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS data11,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS data12,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS data13       FROM       (       SELECT       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       UNION       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       '' CATEGORY,       '' BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM       (       SELECT       GN.EQUIPMENT,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       )A       GROUP BY A.EQUIPMENT       union       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       D.CATEGORYNAME  CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM       (       SELECT       GN.SERVICE,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE  GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       )A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY D.CATEGORYNAME       UNION       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       D.CATEGORYNAME  CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM       (       SELECT       GN.EQUIPMENT,       GN.SERVICE,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       )A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY D.CATEGORYNAME,A.EQUIPMENT       union       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM       (       SELECT       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE  AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY D.CATEGORYNAME, D.BUSSINESSNAME       UNION       SELECT       '全国' PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM       (       SELECT       GN.EQUIPMENT,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE  AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY D.CATEGORYNAME, D.BUSSINESSNAME,A.EQUIPMENT"
+      }
+    },
+    {
+      "key": "query_gntab5_2",
+      "desc": "HTTP大类业务统计-上行_省",
+      "config": {
+        "parameters": [
+          {
+            "name": "preData",
+            "type": "object",
+            "conditions": {
+              "cnd": [
+                {
+                  "key": "city_no",
+                  "columnname": "gn.city_no",
+                  "type": "string",
+                  "format": "",
+                  "conditionid": "city0",
+                  "symbol": "="
+                },
+                {
+                  "key": "starttime",
+                  "columnname": "starttime",
+                  "type": "string",
+                  "format": "",
+                  "conditionid": "time0",
+                  "symbol": "in"
+                }
+              ],
+              "co": "or"
+            }
+          },
+          {
+            "name": "preDatacategory",
+            "type": "object",
+            "conditions": {
+              "cnd": [
+                {
+                  "key": "service",
+                  "columnname": "gn.city_no",
+                  "type": "string",
+                  "format": "",
+                  "conditionid": "cate0",
+                  "symbol": "="
+                },
+                {
+                  "key": "bussinesstype",
+                  "columnname": "service",
+                  "type": "string",
+                  "format": "",
+                  "conditionid": "subapp0",
+                  "symbol": "in"
+                }
+              ],
+              "co": "or"
+            }
+          },
+          {
+            "name": "preDataterminal",
+            "type": "projects",
+            "conditions": [
+              {
+                "key": "terminal",
+                "columnname": "",
+                "type": "string",
+                "format": "",
+                "conditionid": "terminal0",
+                "symbol": ""
+              },
+              {
+                "key": "terminalname",
+                "columnname": "",
+                "type": "string",
+                "format": "",
+                "conditionid": "terminalname0",
+                "symbol": ""
+              },
+              {
+                "key": "filetypename",
+                "columnname": "",
+                "type": "string",
+                "format": "",
+                "conditionid": "filetypename",
+                "symbol": ""
+              }
+            ]
+          },
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "p0",
+            "symbol": ""
+          },
+          {
+            "name": "factory",
+            "columnname": "EQUIPMENT",
+            "type": "string",
+            "format": "",
+            "conditionid": "fac0",
+            "symbol": "="
+          }
+        ],
+        "value": "SELECT       A.PRONAME as data1,       '汇总' data2,       '汇总' AS data3,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       '' data7,       '' data8,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS data9,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS data10,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS data11,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS data12,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS data13       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       GROUP BY A.PRONAME       UNION       SELECT       A.PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       '' CATEGORY,       '' BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.EQUIPMENT,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       GROUP BY A.PRONAME,A.EQUIPMENT       union       SELECT       A.PRONAME,       '汇总' CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       D.CATEGORYNAME  CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.SERVICE,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY A.PRONAME,D.CATEGORYNAME       UNION       SELECT       A.PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       D.CATEGORYNAME  CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY A.PRONAME,D.CATEGORYNAME,A.EQUIPMENT       union       SELECT       A.PRONAME,       '汇总' CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY A.PRONAME,D.CATEGORYNAME,D.BUSSINESSNAME       UNION       SELECT       A.PRONAME,       '汇总' CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM (       SELECT       (SELECT D.PRONAME FROM lte_sys.T_BASE_CITY D WHERE D.CITY_NO=GN.CITY_NO) PRONAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY A.PRONAME,D.CATEGORYNAME,D.BUSSINESSNAME,A.EQUIPMENT"
+      }
+    },
+    {
+      "key": "query_gntab5_3",
+      "desc": "HTTP大类业务统计-上行_市",
+      "config": {
+        "parameters": [
+          {
+            "name": "preData",
+            "type": "object",
+            "conditions": {
+              "cnd": [
+                {
+                  "key": "city_no",
+                  "columnname": "gn.city_no",
+                  "type": "string",
+                  "format": "",
+                  "conditionid": "city0",
+                  "symbol": "="
+                },
+                {
+                  "key": "starttime",
+                  "columnname": "starttime",
+                  "type": "string",
+                  "format": "",
+                  "conditionid": "time0",
+                  "symbol": "in"
+                }
+              ],
+              "co": "or"
+            }
+          },
+          {
+            "name": "preDatacategory",
+            "type": "object",
+            "conditions": {
+              "cnd": [
+                {
+                  "key": "service",
+                  "columnname": "gn.city_no",
+                  "type": "string",
+                  "format": "",
+                  "conditionid": "cate0",
+                  "symbol": "="
+                },
+                {
+                  "key": "bussinesstype",
+                  "columnname": "service",
+                  "type": "string",
+                  "format": "",
+                  "conditionid": "subapp0",
+                  "symbol": "in"
+                }
+              ],
+              "co": "or"
+            }
+          },
+          {
+            "name": "preDataterminal",
+            "type": "projects",
+            "conditions": [
+              {
+                "key": "terminal",
+                "columnname": "",
+                "type": "string",
+                "format": "",
+                "conditionid": "terminal0",
+                "symbol": ""
+              },
+              {
+                "key": "terminalname",
+                "columnname": "",
+                "type": "string",
+                "format": "",
+                "conditionid": "terminalname0",
+                "symbol": ""
+              },
+              {
+                "key": "filetypename",
+                "columnname": "",
+                "type": "string",
+                "format": "",
+                "conditionid": "filetypename",
+                "symbol": ""
+              }
+            ]
+          },
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "p0",
+            "symbol": ""
+          },
+          {
+            "name": "factory",
+            "columnname": "EQUIPMENT",
+            "type": "string",
+            "format": "",
+            "conditionid": "fac0",
+            "symbol": "="
+          }
+        ],
+        "value": "SELECT       A.PRONAME as data1,       A.CITYNAME as data2,       '汇总' AS data3,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       '' data7,       '' data8,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS data9,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS data10,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS data11,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS data12,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS data13       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       GROUP BY A.PRONAME,A.CITYNAME       UNION       SELECT       A.PRONAME,       A.CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       '' CATEGORY,       '' BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.EQUIPMENT,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN lte_sys.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       GROUP BY A.PRONAME,A.CITYNAME,A.EQUIPMENT       union       SELECT       A.PRONAME,       A.CITYNAME,       '汇总' AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       D.CATEGORYNAME CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.SERVICE,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN JOIN GN.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY A.PRONAME,A.CITYNAME,D.CATEGORYNAME       UNION       SELECT       A.PRONAME,       A.CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,       '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       D.CATEGORYNAME CATEGORY,       '汇总' BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM (       SELECT       GN.CITY_NO,       D.PRONAME,       D.CITYNAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN JOIN GN.T_BASE_CITY D ON D.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN (SELECT DISTINCT CATEGORYNAME,CATEGORYID FROM lte_sys.[@p0]_T_BASE_CATEGORYTYPE) D ON D.CATEGORYID=A.SERVICE       GROUP BY A.PRONAME,A.CITYNAME,D.CATEGORYNAME,A.EQUIPMENT       union       SELECT       A.PRONAME,       A.CITYNAME,       '汇总' AS EQUIPMENT,        '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM (       SELECT       GN.CITY_NO,       C.PRONAME PRONAME,       C.CITYNAME CITYNAME,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN  lte_sys.T_BASE_CITY C ON C.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE   AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY A.PRONAME,A.CITYNAME,D.CATEGORYNAME,D.BUSSINESSNAME       UNION       SELECT       A.PRONAME,       A.CITYNAME,       CASE WHEN A.EQUIPMENT IS NULL THEN '未匹配' ELSE A.EQUIPMENT END AS EQUIPMENT,        '[@terminalname0]' data4,       'LTE网络' data5,       '[@filetypename]' data6,       D.CATEGORYNAME  CATEGORY,       D.BUSSINESSNAME  BUSSNIES,       CASE WHEN SUM(A.ULDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.ULDELAY),3.0) END AS USERSPEED,       CASE WHEN SUM(A.EMPTYDELAY)=0 THEN 0 ELSE ROUND(SUM(A.ULTRAFFIC) * 8000 / 1024 /SUM(A.EMPTYDELAY),3.0) END AS ESPEED,       ROUND(SUM(A.ULTRAFFIC)/1024/1024,3.0) AS ULTRAFFIC,       ROUND(SUM(A.ULDELAY)/1000,3.0) AS ULDELAY,       ROUND(SUM(A.EMPTYDELAY)/1000,3.0) AS EMPTYDELAY       FROM (       SELECT       GN.CITY_NO,       C.PRONAME PRONAME,       C.CITYNAME CITYNAME,       GN.EQUIPMENT,       GN.SERVICE,       GN.BUSSINESSTYPE,       GN.ULDELAY,       GN.EMPTYDELAY,       GN.ULTRAFFIC       FROM lte_sys.[@p0]_T_GN_SUM_ALLFILE GN       LEFT JOIN  lte_sys.T_BASE_CITY C ON C.CITY_NO=GN.CITY_NO       WHERE GN.BSPROTOCAL=2 AND 1=1 [@and] ${[@city0] [@and] [@time0]}& [@and] ${[@cate0] [@and] [@subapp0]}& [@and] [@terminal0] [@and] [@fac0]       ) A       INNER JOIN lte_sys.[@p0]_T_BASE_CATEGORYTYPE D ON D.CATEGORYID=A.SERVICE   AND D.BUSSINESSTYPE=A.BUSSINESSTYPE       GROUP BY A.PRONAME,A.CITYNAME,D.CATEGORYNAME,D.BUSSINESSNAME,A.EQUIPMENT"
+      }
+    }
+  ]
+}

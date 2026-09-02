@@ -9,6 +9,7 @@ import { requireAuth, requireAdmin } from "../middlewares/requireAuth";
 import { scrapeAllSources, addJobSource, loadJobSources } from "../services/job-intelligence/scraper";
 import { scrapeNaukriListingPage } from "../services/job-intelligence/naukriScraper";
 import { analyzeTrends, getTop3Stacks } from "../services/job-intelligence/trendAnalyzer";
+import { searchJobs, searchMultipleQueries } from "../services/job-intelligence/serpapiSearch";
 import { db, scrapedJobPostingsTable } from "../lib/db/index.js";
 import { desc } from "drizzle-orm";
 import { z } from "zod";
@@ -151,6 +152,91 @@ router.get("/jobs/sources", requireAdmin, async (_req, res): Promise<void> => {
   } catch (error: any) {
     res.status(500).json({ error: `Failed to load sources: ${error.message}` });
   }
+});
+
+// ─── POST /jobs/search-serpapi — Search jobs via SerpAPI ────────────────────
+// Authenticated users can run market-intelligence searches.
+
+const SerpApiSearchBody = z.object({
+  query: z.string().min(1, "Search query is required").max(500),
+  location: z.string().optional().default("us"),
+  numResults: z.number().int().min(1).max(100).optional().default(20),
+});
+
+router.post("/jobs/search-serpapi", requireAuth, async (req, res): Promise<void> => {
+  const parsed = SerpApiSearchBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  try {
+    const result = await searchJobs(parsed.data);
+    res.json({
+      query: result.query,
+      totalResults: result.totalResults,
+      jobs: result.jobs,
+    });
+  } catch (error: any) {
+    // Distinguish between configuration errors and transient failures
+    if (error.message?.includes("SERPAPI_API_KEY")) {
+      res.status(503).json({ error: error.message });
+    } else if (error.message?.includes("rate limit")) {
+      res.status(429).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: `SerpAPI search failed: ${error.message}` });
+    }
+  }
+});
+
+// ─── POST /jobs/search-batch — Run multiple SerpAPI queries ─────────────────
+// Admin-only to prevent abuse of API quota.
+
+const SerpApiBatchBody = z.object({
+  queries: z.array(z.string().min(1).max(500)).min(1).max(10),
+  location: z.string().optional().default("us"),
+  numResults: z.number().int().min(1).max(100).optional().default(10),
+});
+
+router.post("/jobs/search-batch", requireAdmin, async (req, res): Promise<void> => {
+  const parsed = SerpApiBatchBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  try {
+    const results = await searchMultipleQueries(parsed.data.queries, {
+      location: parsed.data.location,
+      numResults: parsed.data.numResults,
+    });
+
+    const totalJobs = results.reduce((sum, r) => sum + r.jobs.length, 0);
+    res.json({
+      queries: results.map((r) => ({
+        query: r.query,
+        totalResults: r.totalResults,
+      })),
+      totalJobs,
+      jobs: results.flatMap((r) => r.jobs),
+    });
+  } catch (error: any) {
+    if (error.message?.includes("SERPAPI_API_KEY")) {
+      res.status(503).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: `Batch search failed: ${error.message}` });
+    }
+  }
+});
+
+// ─── GET /jobs/serpapi-status — Check SerpAPI key configuration ─────────────
+
+router.get("/jobs/serpapi-status", requireAuth, async (_req, res): Promise<void> => {
+  const key = process.env.SERPAPI_API_KEY;
+  res.json({
+    configured: !!key && key !== "PLACEHOLDER",
+    // Never expose the actual key
+  });
 });
 
 export default router;

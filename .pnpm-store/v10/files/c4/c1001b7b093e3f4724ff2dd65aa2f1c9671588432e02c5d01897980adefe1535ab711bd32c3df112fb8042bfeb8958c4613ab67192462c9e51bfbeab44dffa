@@ -1,0 +1,70 @@
+{
+  "module": "Test.tb7_sceneData",
+  "flag": "vertical",
+  "configs": [
+    {
+      "key": "Test.tb7_sceneData",
+      "desc": "LTE室内外场景分析",
+      "config": {
+        "parameters": [
+          {
+            "name": "p_en",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c0",
+            "symbol": ""
+          },
+          {
+            "name": "starttime",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c1",
+            "symbol": ""
+          },
+          {
+            "name": "endtime",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c2",
+            "symbol": ""
+          },
+          {
+            "name": "scenename",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c3",
+            "symbol": ""
+          },
+          {
+            "name": "fieldname",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c4",
+            "symbol": ""
+          },
+          {
+            "name": "scenevalue",
+            "columnname": "",
+            "type": "string",
+            "format": "",
+            "conditionid": "c5",
+            "symbol": ""
+          }, {
+            "name": "province",
+            "columnname": "",
+            "type":"string",
+            "format": "",
+            "conditionid": "c6",
+            "symbol":""
+          }
+        ],
+        "value": "SELECT      '[@c6]' AS data1,      '[@c3]' AS data2,      c.*  FROM      (          SELECT                 SUM(USERNUM)            AS data3,              SUM( MUTUALOPERUSERNUM) AS data4,              ROUND(                  CASE                      WHEN SUM(USERNUM)>0                      THEN SUM(MUTUALOPERUSERNUM)/SUM(USERNUM)                      ELSE 0                  END ,2.0)            AS data5,              SUM(MUTUALOPERUSERCOUNT) AS data6,              ROUND(                  CASE                      WHEN SUM(MUTUALOPERUSERNUM)>0                      THEN SUM(MUTUALOPERUSERCOUNT)/SUM(MUTUALOPERUSERNUM)                      ELSE 0                  END,2.0)       AS data7,              SUM(USERNUM4G_23G) AS data8,              ROUND(                  CASE                      WHEN SUM(USERNUM)>0                      THEN SUM(USERNUM4G_23G)/SUM(USERNUM)                      ELSE 0                  END ,2.0)     AS data9,              SUM(MUTUALMORE50) AS data10,              ROUND(                  CASE                      WHEN SUM(USERNUM)>0                      THEN SUM(MUTUALMORE50)/SUM(USERNUM)                      ELSE 0                  END ,2.0)         AS data11,              SUM(USERNUM)          AS data12,              SUM(SIGNALINGUSERNUM) AS data13,              ROUND(                  CASE                      WHEN SUM(USERNUM)>0                      THEN SUM(SIGNALINGUSERNUM)/SUM(USERNUM)                      ELSE 0                  END ,2.0)           AS data14,              SUM(SIGNALINGUSERCOUNT) AS data15,              ROUND(                  CASE                      WHEN SUM(USERNUM)>0                      THEN SUM(SIGNALINGUSERCOUNT)/SUM(USERNUM)                      ELSE 0                  END,2.0)         AS data16,              SUM(TOTALUSER)       AS data17,              SUM(LONGTERM23GUSER) AS data18,              ROUND(                  CASE                      WHEN SUM(TOTALUSER)>0                      THEN SUM(LONGTERM23GUSER)/SUM(TOTALUSER)                      ELSE 0                  END ,2.0) AS data19,              SUM(LTEUSER)  AS data20,              SUM(WIFIUSER) AS data21,              ROUND(                  CASE                      WHEN SUM(LTEUSER)>0                      THEN SUM(WIFIUSER)/SUM(LTEUSER)                      ELSE 0                  END ,2.0)AS data22          FROM              (                  SELECT                      (                          CASE                              WHEN scene=0                              THEN '全网用户'                              WHEN SCENE=1                              THEN '室外用户'                              WHEN SCENE=2                              THEN '占用室分的室内稳定用户(有室分)'                              WHEN SCENE=3                              THEN '占用宏站的室内稳定用户(无室分)'                              WHEN SCENE=4                              THEN '室内稳定用户(占用宏站和室分)'                              WHEN SCENE=5                              THEN '高铁'                              WHEN SCENE=6                              THEN '地铁'                              WHEN SCENE=7                              THEN '校园'                              WHEN SCENE=8                              THEN '商业区'                              WHEN SCENE=9                              THEN '风景区'                              WHEN SCENE=10                              THEN '居民区'                              WHEN SCENE=11                              THEN '高速公路'                              ELSE '未定义场景'                          END ) AS data2,                      *                  FROM                      LTE_SYS.[@c0]_T_INTENETWORK                  WHERE                      HOUR>='[@c1]'                  AND HOUR<='[@c2]')b          WHERE              b.data2[@c4])c"
+      }
+    }
+  ]
+}
