@@ -52,7 +52,7 @@ router.patch("/profile", requireAuth, async (req, res): Promise<void> => {
     .set(parsed.data)
     .where(eq(usersTable.clerkId, clerkId));
 
-  // affectedRows === 0 means the user didn't exist
+  // affectedRows === 0 means the user didn't have a profile row
   if ((result[0] as any).affectedRows === 0) {
     res.status(404).json({ error: "Profile not found" });
     return;

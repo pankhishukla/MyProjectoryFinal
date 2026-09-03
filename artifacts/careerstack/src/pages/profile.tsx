@@ -75,7 +75,14 @@ export default function Profile() {
       queryClient.invalidateQueries({ queryKey: getGetProfileQueryKey() });
       toast({ title: "Success", description: "Profile updated successfully." });
     } catch (error) {
-      toast({ title: "Error", description: "Failed to update profile.", variant: "destructive" });
+      let errorMessage = "Failed to update profile.";
+      // Extract meaningful error from ApiError or plain Error
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === "object" && error !== null && "message" in error) {
+        errorMessage = String(error.message);
+      }
+      toast({ title: "Error", description: errorMessage, variant: "destructive" });
     }
   };
 
