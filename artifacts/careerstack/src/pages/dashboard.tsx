@@ -84,7 +84,7 @@ export default function Dashboard() {
             <CardTitle>Recent Activity</CardTitle>
           </CardHeader>
           <CardContent>
-            {activity && activity.length > 0 ? (
+            {Array.isArray(activity) && activity.length > 0 ? (
               <div className="space-y-6">
                 {activity.map((item, i) => (
                   <motion.div 

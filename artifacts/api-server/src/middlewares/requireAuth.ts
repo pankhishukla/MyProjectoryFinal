@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { createClerkClient } from "@clerk/backend";
 import { logger } from "../lib/logger";
+import { verifyToken } from "@clerk/backend";
 
 // ---------------------------------------------------------------------------
 // Clerk client – initialised lazily so the module can be imported even when
@@ -64,12 +65,13 @@ export const requireAuth = async (
   }
 
   try {
-    const clerk = getClerkClient();
-    const session = await clerk.verifyToken(token);
+    const session = await verifyToken(token, {
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
 
     // session.sub is the Clerk user id (the "sub" claim of the JWT).
     (req as any).clerkUserId = session.sub;
-    (req as any).clerkSessionId = session.sessionId;
+    (req as any).clerkSessionId = session.sid;
     next();
   } catch (error: any) {
     logger.warn({ error: error.message }, "Clerk token verification failed");
@@ -108,7 +110,9 @@ export const requireAdmin = async (
 
   try {
     const clerk = getClerkClient();
-    const session = await clerk.verifyToken(token);
+    const session = await verifyToken(token, {
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
     const userId = session.sub;
 
     // Fetch user to check public metadata for admin role
@@ -121,7 +125,7 @@ export const requireAdmin = async (
     }
 
     (req as any).clerkUserId = userId;
-    (req as any).clerkSessionId = session.sessionId;
+    (req as any).clerkSessionId = session.sid;
     next();
   } catch (error: any) {
     logger.warn({ error: error.message }, "Clerk admin verification failed");
