@@ -111,7 +111,7 @@ router.post("/roadmaps", requireAuth, async (req, res): Promise<void> => {
     userId,
     technology: parsed.data.technology,
   });
-  const roadmapId = (roadmapResult[0] as any).insertId;
+  const roadmapId = (roadmapResult as any).insertId;
   const [roadmap] = await db.select().from(roadmapsTable).where(eq(roadmapsTable.id, roadmapId));
 
   for (let i = 0; i < template.milestones.length; i++) {
@@ -126,7 +126,7 @@ router.post("/roadmaps", requireAuth, async (req, res): Promise<void> => {
       industryRelevance: msTemplate.industryRelevance,
       status: "not_started",
     });
-    const milestoneId = (msResult[0] as any).insertId;
+    const milestoneId = (msResult as any).insertId;
 
     for (const taskTitle of msTemplate.tasks) {
       await db.insert(tasksTable).values({
