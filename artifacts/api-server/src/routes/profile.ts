@@ -3,16 +3,18 @@ import { eq } from "drizzle-orm";
 import { db, usersTable } from "../lib/db/index.js";
 import { CreateProfileBody, UpdateProfileBody, GetProfileResponse, UpdateProfileResponse } from "../lib/api-zod/index.js";
 import { requireAuth } from "../middlewares/requireAuth";
+import { getOrCreateUserId } from "../lib/db/index.js";
 
 const router: IRouter = Router();
 
 router.get("/profile", requireAuth, async (req, res): Promise<void> => {
   const clerkId = (req as any).clerkUserId;
-  const [user] = await db.select().from(usersTable).where(eq(usersTable.clerkId, clerkId));
-  if (!user) {
+  const userId = await getOrCreateUserId(clerkId);
+  if (userId === null) {
     res.status(404).json({ error: "Profile not found" });
     return;
   }
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
   res.json(GetProfileResponse.parse(user));
 });
 
