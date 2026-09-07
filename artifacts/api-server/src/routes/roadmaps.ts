@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { eq, and } from "drizzle-orm";
-import { db, usersTable, roadmapsTable, milestonesTable, tasksTable, activityTable, userSkillsTable } from "../lib/db/index.js";
+import { db, getOrCreateUserId, usersTable, roadmapsTable, milestonesTable, tasksTable, activityTable, userSkillsTable } from "../lib/db/index.js";
 import {
   GenerateRoadmapBody,
   GetRoadmapParams,
@@ -179,7 +179,7 @@ router.get("/roadmaps/:id", requireAuth, async (req, res): Promise<void> => {
     res.status(400).json({ error: params.error.message });
     return;
   }
-  const userId = await getUserId((req as any).clerkUserId);
+  const userId = await getOrCreateUserId((req as any).clerkUserId);
   if (!userId) {
     res.status(404).json({ error: "Not found" });
     return;
@@ -340,7 +340,7 @@ router.patch("/roadmaps/:roadmapId/tasks/:taskId/toggle", requireAuth, async (re
 
 router.delete("/roadmaps/:id", requireAuth, async (req, res): Promise<void> => {
   try {
-    const userId = await getUserId((req as any).clerkUserId);
+    const userId = await getOrCreateUserId((req as any).clerkUserId);
     if (!userId) {
       res.status(404).json({ error: "User not found" });
       return;
