@@ -111,8 +111,18 @@ router.post("/roadmaps", requireAuth, async (req, res): Promise<void> => {
     userId,
     technology: parsed.data.technology,
   });
-  const roadmapId = (roadmapResult as any).insertId;
-  const [roadmap] = await db.select().from(roadmapsTable).where(eq(roadmapsTable.id, roadmapId));
+
+  // Select the newly inserted roadmap by userId and technology
+  const [roadmap] = await db.select().from(roadmapsTable).where(
+    eq(roadmapsTable.userId, userId)
+  ).where(eq(roadmapsTable.technology, parsed.data.technology));
+
+  if (!roadmap) {
+    res.status(500).json({ error: "Failed to generate roadmap: roadmap not found after insert" });
+    return;
+  }
+
+  const roadmapId = roadmap.id;
 
   for (let i = 0; i < template.milestones.length; i++) {
     const msTemplate = template.milestones[i];
@@ -126,9 +136,13 @@ router.post("/roadmaps", requireAuth, async (req, res): Promise<void> => {
       industryRelevance: msTemplate.industryRelevance,
       status: "not_started",
     });
-    const milestoneId = (msResult as any).insertId;
+    
+    // Select the milestone to get its ID after insert
+    const [ms] = await db.select().from(milestonesTable).where(and(eq(milestonesTable.roadmapId, roadmap.id), eq(milestonesTable.orderIndex, i))).limit(1);
+    const milestoneId = ms ? ms.id : null;
 
     for (const taskTitle of msTemplate.tasks) {
+      if (milestoneId == null) continue;
       await db.insert(tasksTable).values({
         milestoneId,
         title: taskTitle,
