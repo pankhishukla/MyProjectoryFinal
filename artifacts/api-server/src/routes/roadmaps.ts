@@ -180,6 +180,7 @@ router.get("/roadmaps/:id", requireAuth, async (req, res): Promise<void> => {
     return;
   }
   const userId = await getOrCreateUserId((req as any).clerkUserId);
+  logger.info({ userId, clerkUserId: (req as any).clerkUserId }, "GET roadmap: user lookup");
   if (!userId) {
     res.status(404).json({ error: "Not found" });
     return;
@@ -187,6 +188,7 @@ router.get("/roadmaps/:id", requireAuth, async (req, res): Promise<void> => {
 
   const [roadmap] = await db.select().from(roadmapsTable)
     .where(and(eq(roadmapsTable.id, params.data.id), eq(roadmapsTable.userId, userId)));
+  logger.info({ roadmapId: params.data.id, userId, found: !!roadmap }, "GET roadmap: query result");
 
   if (!roadmap) {
     res.status(404).json({ error: "Roadmap not found" });
@@ -341,6 +343,7 @@ router.patch("/roadmaps/:roadmapId/tasks/:taskId/toggle", requireAuth, async (re
 router.delete("/roadmaps/:id", requireAuth, async (req, res): Promise<void> => {
   try {
     const userId = await getOrCreateUserId((req as any).clerkUserId);
+    logger.info({ userId, clerkUserId: (req as any).clerkUserId }, "DELETE roadmap: user lookup");
     if (!userId) {
       res.status(404).json({ error: "User not found" });
       return;
@@ -355,6 +358,7 @@ router.delete("/roadmaps/:id", requireAuth, async (req, res): Promise<void> => {
     // Fetch before delete so we can use the technology name after
     const [toDelete] = await db.select().from(roadmapsTable)
       .where(and(eq(roadmapsTable.id, id), eq(roadmapsTable.userId, userId)));
+    logger.info({ roadmapId: id, userId, found: !!toDelete }, "DELETE roadmap: query result");
 
     if (!toDelete) {
       res.status(404).json({ error: "Roadmap not found" });
