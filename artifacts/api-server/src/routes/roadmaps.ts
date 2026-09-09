@@ -343,40 +343,76 @@ router.patch("/roadmaps/:roadmapId/tasks/:taskId/toggle", requireAuth, async (re
 router.delete("/roadmaps/:id", requireAuth, async (req, res): Promise<void> => {
   try {
     const userId = await getOrCreateUserId((req as any).clerkUserId);
-    logger.info({ userId, clerkUserId: (req as any).clerkUserId }, "DELETE roadmap: user lookup");
+
     if (!userId) {
       res.status(404).json({ error: "User not found" });
       return;
     }
 
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.id, 10);
+
     if (isNaN(id)) {
       res.status(400).json({ error: "Invalid roadmap ID" });
       return;
     }
 
-    // Fetch before delete so we can use the technology name after
-    const [toDelete] = await db.select().from(roadmapsTable)
-      .where(and(eq(roadmapsTable.id, id), eq(roadmapsTable.userId, userId)));
-    logger.info({ roadmapId: id, userId, found: !!toDelete }, "DELETE roadmap: query result");
+    //Fetch the roadmap and verify ownership
+    const [toDelete] = await db
+      .select()
+      .from(roadmapsTable)
+      .where(
+        and(
+          eq(roadmapsTable.id, id),
+          eq(roadmapsTable.userId, userId)
+        )
+      );
 
     if (!toDelete) {
       res.status(404).json({ error: "Roadmap not found" });
       return;
     }
 
-    // MySQL doesn't support .returning() — delete and use pre-fetched row
-    await db.delete(roadmapsTable)
-      .where(and(eq(roadmapsTable.id, id), eq(roadmapsTable.userId, userId)));
+    //Find all milestones belonging to this roadmap
+    const milestones = await db
+      .select({ id: milestonesTable.id })
+      .from(milestonesTable)
+      .where(eq(milestonesTable.roadmapId, id));
 
-    // ─── Delete Synced User Skill ───────────────────────────────────────────
+    //Delete tasks belonging to those milestones first
+    for (const milestone of milestones) {
+      await db
+        .delete(tasksTable)
+        .where(eq(tasksTable.milestoneId, milestone.id));
+    }
+
+    //Delete the milestones
+    await db
+      .delete(milestonesTable)
+      .where(eq(milestonesTable.roadmapId, id));
+
+    //Now the roadmap can safely be deleted
+    await db
+      .delete(roadmapsTable)
+      .where(
+        and(
+          eq(roadmapsTable.id, id),
+          eq(roadmapsTable.userId, userId)
+        )
+      );
+
+    //Remove the synced skill for this technology
     const techSkillName = toDelete.technology.trim();
-    await db.delete(userSkillsTable)
-      .where(and(
-        eq(userSkillsTable.userId, userId),
-        eq(userSkillsTable.name, techSkillName)
-      ));
 
+    await db
+      .delete(userSkillsTable)
+      .where(
+        and(
+          eq(userSkillsTable.userId, userId),
+          eq(userSkillsTable.name, techSkillName)
+        )
+      );
+
+    //Record the deletion activity
     await db.insert(activityTable).values({
       userId,
       type: "project_updated",
@@ -387,7 +423,9 @@ router.delete("/roadmaps/:id", requireAuth, async (req, res): Promise<void> => {
     res.sendStatus(204);
   } catch (err) {
     console.error("Error deleting roadmap:", err);
-    res.status(500).json({ error: (err as Error).message });
+    res.status(500).json({
+      error: err instanceof Error ? err.message : "Failed to delete roadmap",
+    });
   }
 });
 
