@@ -15,6 +15,7 @@ import {
 } from "../lib/db/index.js";
 import { requireAuth } from "../middlewares/requireAuth";
 import { logger } from "../lib/logger";
+import { computeTechScores } from "../services/scoring.service";
 
 const router: IRouter = Router();
 
@@ -89,50 +90,6 @@ async function generateUniqueSlug(base: string, existingId?: number | null): Pro
     slug = `${base}-${suffix}`;
     suffix += 1;
   }
-}
-
-function computeTechScores(projects: Array<{ technologies: string[]; difficultyLevel: string; completionStatus: string }>) {
-  const completedProjects = projects.filter(p => p.completionStatus === "completed");
-  const techMap: Record<string, { count: number; complexitySum: number; completedCount: number }> = {};
-
-  for (const project of completedProjects) {
-    const complexity = project.difficultyLevel === "advanced" ? 3 : project.difficultyLevel === "intermediate" ? 2 : 1;
-    const completionScore = project.completionStatus === "completed"
-      ? 1
-      : project.completionStatus === "in_progress"
-      ? 0.5
-      : 0.2;
-
-    for (const tech of project.technologies || []) {
-      if (!techMap[tech]) {
-        techMap[tech] = { count: 0, complexitySum: 0, completedCount: 0 };
-      }
-      techMap[tech].count += 1;
-      techMap[tech].complexitySum += complexity * completionScore;
-      if (project.completionStatus === "completed") {
-        techMap[tech].completedCount += 1;
-      }
-    }
-  }
-
-  const maxPossible = Math.max(...Object.values(techMap).map((t) => t.complexitySum), 1);
-
-  return Object.entries(techMap)
-    .map(([technology, data]) => {
-      const rawScore = (data.complexitySum / maxPossible) * 100;
-      const comfortScore = Math.min(100, Math.round(rawScore));
-      let confidenceLevel: "low" | "medium" | "high" = "low";
-      if (data.count >= 4) confidenceLevel = "high";
-      else if (data.count >= 2) confidenceLevel = "medium";
-
-      return {
-        technology,
-        projectCount: data.count,
-        comfortScore,
-        confidenceLevel,
-      };
-    })
-    .sort((a, b) => b.comfortScore - a.comfortScore);
 }
 
 function computePortfolioRating(projects: Array<{ difficultyLevel: string; completionStatus: string }>) {

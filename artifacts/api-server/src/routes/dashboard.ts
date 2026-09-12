@@ -1,11 +1,19 @@
 import { Router, type IRouter } from "express";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 import { db, usersTable, projectsTable, roadmapsTable, milestonesTable, tasksTable, jobsTable, activityTable } from "../lib/db/index.js";
 import {
   GetDashboardSummaryResponse,
   GetRecentActivityResponse,
 } from "../lib/api-zod/index.js";
 import { requireAuth } from "../middlewares/requireAuth";
+import {
+  calculateReadinessScore,
+  getUserScoringWeights,
+  computeComfortComponent,
+  computeMarketDemandComponent,
+  computeRoadmapComponent,
+  computePortfolioComponent,
+} from "../services/scoring.service";
 
 const router: IRouter = Router();
 
@@ -42,6 +50,7 @@ router.get("/dashboard/summary", requireAuth, async (req, res): Promise<void> =>
   }
   const strongestTech = Object.entries(techCount).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
 
+  // Calculate roadmap progress (percentage of completed tasks)
   const roadmaps = await db.select().from(roadmapsTable).where(eq(roadmapsTable.userId, userId));
   let totalTasks = 0;
   let completedTasks = 0;
@@ -53,17 +62,47 @@ router.get("/dashboard/summary", requireAuth, async (req, res): Promise<void> =>
       completedTasks += tasks.filter(t => t.completed).length;
     }
   }
-  const roadmapProgress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
+  // Count job matches (jobs where user has at least one required skill)
   const allJobs = await db.select().from(jobsTable);
   const userSkills = new Set(completedProjects.flatMap(p => p.technologies));
   const jobMatches = allJobs.filter(j =>
     j.requiredSkills.some(s => [...userSkills].some(us => us.toLowerCase() === s.toLowerCase()))
   ).length;
 
-  const comfortComponent = Math.min(100, completedProjects.length * 15 + completedProjects.length * 10);
-  const portfolioComponent = Math.min(100, completedProjects.length * 25);
-  const readinessScore = Math.round(comfortComponent * 0.35 + roadmapProgress * 0.25 + portfolioComponent * 0.15);
+  // ─── Canonical scoring (same as Scores page) ──────────────────────────────
+  // Use the same scoring functions as the Scores page for consistency.
+
+  // Calculate individual component scores (each 0-100)
+  const comfortComponent = computeComfortComponent(completedProjects.length);
+  const portfolioComponent = computePortfolioComponent(completedProjects.length);
+  const roadmapProgress = computeRoadmapComponent(completedTasks, totalTasks);
+
+  // Market demand: how many of user's skills are in top 20 demanded skills
+  const allJobsForDemand = await db.select().from(jobsTable);
+  const demandedSkills: Record<string, number> = {};
+  for (const job of allJobsForDemand) {
+    for (const skill of job.requiredSkills) {
+      const s = skill.toLowerCase();
+      demandedSkills[s] = (demandedSkills[s] || 0) + 1;
+    }
+  }
+  const topDemanded = Object.entries(demandedSkills)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 20)
+    .map(([skill]) => skill);
+  const userSkillSet = new Set(completedProjects.flatMap(p => p.technologies.map(t => t.toLowerCase())));
+  const marketDemandComponent = computeMarketDemandComponent(userSkillSet, topDemanded);
+
+  // Get dynamic weights and calculate overall readiness score
+  const weights = await getUserScoringWeights(userId);
+  const readinessScore = calculateReadinessScore(
+    comfortComponent,
+    marketDemandComponent,
+    roadmapProgress,
+    portfolioComponent,
+    weights
+  );
 
   res.json(GetDashboardSummaryResponse.parse({
     totalProjects: projects.length,
