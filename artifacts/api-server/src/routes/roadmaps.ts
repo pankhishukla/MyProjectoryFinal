@@ -106,16 +106,17 @@ router.post("/roadmaps", requireAuth, async (req, res): Promise<void> => {
   const techLower = parsed.data.technology.toLowerCase();
   const template = ROADMAP_TEMPLATES[techLower] || getDefaultTemplate(parsed.data.technology);
 
-  // MySQL doesn't support .returning() — insert then select
+  // MySQL doesn't support .returning() — insert then select by insertId
   const roadmapResult = await db.insert(roadmapsTable).values({
     userId,
     technology: parsed.data.technology,
   });
+  const newRoadmapId = (roadmapResult[0] as any).insertId as number;
 
-  // Select the newly inserted roadmap by userId and technology
+  // Select the newly inserted roadmap by its auto-increment ID
   const [roadmap] = await db.select().from(roadmapsTable).where(
-    eq(roadmapsTable.userId, userId)
-  ).where(eq(roadmapsTable.technology, parsed.data.technology));
+    eq(roadmapsTable.id, newRoadmapId)
+  );
 
   if (!roadmap) {
     res.status(500).json({ error: "Failed to generate roadmap: roadmap not found after insert" });

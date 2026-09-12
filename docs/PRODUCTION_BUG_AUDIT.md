@@ -469,7 +469,79 @@ This confirms `resolveApiUrl` is included and the `VITE_API_URL` is correctly ba
 
 ---
 
-## 16. Summary
+## 17. Roadmap Creation Bug — "0 milestones" Root Cause
+
+**Date found:** 2026-09-13
+**Severity:** Critical
+**Affected endpoint:** `POST /api/roadmaps`
+
+### Root cause
+
+The POST roadmap creation endpoint had a chained `.where()` bug at lines 116-118:
+
+```js
+// BEFORE (buggy)
+const [roadmap] = await db.select().from(roadmapsTable).where(
+  eq(roadmapsTable.userId, userId)
+).where(eq(roadmapsTable.technology, parsed.data.technology));
+```
+
+In Drizzle ORM, chaining `.where()` **replaces** the previous filter. The second `.where()` overwrites the first, making the query equivalent to:
+
+```sql
+SELECT * FROM roadmaps WHERE technology = ? LIMIT 1
+```
+
+The `userId` filter is silently dropped.
+
+### Impact
+
+1. If ANY user has a roadmap with the same technology name, the select returns **their** roadmap instead of the newly inserted one
+2. Milestones get inserted with the wrong `roadmapId` (pointing to the other user's roadmap)
+3. The newly created roadmap has **0 milestones** and **0 tasks**
+4. Navigating to the roadmap detail page shows an empty roadmap
+5. In duplicate creation scenarios (user creates "React" twice), milestones go to the OLD roadmap and the NEW one gets 0 milestones
+
+### Fix applied
+
+**File:** `artifacts/api-server/src/routes/roadmaps.ts:109-119`
+
+Replaced the chained `.where()` with `insertId` from the MySQL result:
+
+```js
+// AFTER (fixed)
+const roadmapResult = await db.insert(roadmapsTable).values({
+  userId,
+  technology: parsed.data.technology,
+});
+const newRoadmapId = (roadmapResult[0] as any).insertId as number;
+
+const [roadmap] = await db.select().from(roadmapsTable).where(
+  eq(roadmapsTable.id, newRoadmapId)
+);
+```
+
+This guarantees the correct roadmap is selected by its auto-increment ID, regardless of duplicates or concurrent inserts.
+
+### Verification
+
+- TypeScript typecheck: 0 new errors (pre-existing errors only)
+- Backend build: completes successfully (pre-existing errors only)
+- No frontend changes required
+
+### Related: GET `/api/roadmaps/:id` is correct
+
+The GET detail endpoint (lines 176-227) correctly uses `and()`:
+
+```js
+.where(and(eq(roadmapsTable.id, params.data.id), eq(roadmapsTable.userId, userId)))
+```
+
+The bug was only in the POST creation flow.
+
+---
+
+## 18. Summary
 
 | Question | Answer |
 |----------|--------|
