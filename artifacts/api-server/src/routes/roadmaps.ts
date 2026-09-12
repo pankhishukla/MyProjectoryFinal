@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { eq, and } from "drizzle-orm";
-import { db, getOrCreateUserId, usersTable, roadmapsTable, milestonesTable, tasksTable, activityTable, userSkillsTable } from "../lib/db/index.js";
+import { db, getOrCreateUserId, usersTable, roadmapsTable, milestonesTable, tasksTable, activityTable, userSkillsTable, logger } from "../lib/db/index.js";
 import {
   GenerateRoadmapBody,
   GetRoadmapParams,
