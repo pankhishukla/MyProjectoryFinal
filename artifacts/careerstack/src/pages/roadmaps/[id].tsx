@@ -1,8 +1,7 @@
 import { useParams, Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useAuth } from "../../lib/fakeClerk";
-import { useCallback } from "react";
+import { useAuthedFetch } from "@/lib/api-fetch";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
@@ -10,31 +9,6 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, CheckCircle2, Circle, Clock, Milestone as MilestoneIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-
-// ─── Auth Fetch (same pattern as use-stack-api.ts) ────────────────────────────
-
-function useAuthedFetch() {
-  const { getToken } = useAuth();
-  return useCallback(
-    async <T,>(url: string, init: RequestInit = {}): Promise<T> => {
-      const token = await getToken();
-      const headers: Record<string, string> = {
-        ...(init.headers as Record<string, string>),
-      };
-      if (token) headers["Authorization"] = `Bearer ${token}`;
-      const response = await fetch(url, { ...init, headers });
-      if (response.status === 204) return undefined as unknown as T;
-      if (!response.ok) {
-        const err = await response.json().catch(() => null);
-        throw new Error(err?.error || `HTTP ${response.status}`);
-      }
-      const text = await response.text();
-      if (!text) return undefined as unknown as T;
-      return JSON.parse(text) as T;
-    },
-    [getToken],
-  );
-}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

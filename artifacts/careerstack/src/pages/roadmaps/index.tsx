@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { useAuthedFetch } from "@/lib/api-fetch";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -35,23 +36,17 @@ interface TrendData {
 
 // ─── Trend data fetch (same source as Market Intel tab) ──────────────────────
 
-async function fetchTrendingStacks(): Promise<TrendData | null> {
-  try {
-    const res = await fetch("/api/jobs/trending-stacks", {
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-    });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
-}
-
 function useTrendingStacks() {
+  const apiFetch = useAuthedFetch();
   return useQuery<TrendData | null>({
     queryKey: ["/api/jobs/trending-stacks"],
-    queryFn: fetchTrendingStacks,
+    queryFn: async () => {
+      try {
+        return await apiFetch<TrendData>("/api/jobs/trending-stacks");
+      } catch {
+        return null;
+      }
+    },
     staleTime: 5 * 60 * 1000,
   });
 }
@@ -181,6 +176,7 @@ export default function Roadmaps() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const apiFetch = useAuthedFetch();
 
   const handleDeleteRoadmap = async (id: number, techName: string) => {
     if (!confirm(`Are you sure you want to delete the roadmap for "${techName}"? This will remove all your progress for this stack.`)) {
@@ -188,11 +184,7 @@ export default function Roadmaps() {
     }
     setDeletingId(id);
     try {
-      const res = await fetch(`/api/roadmaps/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Failed to delete roadmap");
+      await apiFetch(`/api/roadmaps/${id}`, { method: "DELETE" });
       toast({ title: "Roadmap Deleted", description: `Removed learning path for ${techName}.` });
       queryClient.invalidateQueries({ queryKey: getListRoadmapsQueryKey() });
     } catch (err) {
@@ -230,11 +222,15 @@ export default function Roadmaps() {
   const handleConfirmGenerate = async () => {
     setShowConfirm(false);
     try {
-      await generateMutation.mutateAsync({ data: { technology: pendingTech } });
+      const roadmap = await generateMutation.mutateAsync({ data: { technology: pendingTech } });
       toast({ title: "Roadmap Generated!", description: `Your ${pendingTech} roadmap is ready.` });
       queryClient.invalidateQueries({ queryKey: getListRoadmapsQueryKey() });
       setTech("");
       setPendingTech("");
+      // Navigate to the newly created roadmap using its database ID
+      if (roadmap && roadmap.id) {
+        setLocation(`/roadmaps/${roadmap.id}`);
+      }
     } catch (error) {
       toast({ title: "Error", description: "Failed to generate roadmap.", variant: "destructive" });
     }

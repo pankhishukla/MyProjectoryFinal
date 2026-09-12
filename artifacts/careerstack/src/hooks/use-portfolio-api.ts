@@ -1,12 +1,11 @@
 /**
  * Manual React Query hooks for the Portfolio extension APIs.
  * These bypass the Orval-generated codegen to avoid modifying generated files.
- * Uses a local authed fetch helper that mirrors the customFetch behavior.
+ * Uses a shared authed fetch helper that resolves API paths against VITE_API_URL.
  */
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UseQueryOptions, UseMutationOptions } from "@tanstack/react-query";
-import { useAuth } from "../lib/fakeClerk";
-import { useCallback } from "react";
+import { useAuthedFetch, usePublicFetch, FetchError } from "../lib/api-fetch";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -121,68 +120,8 @@ export interface AddCertificationBody {
   url?: string;
 }
 
-// ─── Auth Fetch Helper ────────────────────────────────────────────────────────
-
-class FetchError extends Error {
-  constructor(message: string, public statusCode: number) {
-    super(message);
-    this.name = "FetchError";
-  }
-}
-
-function useAuthedFetch() {
-  const { getToken } = useAuth();
-
-  return useCallback(
-    async <T>(url: string, init: RequestInit = {}): Promise<T> => {
-      const token = await getToken();
-      const headers: Record<string, string> = {
-        ...(init.headers as Record<string, string>),
-      };
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-
-      const response = await fetch(url, { ...init, headers });
-
-      if (response.status === 204) {
-        return undefined as unknown as T;
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw new FetchError(errorData?.error || `HTTP ${response.status}`, response.status);
-      }
-
-      const text = await response.text();
-      if (!text) return undefined as unknown as T;
-      return JSON.parse(text) as T;
-    },
-    [getToken],
-  );
-}
-
-function usePublicFetch() {
-  return useCallback(
-    async <T>(url: string, init: RequestInit = {}): Promise<T> => {
-      const response = await fetch(url, init);
-
-      if (response.status === 204) {
-        return undefined as unknown as T;
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw new FetchError(errorData?.error || `HTTP ${response.status}`, response.status);
-      }
-
-      const text = await response.text();
-      if (!text) return undefined as unknown as T;
-      return JSON.parse(text) as T;
-    },
-    [],
-  );
-}
+// Re-export FetchError for consumers that catch it (e.g. useMyPortfolio 404 handling)
+export { FetchError } from "../lib/api-fetch";
 
 // ─── Query Keys ───────────────────────────────────────────────────────────────
 

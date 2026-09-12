@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "../lib/fakeClerk";
-import { useCallback } from "react";
+import { useAuthedFetch } from "../lib/api-fetch";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -34,36 +33,7 @@ export interface ListJobsResponse {
   limit: number;
 }
 
-// ─── Auth Fetch Helper ────────────────────────────────────────────────────────
 
-function useAuthedFetch() {
-  const { getToken } = useAuth();
-
-  return useCallback(
-    async <T>(url: string, init: RequestInit = {}): Promise<T> => {
-      const token = await getToken();
-      const headers: Record<string, string> = {
-        ...(init.headers as Record<string, string>),
-      };
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-
-      const response = await fetch(url, { ...init, headers });
-
-      if (response.status === 204) return undefined as unknown as T;
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw new Error(errorData?.error || `HTTP ${response.status}`);
-      }
-
-      const text = await response.text();
-      if (!text) return undefined as unknown as T;
-      return JSON.parse(text) as T;
-    },
-    [getToken],
-  );
-}
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 
